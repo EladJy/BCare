@@ -165,5 +165,31 @@ namespace BCare.data
             }
             return bloodTestResult;
         }
+
+        public void GetSOMByID(int SOM_ID)
+        {
+            supplements_or_medication_info SOMI = new supplements_or_medication_info();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM supplements_or_medication_info WHERE SOM_ID=@SOM_ID", conn);
+                cmd.Parameters.AddWithValue("@SOM_ID", SOM_ID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        SOMI.SomID = reader.GetInt32("SOM_ID");
+                        SOMI.PharmID = reader.GetInt32("Pharm_ID");
+                        SOMI.SOMName = reader.GetString("SOM_NAME");
+                        SOMI.ServingAmount = reader.GetInt32("Serving_Amount");
+                        SOMI.ProductCode = reader.GetString("Product_Code");
+                        //SOMI.CodeType = new CodeType (reader.GetEnumerator("Code_Type"));
+                        //SOMI.InHealthPlan = new InHealthPlan (reader.GetEnumerator("In_Health_Plan"));
+                        //SOMI.WithMedicalPrescription = reader.GetEnumerator("With_Medical_Prescription");
+                    }
+                }
+            }
+        }
     }
 }

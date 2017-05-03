@@ -122,7 +122,8 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select * from blood_test WHERE BUser_ID=UserID", conn);
+                MySqlCommand cmd = new MySqlCommand("Select * from blood_test WHERE BUser_ID=@User_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", userId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -147,7 +148,8 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data WHERE BTest_ID=testID", conn);
+                MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data WHERE BTest_ID=@TestID", conn);
+                cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -161,7 +163,6 @@ namespace BCare.data
                     }
                 }
             }
-
             return bloodTestResult;
         }
     }

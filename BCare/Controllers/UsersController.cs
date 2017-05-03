@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BCare.data;
+using BCare.Models;
 
 namespace BCare.Controllers
 {
@@ -13,7 +14,9 @@ namespace BCare.Controllers
         public IActionResult Index()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            context.SignUp(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod");
+            //context.SignUp(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod");
+            //List<blood_test> BT = context.GetUserTests(34928267);
+            //List<blood_test_data> BTD = context.GetTestResulltByID(1);
             return View(context.GetAllUsers());
         }
     }

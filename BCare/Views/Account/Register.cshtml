@@ -1,0 +1,52 @@
+﻿@model BCare.Models.User
+@{
+    ViewBag.Title = "יצירת משתמש";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div>
+        <label asp-for="FirstName">שם פרטי:</label>
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName"></span>
+    </div>
+
+    <div>
+        <label asp-for="LastName">שם משפחה:</label>
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+
+    <label asp-for="Gender">מין:</label>
+    <select asp-for="Gender">
+        <option value="M">זכר</option>
+        <option value="F">נקבה</option>
+        <!-- other options..... -->
+    </select>
+    <br />
+    <label asp-for="BirthDate">תאריך לידה:</label>
+    <input asp-for="BirthDate" type="date" value="" />
+    <span asp-validation-for="BirthDate"></span>
+    <br />
+    <label asp-for="BloodType">סוג דם:</label>
+    <select asp-for="BloodType">
+        <option value="Oplus">O+</option>
+        <option value="Pminus">P+</option>
+        <option value="Aplus">A+</option>
+        <option value="Aminus">A-</option>
+        <option value="Bplus">B+</option>
+        <option value="Bminus">B-</option>
+        <option value="ABplus">AB+</option>
+        <option value="ABminus">AB-</option>
+        <option value="HH">HH</option>
+        <option value="Unknown">לא ידוע</option>
+        <!-- other options..... -->
+    </select>
+    <div>
+        <input type="submit" value="Register" />
+    </div>
+
+</form>

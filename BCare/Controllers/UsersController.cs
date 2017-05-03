@@ -13,7 +13,7 @@ namespace BCare.Controllers
         public IActionResult Index()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            context.SignUp(319253365, "Maria", "Gunko", "Female" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod");
+            context.SignUp(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod");
             return View(context.GetAllUsers());
         }
     }

@@ -52,7 +52,10 @@ namespace BCare.Models
         ABplus,
         [Display(Name = "AB-")]
         ABminus,
-        HH
+        [Display(Name = "HH")]
+        HH,
+        [Display(Name = "Unknown")]
+        Unknown
     }
 
 }

@@ -86,9 +86,18 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO users VALUES (User_ID, First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address) ", conn);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO users VALUES (@User_ID, @First_Name, @Last_Name, @Gender, @Birth_Date, @HMO_ID, @Blood_Type, @Address) ", conn);
+                cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                cmd.Parameters.AddWithValue("@First_Name", First_Name);
+                cmd.Parameters.AddWithValue("@Last_Name", Last_Name);
+                cmd.Parameters.AddWithValue("@Gender", Gender);
+                DateTime dt = Convert.ToDateTime(Birth_Date);
+                cmd.Parameters.AddWithValue("@Birth_Date", dt);
+                cmd.Parameters.AddWithValue("@HMO_ID", HMO_ID);
+                cmd.Parameters.AddWithValue("@Blood_Type", Blood_Type);
+                cmd.Parameters.AddWithValue("@Address", Address);
                 cmd.ExecuteNonQuery();
-                // 'FOREIGN KEY (HMO_ID) REFERENCES health_maintenance_organizations (HMO_ID)'
+                cmd.Parameters.Clear();
             }
            // return newUser;
         }

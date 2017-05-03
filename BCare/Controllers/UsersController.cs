@@ -16,6 +16,7 @@ namespace BCare.Controllers
         }
         public IActionResult Index()
         {
+            yy
             return View(context.GetAllUsers());
         }
     }

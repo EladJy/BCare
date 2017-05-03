@@ -16,7 +16,7 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             //context.Register(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod", "MashaG", "1234", false);
             //List<blood_test> BT = context.GetUserTests(34928267);
-            //List<blood_test_data> BTD = context.GetTestResulltByID(1);
+            List<blood_test_data> BTD = context.GetTestResultByID(1);
             return View();
         }
 

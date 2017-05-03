@@ -135,6 +135,28 @@ namespace BCare.data
             return i;
         }
 
+        public List <health_maintenance_organizations> GetAllHMO()
+        {
+            List<health_maintenance_organizations> HMOList = new List<health_maintenance_organizations>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select * from health_maintenance_organizations", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        HMOList.Add(new health_maintenance_organizations()
+                        {
+                            HMOID = reader.GetInt32("HMO_ID"),
+                            HMOName = reader.GetString("HMO_NAME")
+                            //BDocName = reader.GetString("BDoc_Name")
+                        });
+                    }
+                }
+            }
+            return HMOList;
+        }
         public List<blood_test> GetUserTests(int userId)
         {
             List<blood_test> testsForUser = new List<blood_test>();
@@ -167,7 +189,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data WHERE BTest_ID=@TestID", conn);
+                MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data, blood_component WHERE BTest_ID=@TestID and blood_test_data.BComp_ID=blood_component.BComp_ID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -177,7 +199,8 @@ namespace BCare.data
                         {
                             BTestID = reader.GetInt32("BTest_ID"),
                             BCompID = reader.GetInt32("BComp_ID"),
-                            Value = reader.GetDouble("Value")
+                            Value = reader.GetDouble("Value"),
+                            //BCompName = reader.GetString("BComp_Name")
                         });
                     }
                 }

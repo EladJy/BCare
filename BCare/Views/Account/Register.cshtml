@@ -1,4 +1,4 @@
-﻿@model BCare.Models.User
+﻿@model BCare.Models.UserDetailViewModel
 @{
     ViewBag.Title = "יצירת משתמש";
 }
@@ -8,43 +8,76 @@
 <form method="post" asp-controller="Account" asp-action="Register">
     <div asp-validation-summary="ModelOnly"></div>
 
+
     <div>
-        <label asp-for="FirstName">שם פרטי:</label>
-        <input asp-for="FirstName" />
-        <span asp-validation-for="FirstName"></span>
+        <label asp-for="user.UserID">תעודת זהות:</label>
+        <input asp-for="user.UserID" name="User_ID" type="number" required />
+        <span asp-validation-for="user.UserID"></span>
+    </div>
+    <div>
+        <label asp-for="pfu.UserName">שם משתמש:</label>
+        <input asp-for="pfu.UserName" name="username" required />
+        <span asp-validation-for="pfu.UserName"></span>
+    </div>
+    <div>
+        <label asp-for="pfu.PWHash">סיסמה:</label>
+        <input asp-for="pfu.PWHash" name="password" type="password" required />
+        <span asp-validation-for="pfu.PWHash"></span>
+    </div>
+    <div>
+        <label asp-for="user.FirstName">שם פרטי:</label>
+        <input asp-for="user.FirstName" name="First_Name"/>
+        <span asp-validation-for="user.FirstName"></span>
     </div>
 
     <div>
-        <label asp-for="LastName">שם משפחה:</label>
-        <input asp-for="LastName" />
-        <span asp-validation-for="LastName"></span>
+        <label asp-for="user.LastName">שם משפחה:</label>
+        <input asp-for="user.LastName" name="Last_Name" />
+        <span asp-validation-for="user.LastName"></span>
+    </div>
+    <div>
+        <label asp-for="user.Address">כתובת:</label>
+        <input asp-for="user.Address" name="Address" />
+        <span asp-validation-for="user.Address"></span>
     </div>
 
-    <label asp-for="Gender">מין:</label>
-    <select asp-for="Gender">
+    <label asp-for="user.Gender">מין:</label>
+    <select asp-for="user.Gender" name="Gender" required>
         <option value="M">זכר</option>
         <option value="F">נקבה</option>
         <!-- other options..... -->
     </select>
     <br />
-    <label asp-for="BirthDate">תאריך לידה:</label>
-    <input asp-for="BirthDate" type="date" value="" />
-    <span asp-validation-for="BirthDate"></span>
+    <label asp-for="user.BirthDate">תאריך לידה:</label>
+    <input asp-for="user.BirthDate" type="date" value="" name="Birth_Date" required />
+    <span asp-validation-for="user.BirthDate"></span>
     <br />
-    <label asp-for="BloodType">סוג דם:</label>
-    <select asp-for="BloodType">
-        <option value="Oplus">O+</option>
-        <option value="Pminus">P+</option>
-        <option value="Aplus">A+</option>
-        <option value="Aminus">A-</option>
-        <option value="Bplus">B+</option>
-        <option value="Bminus">B-</option>
-        <option value="ABplus">AB+</option>
-        <option value="ABminus">AB-</option>
+    <label asp-for="user.BloodType">סוג דם:</label>
+    <select asp-for="user.BloodType" name="Blood_Type">
+        <option value="O+">O+</option>
+        <option value="P-">P+</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
         <option value="HH">HH</option>
         <option value="Unknown">לא ידוע</option>
         <!-- other options..... -->
     </select>
+    <br />
+    <label asp-for="hmo.HMOID">קופת חולים:</label>
+    <select asp-for="hmo.HMOID" name="HMO_ID" required>
+        @foreach (var item in ViewBag.ListHMO)
+        {
+            <option value="@item.HMOID">@item.HMOName</option>
+
+        }
+    </select>
+    <span asp-validation-for="hmo.HMOID"></span>
+    <input asp-for="isDoctor" type="checkbox" value="true" name="isDoctor"/>
+    <span asp-validation-for="isDoctor"></span>
     <div>
         <input type="submit" value="Register" />
     </div>

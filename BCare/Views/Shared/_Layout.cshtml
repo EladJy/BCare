@@ -1,0 +1,121 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using System.Security.Claims;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Momlazim</title>
+    @await Html.PartialAsync("_HeaderPartial")
+</head>
+<body>
+    <header>
+        <div class="navbar navbar-fixed-top">
+            <div class="col-md-11">
+                <div class="navbar-header navbar-right">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-controller="Home" asp-action="Index">
+                        <img src="~/images/logo.png" width="205" height="50" alt="logo" />
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-controller="Home" asp-action="Contact">צור קשר<span class="glyphicon glyphicon-envelope"></span></a></li>
+                        <li><a asp-controller="Home" asp-action="About">אודותינו<span class="glyphicon glyphicon-envelope"></span></a></li>
+                        <li><a asp-controller="Home" asp-action="Stats">סטטיסטיקות<span class="glyphicon glyphicon-user"></span></a></li>
+                        <li>
+                            <a asp-controller="Home" asp-action="Index">בלוג<span class="glyphicon glyphicon-folder-open"></span></a>
+                        </li>
+                        <li><a asp-controller="Home" asp-action="Index">ראשי<span class="glyphicon glyphicon-home"></span></a></li>
+
+                    </ul>
+                    @*@await Html.PartialAsync("_LoginPartial")*@
+                </div>
+            </div>
+        </div>
+        @if (Context.Request.Cookies["Session"] != null)
+            {
+            <div class="col-md-7 col-md-offset-4 ">
+                <div class="sub-navbar">
+                    <div class="navbar-inner">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#">Link</a></li>
+                            <li><a href="#">Link</a></li>
+                            <li><a href="#">Link</a></li>
+                            <li><a href="#">Link</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </header>
+    <div id="content">
+        <div id="mainContent" class="col-md-8">
+            @RenderBody()
+        </div>
+        @*Aside*@
+        <aside class="col-md-4">
+            
+            <header>
+                <h3>התחברות</h3>
+            </header>
+            <section>
+
+                @if (Context.Request.Cookies["Session"] == null)
+                    {
+                        <form asp-controller="Home" asp-action="Login" method="post">
+
+                            <div class="container">
+                                <label><b>שם משתמש</b></label>
+                                <br />
+                                <input type="text" placeholder="שם משתמש" name="username" size="24" required>
+
+                                <label><b>סיסמה</b></label>
+                                <br />
+                                <input type="password" placeholder="סיסמה" name="password" size="24" required>
+                                <center>
+                                <button class="btn btn-danger" id="loginButton" type="submit">התחבר</button>
+                                </center>
+                            </div>
+                        </form>
+                    } else
+                    {
+                        <p>שלום, @Context.Request.Cookies["Session"].Substring(10)</p>
+                        <center>
+                            <button class="btn btn-danger" id="loginButton" type="submit" onclick="location.href='@Url.Action("LogOut", "Home")'">התנתק</button>
+                        </center>
+                    }
+
+            </section>
+            <header>
+                <h3>ברוכים הבאים</h3>
+            </header>
+            <section>
+                <p>שלום לכולם,</p><p>אתם אחלה אנשים שבעולם.</p>
+            </section>
+            <header>
+                <h3>בדיקה 1</h3>
+            </header>
+            <section>
+בלה בלה
+            </section>
+        </aside>
+    </div>
+    <hr />
+    <footer>
+        <div>
+            <section id="about">
+                <h3>About</h3>
+                <p>&copy Momlazim - 2016.</p>
+            </section>
+        </div>
+    </footer>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

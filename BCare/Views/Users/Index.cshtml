@@ -1,0 +1,22 @@
+@model IEnumerable<BCare.Models.User>
+@{
+    ViewBag.Title = "Users";
+}
+<h2>Films</h2>
+<table class="table">
+    <tr>
+        <th>User ID</th>
+        <th>Title</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+        </tr>
+    }
+</table>

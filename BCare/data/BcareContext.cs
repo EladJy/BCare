@@ -69,8 +69,9 @@ namespace BCare.data
             return false;
         }
 
-        public void SignUp(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address)
+        public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, bool isDoctor)
         {
+            int permissionID=1;
             //int userId = GenerateAutoID();
             // User newUser = new User()
             //{
@@ -98,6 +99,24 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@Address", Address);
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
+               
+                if (isDoctor==true)
+                    permissionID = 3;
+                else
+                    permissionID = 2;
+
+                MySqlCommand cmd2 = new MySqlCommand("INSERT INTO premission_for_users VALUES (@Prem_ID, @User_ID, @User_Name, @PW_Hash)", conn);
+                cmd2.Parameters.AddWithValue("@Prem_ID", permissionID);
+                cmd2.Parameters.AddWithValue("@User_ID", User_ID);
+                cmd2.Parameters.AddWithValue("@User_Name", username);
+
+                var sha512 = SHA512.Create();
+                byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(password));
+                string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
+                
+                cmd2.Parameters.AddWithValue("@PW_Hash", hashedPassword);
+                cmd2.ExecuteNonQuery();
+                cmd2.Parameters.Clear();
             }
            // return newUser;
         }
@@ -141,7 +160,7 @@ namespace BCare.data
             return testsForUser;
         }
 
-        public List<blood_test_data> GetTestResulltByID (int testId)
+        public List<blood_test_data> GetTestResultByID (int testId)
         {
             List<blood_test_data> bloodTestResult = new List<blood_test_data>();
 
@@ -184,9 +203,12 @@ namespace BCare.data
                         SOMI.SOMName = reader.GetString("SOM_NAME");
                         SOMI.ServingAmount = reader.GetInt32("Serving_Amount");
                         SOMI.ProductCode = reader.GetString("Product_Code");
-                        //SOMI.CodeType = new CodeType (reader.GetEnumerator("Code_Type"));
-                        //SOMI.InHealthPlan = new InHealthPlan (reader.GetEnumerator("In_Health_Plan"));
-                        //SOMI.WithMedicalPrescription = reader.GetEnumerator("With_Medical_Prescription");
+                        Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
+                        SOMI.CodeType = CT;
+                        Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
+                        SOMI.InHealthPlan = IHP;
+                        Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
+                        SOMI.WithMedicalPrescription = WMP;
                     }
                 }
             }

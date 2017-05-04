@@ -259,6 +259,20 @@ namespace BCare.data
             }
         }
 
+        public int GetIDByUserName(string userName)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select * from premission_for_users WHERE User_Name=@User_Name", conn);
+                cmd.Parameters.AddWithValue("@User_Name", userName);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                        return reader.GetInt32("User_ID");
+                }
+            }
+        }
+
         public List<BloodTestViewModel> GetTestResultByID(int testId)
         {
             BloodTestViewModel BTVM = new BloodTestViewModel();

@@ -182,52 +182,52 @@ namespace BCare.data
             return testsForUser;
         }
 
-        public List<blood_component> GetTestResultByID (int testId)
-        {
-            List<blood_test_data> bloodTestResult = new List<blood_test_data>();
-            List<blood_component> bloodComponents = new List<blood_component>();
+        //public List<blood_component> GetTestResultByID (int testId)
+        //{
+        //    List<blood_test_data> bloodTestResult = new List<blood_test_data>();
+        //    List<blood_component> bloodComponents = new List<blood_component>();
 
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
+        //    using (MySqlConnection conn = GetConnection())
+        //    {
+        //        conn.Open();
                 
-                MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data WHERE BTest_ID=@TestID", conn);
-                cmd.Parameters.AddWithValue("@TestID", testId);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        bloodTestResult.Add(new blood_test_data()
-                        {
-                            BTestID = reader.GetInt32("BTest_ID"),
-                            BCompID = reader.GetInt32("BComp_ID"),
-                            Value = reader.GetDouble("Value")
-                        });
-                    }
-                }
+        //        MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data WHERE BTest_ID=@TestID", conn);
+        //        cmd.Parameters.AddWithValue("@TestID", testId);
+        //        using (MySqlDataReader reader = cmd.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                bloodTestResult.Add(new blood_test_data()
+        //                {
+        //                    BTestID = reader.GetInt32("BTest_ID"),
+        //                    BCompID = reader.GetInt32("BComp_ID"),
+        //                    Value = reader.GetDouble("Value")
+        //                });
+        //            }
+        //        }
 
-                MySqlCommand cmd2 = new MySqlCommand("Select * FROM blood_component INNER JOIN blood_test_data WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_component.BComp_ID", conn);
-                cmd2.Parameters.AddWithValue("@TestID", testId);
-                //MySqlCommand cmd2 = new MySqlCommand("Select * from blood_component", conn);
-                using (MySqlDataReader reader = cmd2.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        bloodComponents.Add(new blood_component()
-                        {
-                            BCompID = reader.GetInt32("BComp_ID"),
-                            BCompName = reader.GetString("BComp_Name"),
-                            MeasurementUnit = reader.GetString("Measurement_Unit"),
-                            MenMax = reader.GetDouble("Men_Max"),
-                            MenMin = reader.GetDouble("Men_Min"),
-                            WomenMax = reader.GetDouble("Women_Max"),
-                            WomenMin = reader.GetDouble("Women_Min")
-                        });
-                    }
-                }
-            }
-            return bloodComponents;
-        }
+        //        MySqlCommand cmd2 = new MySqlCommand("Select * FROM blood_component INNER JOIN blood_test_data WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_component.BComp_ID", conn);
+        //        cmd2.Parameters.AddWithValue("@TestID", testId);
+        //        //MySqlCommand cmd2 = new MySqlCommand("Select * from blood_component", conn);
+        //        using (MySqlDataReader reader = cmd2.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                bloodComponents.Add(new blood_component()
+        //                {
+        //                    BCompID = reader.GetInt32("BComp_ID"),
+        //                    BCompName = reader.GetString("BComp_Name"),
+        //                    MeasurementUnit = reader.GetString("Measurement_Unit"),
+        //                    MenMax = reader.GetDouble("Men_Max"),
+        //                    MenMin = reader.GetDouble("Men_Min"),
+        //                    WomenMax = reader.GetDouble("Women_Max"),
+        //                    WomenMin = reader.GetDouble("Women_Min")
+        //                });
+        //            }
+        //        }
+        //    }
+        //    return bloodComponents;
+        //}
 
         public void GetSOMByID(int SOM_ID)
         {

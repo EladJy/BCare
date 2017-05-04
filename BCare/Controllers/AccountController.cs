@@ -34,5 +34,13 @@ namespace BCare.Controllers
             context.Register(User_ID, First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, username, password, isDoctor);
             return RedirectToAction("Index","Home");
         }
+
+        public IActionResult BloodTest()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            //context.getIdByUserName(cookie.Substring(10));
+            return View();
+        }
     }
 }

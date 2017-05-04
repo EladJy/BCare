@@ -1,0 +1,36 @@
+﻿@model BCare.Models.BloodTestViewModel
+@{
+    ViewBag.Title = "הבדיקות שלי";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>תוצאות הפניה שבוצעה בתאריך 28/03/2017</p>
+<p><b>שם הרופא: </b>אמירן גונקו</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>תאריך הבדיקה</th>
+            <th>שם רופא</th>
+            <th>תוצאות</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>24.1.16</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#">להצגת התוצאות</a></td>
+        </tr>
+        <tr class="danger">
+            <td>26.1.17</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#">להצגת התוצאות</a></td>
+        </tr>
+        <tr>
+            <td>1.4.17</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#">להצגת התוצאות</a></td>
+        </tr>
+    </tbody>
+</table>

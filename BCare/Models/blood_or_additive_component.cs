@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace BCare.Models
 {
-    public class blood_component
+    public class blood_or_additive_component
     {
         //primary key
         //foreign key
-        public int BCompID { get; set; }
-        public string BCompName { get; set; }
+        public int BOA_ID { get; set; }
+        public string BOA_Name { get; set; }
         public string MeasurementUnit { get; set; }
         public double MenMin { get; set; }
         public double MenMax { get; set; }
@@ -20,6 +20,7 @@ namespace BCare.Models
         public double PregnantMin { get; set; }
 
         public double PregnantMax { get; set; }
+        public string info { get; set; }
 
     }
 }

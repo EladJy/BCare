@@ -12,5 +12,14 @@ namespace BCare.Models
         //foreign key
         public int BUserID { get; set; }
         public DateTime BTestDate { get; set; }
+        public string DoctorName { get; set; }
+        public IsPregnant IsPregnant { get; set; }
+
+    }
+
+    public enum IsPregnant
+    {
+        Y,
+        N
     }
 }

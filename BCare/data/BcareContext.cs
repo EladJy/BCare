@@ -157,6 +157,7 @@ namespace BCare.data
             }
             return HMOList;
         }
+
         public List<blood_test> GetUserTests(int userId)
         {
             List<blood_test> testsForUser = new List<blood_test>();
@@ -256,6 +257,60 @@ namespace BCare.data
                     }
                 }
             }
+        }
+
+        public List<BloodTestViewModel> GetTestResultByID(int testId)
+        {
+            BloodTestViewModel BTVM = new BloodTestViewModel();
+            List <BloodTestViewModel> BTVMList = new List <BloodTestViewModel>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("Select * FROM blood_test INNER JOIN blood_test_data INNER JOIN blood_or_additive_component INNER JOIN users WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_or_additive_component.BComp_ID and users.User_ID=blood_test.BUser_ID", conn);
+                cmd.Parameters.AddWithValue("@TestID", testId);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        BTVM.user.UserID = reader.GetInt32("User_ID");
+                        BTVM.user.Address = reader.GetString("Address");
+                        BTVM.user.BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date"));
+                        BTVM.user.FirstName = reader.GetString("First_Name");
+                        BTVM.user.LastName = reader.GetString("Last_Name");
+                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
+                        BTVM.user.Gender = gender;
+                        Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
+                        BTVM.user.BloodType = BT;
+                        BTVM.user.HMOID = reader.GetInt32("HMO_ID");
+
+                        BTVM.bloodTest.BTestID = reader.GetInt32("BTest_ID");
+                        BTVM.bloodTest.BUserID = reader.GetInt32("BUser_ID");
+                        //BTVM.bloodTest.DoctorName = reader.GetInt32("Doctor_Name");
+                        BTVM.bloodTest.BTestDate = Convert.ToDateTime(reader.GetString("BTest_Date"));
+                        Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
+                        BTVM.bloodTest.IsPregnant = IP;
+
+                        BTVM.btData.BCompID = reader.GetInt32("BComp_ID");
+                        BTVM.btData.BTestID = reader.GetInt32("BTest_ID");
+                        BTVM.btData.Value = reader.GetDouble("Value");
+
+                        BTVM.BOAComp.BOA_ID = reader.GetInt32("BOA_ID");
+                        BTVM.BOAComp.BOA_Name = reader.GetString("BOA_Name");
+                        BTVM.BOAComp.info = reader.GetString("Info");
+                        BTVM.BOAComp.MeasurementUnit = reader.GetString("Measurement_Unit");
+                        BTVM.BOAComp.MenMax = reader.GetDouble("Men_Max");
+                        BTVM.BOAComp.MenMin = reader.GetDouble("Men_Min");
+                        BTVM.BOAComp.PregnantMax = reader.GetDouble("Pregnant_Max");
+                        BTVM.BOAComp.PregnantMin = reader.GetDouble("Pregnant_Min");
+                        BTVM.BOAComp.WomenMax = reader.GetDouble("Women_Max");
+                        BTVM.BOAComp.WomenMin = reader.GetDouble("Women_Min");
+
+                        BTVMList.Add(BTVM);
+                    }
+                }
+            }
+            return BTVMList;
         }
     }
 }

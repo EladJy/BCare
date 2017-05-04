@@ -1,35 +1,31 @@
-﻿@model BCare.Models.BloodTestViewModel
+﻿@model BCare.Models.blood_test
 @{
     ViewBag.Title = "הבדיקות שלי";
 }
 
 <h2>@ViewData["Title"]</h2>
 
+@if(ViewBag.UserID != null) {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>תאריך הבדיקה</th>
+                <th>שם רופא</th>
+                <th>תוצאות</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.UserBloodTest)
+            {
+                <tr>
+                    <td>@item.BTestDate</td>
+                    <td>@item.DoctorName</td>
+                    <td><a asp-controller="Account" asp-action="BloodTestResult" asp-route-id="@item.BTestID">להצגת התוצאות</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else {
+<h2>You are not logged in!</h2>
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>תאריך הבדיקה</th>
-            <th>שם רופא</th>
-            <th>תוצאות</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1.4.17</td>
-            <td>ד"ר אמירן גונקו</td>
-            <td><a asp-controller="Account" asp-action="BloodTestResult">להצגת התוצאות</a></td>
-        </tr>
-        <tr class="danger">
-            <td>26.1.17</td>
-            <td>ד"ר אמירן גונקו</td>
-            <td><a href="#">להצגת התוצאות</a></td>
-        </tr>
-        <tr>
-            <td>24.1.16</td>
-            <td>ד"ר אמירן גונקו</td>
-            <td><a href="#">להצגת התוצאות</a></td>
-        </tr>
-
-    </tbody>
-</table>

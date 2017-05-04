@@ -39,15 +39,23 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
+            if (cookie != null)
+            {
+                ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
+            }
+            ViewBag.UserBloodTest = context.GetUserTests(ViewBag.UserID);
             return View();
         }
 
-        public IActionResult BloodTestResult()
+        public IActionResult BloodTestResult(int id)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            //context.getIdByUserName(cookie.Substring(10));
+            if (cookie != null)
+            {
+                ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
+            }
+            ViewBag.UserTestResult = context.GetTestResultByID(id);
             return View();
         }
 

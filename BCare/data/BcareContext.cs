@@ -176,7 +176,7 @@ namespace BCare.data
                             BTestID = reader.GetInt32("BTest_ID"),
                             BUserID = reader.GetInt32("BUser_ID"),
                             BTestDate = reader.GetDateTime("BTest_Date"),
-                            DoctorName = " Amiran Gunko",
+                            DoctorName = "אמירן גונקו",
                             IsPregnant = IP
                             //BDocID = reader.GetInt32("Doctor_ID");
 
@@ -286,13 +286,13 @@ namespace BCare.data
             {
                 conn.Open();
 
-                MySqlCommand cmd = new MySqlCommand("Select * FROM blood_test INNER JOIN blood_test_data INNER JOIN blood_or_additive_component INNER JOIN users WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_or_additive_component.BComp_ID and users.User_ID=blood_test.BUser_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("Select * FROM blood_test INNER JOIN blood_test_data INNER JOIN blood_or_additive_component INNER JOIN users WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_or_additive_component.BOA_ID and users.User_ID=blood_test.BUser_ID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        BTVM.user.UserID = reader.GetInt32("User_ID");
+                        BTVM.user.UserID = reader.GetInt32("BUser_ID");
                         BTVM.user.Address = reader.GetString("Address");
                         BTVM.user.BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date"));
                         BTVM.user.FirstName = reader.GetString("First_Name");

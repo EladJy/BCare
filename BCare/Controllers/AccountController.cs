@@ -42,5 +42,21 @@ namespace BCare.Controllers
             //context.getIdByUserName(cookie.Substring(10));
             return View();
         }
+
+        public IActionResult BloodTestResult()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            //context.getIdByUserName(cookie.Substring(10));
+            return View();
+        }
+
+        public IActionResult AddBloodTest()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            //context.getIdByUserName(cookie.Substring(10));
+            return View();
+        }
     }
 }

@@ -170,12 +170,16 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
+                        Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
                         testsForUser.Add(new blood_test()
                         {
                             BTestID = reader.GetInt32("BTest_ID"),
                             BUserID = reader.GetInt32("BUser_ID"),
                             BTestDate = reader.GetDateTime("BTest_Date"),
-                            //BDocName = reader.GetString("BDoc_Name")
+                            DoctorName = " Amiran Gunko",
+                            IsPregnant = IP
+                            //BDocID = reader.GetInt32("Doctor_ID");
+
                         });
                     }
                 }

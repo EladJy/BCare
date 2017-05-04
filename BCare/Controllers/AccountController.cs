@@ -39,7 +39,7 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            //context.getIdByUserName(cookie.Substring(10));
+            ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
             return View();
         }
 

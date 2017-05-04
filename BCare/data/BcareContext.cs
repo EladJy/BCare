@@ -268,7 +268,8 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@User_Name", userName);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                        return reader.GetInt32("User_ID");
+                    reader.Read();
+                    return reader.GetInt32("User_ID");
                 }
             }
         }

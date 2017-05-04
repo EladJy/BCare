@@ -1,0 +1,60 @@
+﻿@model BCare.Models.BloodTestViewModel
+@{
+    ViewBag.Title = "הבדיקות שלי";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>להלן פירוט של הבדיקות שמשכנו מקופת החולים שלך</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>תאריך הבדיקה</th>
+            <th>שם רופא</th>
+            <th>תוצאות</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1.4.17</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#" id="blood1" onclick='changeText()'>הוסף בדיקה</a></td>
+        </tr>
+        <tr class="danger">
+            <td>26.1.17</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#" id="blood2" onclick='changeText1()'>הוסף בדיקה</a></td>
+        </tr>
+        <tr>
+            <td>24.1.16</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#" id="blood3" onclick='changeText2()'>הוסף בדיקה</a></td>
+        </tr>
+        <tr class="danger">
+            <td>3.8.15</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#">הוסף בדיקה</a></td>
+        </tr>
+        <tr>
+            <td>8.9.14</td>
+            <td>ד"ר אמירן גונקו</td>
+            <td><a href="#">הוסף בדיקה</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    function changeText() {
+        $("a").removeAttr("onclick");
+        document.getElementById('blood1').innerHTML = 'התווסף בהצלחה';
+    }
+    function changeText1() {
+        $("a").removeAttr("onclick");
+        document.getElementById('blood2').innerHTML = 'התווסף בהצלחה';
+    }
+    function changeText2() {
+        $("a").removeAttr("onclick");
+        document.getElementById('blood3').innerHTML = 'התווסף בהצלחה';
+    }
+</script>

@@ -31,6 +31,7 @@ table {
     border: 1px solid #cc1a1c;
     border-collapse: separate;
     border-spacing: 0;
+    table-layout: fixed;
 }
 th {
     background-color: #cc1a1c;

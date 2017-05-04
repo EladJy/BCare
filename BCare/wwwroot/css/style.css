@@ -13,6 +13,40 @@ body {
     padding-right: 15px;
 }
 
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    margin-bottom: 15px;
+}
+
+
+.main-login {
+    background-color: #fff;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.main-center {
+
+    padding: 40px 40px;
+}
+
+.login-button {
+    margin-top: 5px;
+}
+
+.login-register {
+    font-size: 11px;
+    text-align: center;
+}
+
 #content {
     width: 80%;
     margin: 0 auto;
@@ -56,6 +90,11 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+#loginInput {
+    float: right;
+    margin: 5px 0 5px 0;
 }
 
 /* Carousel */

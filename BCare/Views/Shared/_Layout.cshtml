@@ -56,11 +56,11 @@
         }
     </header>
     <div id="content">
-        <div id="mainContent" class="col-md-8">
+        <div id="mainContent" class="col-md-9">
             @RenderBody()
         </div>
         @*Aside*@
-        <aside class="col-md-4">
+        <aside class="col-md-3">
             
             <header>
                 <h3>התחברות</h3>
@@ -70,26 +70,28 @@
                 @if (Context.Request.Cookies["Session"] == null)
                     {
                         <form asp-controller="Home" asp-action="Login" method="post">
-
-                            <div class="container">
-                                <label><b>שם משתמש</b></label>
-                                <br />
-                                <input type="text" placeholder="שם משתמש" name="username" size="24" required>
-                                <br />
-                                <label><b>סיסמה</b></label>
-                                <br />
-                                <input type="password" placeholder="סיסמה" name="password" size="24" required>
-                                <center>
-                                <button class="btn btn-danger" id="loginButton" type="submit">התחבר</button>
-                                </center>
+                            <div>
+                                <div><b>שם משתמש</b></div>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" placeholder="שם משתמש" name="username" required>
+                                    </div>
+                                </div>
                             </div>
+                            <div>
+                                <div><b>סיסמה</b></div>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="password" placeholder="סיסמה" name="password" required>
+                                    </div>
+                                </div>
+                            </div>
+                                <button class="btn btn-danger" id="loginButton" type="submit">התחבר</button>
                         </form>
                     } else
                     {
                         <p>שלום, @Context.Request.Cookies["Session"].Substring(10)</p>
-                        <center>
-                            <button class="btn btn-danger" id="loginButton" type="submit" onclick="location.href='@Url.Action("LogOut", "Home")'">התנתק</button>
-                        </center>
+                        <button class="btn btn-danger" id="loginButton" type="submit" onclick="location.href='@Url.Action("LogOut", "Home")'">התנתק</button>
                     }
 
             </section>

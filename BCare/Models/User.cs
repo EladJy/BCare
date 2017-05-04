@@ -18,7 +18,7 @@ namespace BCare.Models
         public string LastName { get; set; }
         //enum F\M
         public Gender Gender { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime BirthDate { get; set; }
         public BloodType BloodType { get; set; }
 

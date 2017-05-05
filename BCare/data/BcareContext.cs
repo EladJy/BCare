@@ -135,6 +135,20 @@ namespace BCare.data
             return i;
         }
 
+        public int CountTestsByID(int User_ID)
+        {
+            int i;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select Count (BTest_ID) from blood_test WHERE BUserID=@User_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                i = Convert.ToInt32(cmd.ExecuteScalar());
+                conn.Close();
+            }
+            return i;
+        }
+
         public List <health_maintenance_organizations> GetAllHMO()
         {
             List<health_maintenance_organizations> HMOList = new List<health_maintenance_organizations>();
@@ -278,13 +292,72 @@ namespace BCare.data
             }
         }
 
+        public User GetUserDetailsByID(int User_ID)
+        {
+            User user = new User();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select * from users WHERE User_ID=@User_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read()) {  
+                        user.UserID = reader.GetInt32("User_ID");
+                        user.FirstName = reader.GetString("First_Name");
+                        user.LastName = reader.GetString("Last_Name");
+                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
+                        user.Gender = gender;
+                        user.Address = reader.GetString("Address");
+                        user.BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date"));
+                        Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
+                        user.BloodType = BT;
+                        user.HMOID = reader.GetInt32("HMO_ID");
+                    }
+                }
+            }
+            return user;
+        }
+
+        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd)
+        {
+            User user = new User();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                if ((firstName.Length == 0)||(lastName.Length==0))
+                {
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @firstName, Last_Name = @lastName, Gender = @Gender, Birth_date=@birth, HMO_ID=@HMOID, Blood_Type=@bloodType, Address=@Address WHERE User_ID =@User_ID ", conn);
+                    cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                    cmd.Parameters.AddWithValue("@First_Name", firstName);
+                    cmd.Parameters.AddWithValue("@Last_Name", lastName);
+                    cmd.Parameters.AddWithValue("@Gender", Gender);
+                    cmd.Parameters.AddWithValue("@Birth_Date", birth);
+                    cmd.Parameters.AddWithValue("@HMO_ID", HMOID);
+                    cmd.Parameters.AddWithValue("@Blood_Type", bloodType);
+                    cmd.Parameters.AddWithValue("@Address", Address);
+                    cmd.ExecuteNonQuery();
+
+                    var sha512 = SHA512.Create();
+                    byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(pwd));
+                    string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
+                    MySqlCommand cmd2 = new MySqlCommand("UPDATE premission_for_users SET User_Name = @userName, PW_Hash = @hashedPassword WHERE User_ID =@User_ID ", conn);
+                    cmd2.Parameters.AddWithValue("@User_ID", User_ID);
+                    cmd2.Parameters.AddWithValue("@userName", userName);
+                    cmd2.Parameters.AddWithValue("@hashedPassword", hashedPassword);
+                }
+            }
+            //return user;
+        }
+
         public List<BloodTestViewModel> GetTestResultByID(int testId)
         {   
             List <BloodTestViewModel> BTVMList = new List <BloodTestViewModel>();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT blood_test.*,users.*,blood_test_data.*,blood_or_additive_component.BOA_ID,blood_or_additive_component.BOA_Name,blood_or_additive_component.Measurement_Unit,blood_or_additive_component.Men_Min,blood_or_additive_component.Men_Max,blood_or_additive_component.Women_Min,blood_or_additive_component.Women_Max,blood_or_additive_component.Pregnant_Min,blood_or_additive_component.Pregnant_Max,IFNULL(blood_or_additive_component.info,' ')as info" +
+                                    " FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -296,7 +369,7 @@ namespace BCare.data
                         BTVM.user = new User()
                         {
                             UserID = reader.GetInt32("User_ID"),
-                            Address = reader.GetString("Address"),
+                            //Address = reader.GetString("Address"),
                             BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
                             FirstName = reader.GetString("First_Name"),
                             LastName = reader.GetString("Last_Name"),
@@ -326,7 +399,7 @@ namespace BCare.data
                         {
                             BOA_ID = reader.GetInt32("BOA_ID"),
                             BOA_Name = reader.GetString("BOA_Name"),
-                            //info = reader.GetString("Info"),
+                            info = reader.GetString("Info"),
                             MeasurementUnit = reader.GetString("Measurement_Unit"),
                             MenMax = reader.GetDouble("Men_Max"),
                             MenMin = reader.GetDouble("Men_Min"),

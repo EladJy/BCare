@@ -144,7 +144,7 @@ namespace BCare.data
                 MySqlCommand cmd = new MySqlCommand("Select Count (BTest_ID) from blood_test WHERE BUserID=@User_ID", conn);
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 i = Convert.ToInt32(cmd.ExecuteScalar());
-                conn.Close();
+                conn.Close(); 
             }
             return i;
         }

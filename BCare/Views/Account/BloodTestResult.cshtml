@@ -5,41 +5,173 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<h4><b>תוצאות הפניה שבוצעה בתאריך 1.4.2017</b></h4>
-<p><b>שם הרופא: </b>אמירן גונקו</p>
+@if (ViewBag.Message == "isCorrect")
+{
+<h4><b>תוצאות הפניה שבוצעה בתאריך @ViewBag.UserTestResult[0].bloodTest.BTestDate</b></h4>
+<p><b>שם הרופא: </b>@ViewBag.UserTestResult[0].bloodTest.DoctorName</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>שם הבדיקה</th>
+                <th>תוצאות הבדיקה</th>
+                <th>גבולות הבדיקה</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.UserTestResult)
+            {
+                <tr>
+                    @{
+                        double min = 0, max = 0;
+                        double value = item.btData.Value;
+                        if (item.user.Gender.ToString() == "M")
+                        {
+                            min = item.BOAComp.MenMin;
+                            max = item.BOAComp.MenMax;
+                        }
+                        else if (item.user.Gender.ToString() == "F")
+                        {
+                            if (item.bloodTest.IsPregnant.ToString() == "N")
+                            {
+                                min = item.BOAComp.WomenMin;
+                                max = item.BOAComp.WomenMax;
+                            }
+                            else
+                            {
+                                min = item.BOAComp.PregnantMin;
+                                max = item.BOAComp.PregnantMax;
+                            }
+                        }
+                        <td><a asp-controller="Account" asp-action="TestInfo" dir="ltr">@item.BOAComp.BOA_Name</a></td>
+                        @if (value < min || value > max)
+                    {
+                            <td class="text-danger"><b>*@value</b></td>
+                        }
+                        else
+                        {
+                            <td>@item.btData.Value</td>
+                        }
+                        <td>@min-@max</td>
+                        double minMax = min + max;
+                        <td style="width: 212px; text-align: center; direction:ltr">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>שם הבדיקה</th>
-            <th>תוצאות הבדיקה</th>
-            <th>גבולות הבדיקה</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in ViewBag.UserTestResult)
-        {
+                            <div class="testRange" style="background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+Limit.png) no-repeat; background-position: center center;">
+                                <p style="right: -11%; width: 62px; text-align: left; min-width: 36px;">
+                                    <span class="LeftLimiter"></span>
+                                    <span class="Center">
+                                        @value
+                                    </span>
+                                    <span class="RightLimiter"></span>
+                                    <span class="clear-both;"></span>
+                                </p>
+                                <div class="rightLimit">
+                                    <span class="max" data-max="@max" style="font-weight: bold;">
+                                        @max
+                                    </span>
+                                </div>
+                                <div class="testRangeInner" data-value="@value">
+                                    <span dir="rtl">&nbsp;יחידות:&nbsp;@item.BOAComp.MeasurementUnit</span>
+                                </div>
+                                <div class="leftLimit">
+                                    <span class="min" data-min="@min" style="font-weight: bold;">
+                                        @min
+                                    </span>
+                                </div>
+                            </div>
 
 
-        }
-        <tr>
-            <td><a asp-controller="Account" asp-action="TestInfo" dir="ltr">Urea(B)</a></td>
-            <td class="text-danger"><b>24.2*</b></td>
-            <td>19-24</td>
-            <td>*|-----|</td>
-        </tr>
-        <tr class="danger">
-            <td><a asp-controller="Account" asp-action="TestInfo" dir="ltr">MCH</a></td>
-            <td>68.6</td>
-            <td>60-77</td>
-            <td>|--*--|</td>
-        </tr>
-        <tr>
-            <td><a asp-controller="Account" asp-action="TestInfo" dir="ltr">ARC</a></td>
-            <td>0.09</td>
-            <td>0-0.15</td>
-            <td>|-*---|</td>
-        </tr>
-    </tbody>
-</table>
+
+
+
+                            &nbsp;
+                        </td>
+                    }
+
+                </tr>
+                        }
+        </tbody>
+    </table>
+                        } else if(ViewBag.Message == "NoTests")
+                        {
+                            <h4>אין בדיקות דם זמינות למשתמש זה</h4>
+                        } else
+                        {
+                            <h3>אל תנסה, אתה לא תצליח!</h3>
+                        }
+
+
+<script>
+    $(document).ready(function () {
+        loadSliderStyles();
+    });
+    function loadSliderStyles() {
+        $('.testRange').each(function () {
+            var min = $(this).find('span.min').data('min');
+            var max = $(this).find('span.max').data('max');
+            var result = $(this).find('div.testRangeInner').data('value');
+            var slider_range = $(this).find('p');
+            var total_width = $(this).width();
+            var slider_range_width = slider_range.width();
+            var slider_range_percentage = (slider_range_width / 100) * total_width;
+            var percentage = (result / total_width) * 100;
+            var max_side = -16;
+            var position = percentage;
+
+            if (result > max) {
+
+                // ===================================================
+                // It's right mathematic calculation, but looks not
+                // good on the page.
+                // ===================================================
+
+                //  if (-position < max_side)
+                //      slider_range.css({ right: max_side + "%" });
+                //  else
+                //      slider_range.css({ right: -position + "%" });
+
+
+                slider_range.css({ right: "-11%", width: "62px", "text-align": "left" });
+                slider_range.css("min-width", "36px");
+                slider_range.addClass('OutOfRangeRight');
+            }
+            else if (result < min) {
+                // ===================================================
+                // It's right mathematic calculation, but looks not
+                // good on the page.
+                // ===================================================
+                //            if (-position < max_side)
+                //                slider_range.css({ left: max_side + "%" });
+                //            else
+                //                slider_range.css({ left: -position + "%" });
+                slider_range.css({ left: "-9.5%", width: "62px", "text-align": "right" });
+                slider_range.css("min-width", "36px");
+                slider_range.addClass('OutOfRangeLeft');
+                if (!$(slider_range).children().first().hasClass('RightLimiter')) {
+                    LeftLimiter = $(this).find('span.LeftLimiter');
+                    RightLimiter = $(this).find('span.RightLimiter');
+                    LeftLimiter.removeClass('LeftLimiter').addClass('RightLimiter');
+                    RightLimiter.removeClass('RightLimiter').addClass('LeftLimiter');
+                }
+            }
+            else {
+
+                var box_half_width = (slider_range_width / 2) + 4;
+                var a = 118 / (max - min);
+                var b = (result - min) * a;
+                b = b + 47 - box_half_width;
+
+                if (result < min)
+                    slider_range.css({ left: -1 + "px" });
+                else if (result > max)
+                    slider_range.css({ right: -1 + "%" });
+                else
+                    slider_range.css({ left: b + "px" });
+
+                slider_range.addClass('WithinRange');
+
+            }
+
+        });
+    }
+</script>

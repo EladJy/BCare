@@ -28,32 +28,44 @@ table tr {
     background-color: #ffffff;
 }
 table {
-    border: 1px solid #cc1a1c;
+
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
 }
+
 th {
     background-color: #cc1a1c;
     color: #ffffff;
 }
+table th:nth-child(1) {
+    border-radius: 0px 15px 0px 0px;
+}
 
-    table tr td {
-        border-right: 0;
-    }
+table th:nth-last-child(1) {
+    border-radius: 15px 0px 0px 0px;
+}
 
-    table tr:last-child td {
-        border-bottom: 0;
-    }
 
-    table tr td:first-child,
-    table tr th:first-child {
-        border-left: 0;
-    }
+/*.table td:last-child {
+    border-left: 1px solid #cc1a1c;
 
-    table tr td {
-        border-top: 0;
-    }
+}
+.table td:first-child {
+    border-right: 1px solid #cc1a1c;
+}*/
+
+.fixed-table-container {
+    border: 0px;
+}
+
+.table th {
+    border-bottom: none !important;
+}
+
+.table:last-child {
+    border: none !important;
+} 
 
 .main-login {
     background-color: #fff;
@@ -180,6 +192,235 @@ p.Login {
 .glyphicon {
     margin-left: 5px;
 }
+/*=============================
+    TEST
+  =============================*/
+
+.testRange .slider {
+    width: 200px;
+    height: 5px;
+    position: relative;
+    border: 1px solid #dddddd;
+    border-radius: 29%;
+}
+
+.testRange .slider-range {
+    position: absolute;
+    z-index: 2;
+    height: 1.2em;
+    width: 1.8em;
+    cursor: default;
+    border: 1px solid blue;
+    border-radius: 30%;
+    color: White;
+}
+
+.testRange .handle {
+    position: absolute;
+    z-index: 2;
+    height: 1.2em;
+    cursor: default;
+    border: 1px dashed red;
+    top: -6px;
+}
+
+.testRange .datum {
+    position: absolute;
+    top: 10px;
+    color: Red;
+}
+
+.testRange .left {
+    left: 5%;
+}
+
+.testRange .right {
+    right: 5%;
+}
+
+.testRange .units {
+    position: absolute;
+    top: 10px;
+    right: 70px;
+}
+
+.testRange span.labResult {
+    direction: ltr;
+    float: right;
+}
+
+.testRange .paddingRight {
+    padding-right: 70px;
+}
+
+
+
+.testRange {
+    width: 212px;
+    height: 40px;
+    margin: 3px 0 5px;
+    background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+Limit.png) center center no-repeat;
+    position: relative;
+}
+
+.testRangeInner {
+    width: 118px;
+    height: 40px;
+    float: right;
+}
+
+    .testRangeInner p {
+        position: absolute;
+        top: 10px;
+        padding: 3px 4px;
+        background-color: #133984;
+        border-radius: 5px;
+        color: #fff;
+        font: bold 14px/1 Arial;
+    }
+
+    .testRangeInner span {
+        position: absolute;
+        top: 35px;
+        left: 74px;
+        color: #666;
+        font: bold 11px/1 Arial !important;
+    }
+
+.rightLimit {
+    width: 47px;
+    height: 40px;
+    float: right; /*background: url(../images/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+testRangeLimitBg.png) top left no-repeat;*/
+}
+
+.leftLimit {
+    width: 47px;
+    height: 40px;
+    position: relative;
+    float: right; /*background: url(../images/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+testRangeLimitBg.png) top right no-repeat;*/
+}
+
+.testRange p {
+    position: absolute;
+    top: 3px;
+    padding: 3px 4px;
+    border-radius: 5px;
+    color: #fff;
+    font: bold 14px/1 Arial;
+    text-align: center;
+}
+
+    .testRange p span {
+        display: block;
+        color: #fff;
+        font: bold 14px/1 Arial !important;
+        text-align: center;
+        margin-top: 4px;
+    }
+
+.rightLimit span {
+    position: absolute;
+    top: 30px;
+    left: 180px;
+    color: #666;
+    font: 14px/1 Arial;
+}
+
+.leftLimit span {
+    position: absolute;
+    top: 30px;
+    right: 13px;
+    color: #666;
+    font: 14px/1 Arial;
+}
+
+    .leftLimit span.min, .leftLimit span.max {
+        font-weight: bold;
+    }
+
+.WithinRange {
+    height: 21px;
+    background-color: none;
+    top: -1px !important;
+}
+
+    .WithinRange .LeftLimiter {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+WithinLimitsLeft.png) center center no-repeat;
+        height: 21px;
+        width: 7px;
+        float: left;
+    }
+
+    .WithinRange .Center {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+WithinLimitsCenter.png) center center repeat-x;
+        height: 21px;
+        float: left;
+        min-width: 22px;
+        line-height: 23px !important;
+    }
+
+    .WithinRange .RightLimiter {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+WithinLimitsRight.png) center center no-repeat;
+        height: 21px;
+        width: 7px;
+        float: left;
+    }
+
+.OutOfRangeRight {
+    height: 21px;
+    background-color: none;
+    top: -1px !important;
+}
+
+    .OutOfRangeRight .LeftLimiter {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+OutOfLimitsLeft.png) center center no-repeat;
+        height: 21px;
+        width: 7px;
+        float: left;
+    }
+
+    .OutOfRangeRight .Center {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+OutOfLimitsCenter.png) center center repeat-x;
+        height: 21px;
+        float: left;
+        min-width: 22px;
+        line-height: 23px !important;
+    }
+
+    .OutOfRangeRight .RightLimiter {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+OutOfLimitsRight.png) center center no-repeat;
+        height: 21px;
+        width: 7px;
+        float: left;
+    }
+
+.OutOfRangeLeft {
+    height: 21px;
+    background-color: none;
+    top: -1px !important;
+}
+
+    .OutOfRangeLeft .LeftLimiter {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+OutOfLimitsLeft.png) center center no-repeat;
+        height: 21px;
+        width: 7px;
+        float: right;
+    }
+
+    .OutOfRangeLeft .Center {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+OutOfLimitsCenter.png) center center repeat-x;
+        height: 21px;
+        float: right;
+        min-width: 22px;
+        line-height: 23px !important;
+    }
+
+    .OutOfRangeLeft .RightLimiter {
+        background: url(https://online.maccabi4u.co.il/images/MedicalTests/,DanaInfo=.aoonlrjFtilmlnvG9Pt6S26+OutOfLimitsRight.png) center center no-repeat;
+        height: 21px;
+        width: 7px;
+        float: right;
+    }
 /*------------------------------
 =COMMENTS
 ------------------------------*/

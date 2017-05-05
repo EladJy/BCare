@@ -56,8 +56,21 @@ namespace BCare.Controllers
             if (cookie != null)
             {
                 ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
+                ViewBag.UserTestResult = context.GetTestResultByID(id);
+                if (ViewBag.UserTestResult.Count != 0)
+                {
+                    if(ViewBag.UserID == ViewBag.UserTestResult[0].user.UserID)
+                    {
+                        ViewBag.Message = "isCorrect";
+                    } else
+                    {
+                        ViewBag.Message = "ErrorID";
+                    }
+                } else
+                {
+                    ViewBag.Message = "NoTests";
+                }
             }
-            ViewBag.UserTestResult = context.GetTestResultByID(id);
             return View();
         }
 

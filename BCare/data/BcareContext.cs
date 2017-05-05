@@ -135,18 +135,51 @@ namespace BCare.data
             return i;
         }
 
-        public int CountTestsByID(int User_ID)
+        public long CountTestsByID(int User_ID)
         {
-            int i;
+            long count;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select Count (BTest_ID) from blood_test WHERE BUserID=@User_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(BTest_ID) FROM blood_test WHERE BUser_ID=@User_ID", conn);
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
-                i = Convert.ToInt32(cmd.ExecuteScalar());
+                count = Convert.ToInt64(cmd.ExecuteScalar());
                 conn.Close(); 
             }
-            return i;
+            return count;
+        }
+
+        public List<supplements_or_medication_info> TopFiveMedications()
+        {
+            List<supplements_or_medication_info> SOMIList = new List<supplements_or_medication_info>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM supplements_or_medication_info LIMIT 5", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
+                        Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
+                        Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
+                        SOMIList.Add(new supplements_or_medication_info()
+                        {
+                            SomID = reader.GetInt32("SOM_ID"),
+                            PharmID = reader.GetInt32("Pharm_ID"),
+                            SOMName = reader.GetString("SOM_Name"),
+                            ServingAmount= reader.GetInt32("Serving_Amount"),
+                            ProductCode= reader.GetString("Product_Code"),   
+                            CodeType = CT,                
+                            InHealthPlan = IHP,                 
+                            WithMedicalPrescription = WMP
+
+                    });
+                    }
+                }
+                conn.Close();
+            }
+            return SOMIList;
         }
 
         public List <health_maintenance_organizations> GetAllHMO()
@@ -319,20 +352,20 @@ namespace BCare.data
             return user;
         }
 
-        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd)
+        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string mail)
         {
             User user = new User();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                if ((firstName.Length == 0)||(lastName.Length==0))
+                if ((firstName.Length != 0)&&(lastName.Length!=0))
                 {
-                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @firstName, Last_Name = @lastName, Gender = @Gender, Birth_date=@birth, HMO_ID=@HMOID, Blood_Type=@bloodType, Address=@Address WHERE User_ID =@User_ID ", conn);
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address WHERE User_ID =@User_ID ", conn);
                     cmd.Parameters.AddWithValue("@User_ID", User_ID);
                     cmd.Parameters.AddWithValue("@First_Name", firstName);
                     cmd.Parameters.AddWithValue("@Last_Name", lastName);
                     cmd.Parameters.AddWithValue("@Gender", Gender);
-                    cmd.Parameters.AddWithValue("@Birth_Date", birth);
+                    cmd.Parameters.AddWithValue("@Birth_Date", Convert.ToDateTime(birth));
                     cmd.Parameters.AddWithValue("@HMO_ID", HMOID);
                     cmd.Parameters.AddWithValue("@Blood_Type", bloodType);
                     cmd.Parameters.AddWithValue("@Address", Address);
@@ -341,13 +374,14 @@ namespace BCare.data
                     var sha512 = SHA512.Create();
                     byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(pwd));
                     string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
-                    MySqlCommand cmd2 = new MySqlCommand("UPDATE premission_for_users SET User_Name = @userName, PW_Hash = @hashedPassword WHERE User_ID =@User_ID ", conn);
+                    MySqlCommand cmd2 = new MySqlCommand("UPDATE premission_for_users SET User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE User_ID =@User_ID ", conn);
                     cmd2.Parameters.AddWithValue("@User_ID", User_ID);
                     cmd2.Parameters.AddWithValue("@userName", userName);
                     cmd2.Parameters.AddWithValue("@hashedPassword", hashedPassword);
+                    cmd2.Parameters.AddWithValue("@Email", mail);
+                    cmd2.ExecuteNonQuery();
                 }
             }
-            //return user;
         }
 
         public List<BloodTestViewModel> GetTestResultByID(int testId)

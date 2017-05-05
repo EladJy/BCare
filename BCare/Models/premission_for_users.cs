@@ -14,6 +14,6 @@ namespace BCare.Models
         public string UserName { get; set; }
         //password
         public string PWHash { get; set; }
-
+        public string EMAIL { get; set; }
     }
 }

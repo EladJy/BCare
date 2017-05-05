@@ -291,39 +291,50 @@ namespace BCare.data
                     while (reader.Read())
                     {
                         BloodTestViewModel BTVM = new BloodTestViewModel();
-                        BTVM.user.UserID = reader.GetInt32("User_ID");
-                        BTVM.user.Address = reader.GetString("Address");
-                        BTVM.user.BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date"));
-                        BTVM.user.FirstName = reader.GetString("First_Name");
-                        BTVM.user.LastName = reader.GetString("Last_Name");
-                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
-                        BTVM.user.Gender = gender;
                         Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
-                        BTVM.user.BloodType = BT;
-                        BTVM.user.HMOID = reader.GetInt32("HMO_ID");
-
-                        BTVM.bloodTest.BTestID = reader.GetInt32("BTest_ID");
-                        BTVM.bloodTest.BUserID = reader.GetInt32("BUser_ID");
-                        BTVM.bloodTest.DoctorName = reader.GetString("Doctor_Name");
-                        BTVM.bloodTest.BTestDate = Convert.ToDateTime(reader.GetString("BTest_Date"));
+                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
+                        BTVM.user = new User()
+                        {
+                            UserID = reader.GetInt32("User_ID"),
+                            Address = reader.GetString("Address"),
+                            BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
+                            FirstName = reader.GetString("First_Name"),
+                            LastName = reader.GetString("Last_Name"),
+                            Gender = gender,
+                            BloodType = BT,
+                            HMOID = reader.GetInt32("HMO_ID")
+                        };
                         Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
-                        BTVM.bloodTest.IsPregnant = IP;
+                        BTVM.bloodTest = new blood_test()
+                        {
+                            BTestID = reader.GetInt32("BTest_ID"),
+                            BUserID = reader.GetInt32("BUser_ID"),
+                            DoctorName = reader.GetString("Doctor_Name"),
+                            BTestDate = Convert.ToDateTime(reader.GetString("BTest_Date")),
+                            IsPregnant = IP
+                        };
 
-                        BTVM.btData.BCompID = reader.GetInt32("BComp_ID");
-                        BTVM.btData.BTestID = reader.GetInt32("BTest_ID");
-                        BTVM.btData.Value = reader.GetDouble("Value");
 
-                        BTVM.BOAComp.BOA_ID = reader.GetInt32("BOA_ID");
-                        BTVM.BOAComp.BOA_Name = reader.GetString("BOA_Name");
-                        BTVM.BOAComp.info = reader.GetString("Info");
-                        BTVM.BOAComp.MeasurementUnit = reader.GetString("Measurement_Unit");
-                        BTVM.BOAComp.MenMax = reader.GetDouble("Men_Max");
-                        BTVM.BOAComp.MenMin = reader.GetDouble("Men_Min");
-                        BTVM.BOAComp.PregnantMax = reader.GetDouble("Pregnant_Max");
-                        BTVM.BOAComp.PregnantMin = reader.GetDouble("Pregnant_Min");
-                        BTVM.BOAComp.WomenMax = reader.GetDouble("Women_Max");
-                        BTVM.BOAComp.WomenMin = reader.GetDouble("Women_Min");
+                        BTVM.btData = new blood_test_data()
+                        {
+                            BCompID = reader.GetInt32("BComp_ID"),
+                            BTestID = reader.GetInt32("BTest_ID"),
+                            Value = reader.GetDouble("Value")
+                        };
 
+                        BTVM.BOAComp = new blood_or_additive_component()
+                        {
+                            BOA_ID = reader.GetInt32("BOA_ID"),
+                            BOA_Name = reader.GetString("BOA_Name"),
+                            //info = reader.GetString("Info"),
+                            MeasurementUnit = reader.GetString("Measurement_Unit"),
+                            MenMax = reader.GetDouble("Men_Max"),
+                            MenMin = reader.GetDouble("Men_Min"),
+                            PregnantMax = reader.GetDouble("Pregnant_Max"),
+                            PregnantMin = reader.GetDouble("Pregnant_Min"),
+                            WomenMax = reader.GetDouble("Women_Max"),
+                            WomenMin = reader.GetDouble("Women_Min")
+                        };
                         BTVMList.Add(BTVM);
                     }
                 }

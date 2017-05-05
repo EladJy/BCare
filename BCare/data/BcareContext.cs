@@ -279,20 +279,19 @@ namespace BCare.data
         }
 
         public List<BloodTestViewModel> GetTestResultByID(int testId)
-        {
-            BloodTestViewModel BTVM = new BloodTestViewModel();
+        {   
             List <BloodTestViewModel> BTVMList = new List <BloodTestViewModel>();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-
-                MySqlCommand cmd = new MySqlCommand("Select * FROM blood_test INNER JOIN blood_test_data INNER JOIN blood_or_additive_component INNER JOIN users WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_or_additive_component.BOA_ID and users.User_ID=blood_test.BUser_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        BTVM.user.UserID = reader.GetInt32("BUser_ID");
+                        BloodTestViewModel BTVM = new BloodTestViewModel();
+                        BTVM.user.UserID = reader.GetInt32("User_ID");
                         BTVM.user.Address = reader.GetString("Address");
                         BTVM.user.BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date"));
                         BTVM.user.FirstName = reader.GetString("First_Name");
@@ -305,7 +304,7 @@ namespace BCare.data
 
                         BTVM.bloodTest.BTestID = reader.GetInt32("BTest_ID");
                         BTVM.bloodTest.BUserID = reader.GetInt32("BUser_ID");
-                        //BTVM.bloodTest.DoctorName = reader.GetInt32("Doctor_Name");
+                        BTVM.bloodTest.DoctorName = reader.GetString("Doctor_Name");
                         BTVM.bloodTest.BTestDate = Convert.ToDateTime(reader.GetString("BTest_Date"));
                         Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
                         BTVM.bloodTest.IsPregnant = IP;

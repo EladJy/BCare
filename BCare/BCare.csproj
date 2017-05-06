@@ -11,6 +11,13 @@
   <ItemGroup>
     <Content Include="wwwroot\css\style.css" />
     <Content Include="wwwroot\images\logo.png" />
+    <Content Include="wwwroot\images\testRange\Limit.png" />
+    <Content Include="wwwroot\images\testRange\OutOfLimitsCenter.png" />
+    <Content Include="wwwroot\images\testRange\OutOfLimitsLeft.png" />
+    <Content Include="wwwroot\images\testRange\OutOfLimitsRight.png" />
+    <Content Include="wwwroot\images\testRange\WithinLimitsCenter.png" />
+    <Content Include="wwwroot\images\testRange\WithinLimitsLeft.png" />
+    <Content Include="wwwroot\images\testRange\WithinLimitsRight.png" />
     <Content Include="wwwroot\js\aside.js" />
     <Content Include="wwwroot\js\aside.min.js" />
   </ItemGroup>

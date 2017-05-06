@@ -10,28 +10,26 @@ namespace BCare.Models
     {
         [Key]
         //primary key
+        [Range(000100000, 999999999)]
         public int UserID { get; set; }
         //foreign key
         public int HMOID { get; set; }
+        [StringLength(15), Required]
         public string FirstName { get; set; }
-
+        [StringLength(15), Required]
         public string LastName { get; set; }
         //enum F\M
         public Gender Gender { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime BirthDate { get; set; }
         public BloodType BloodType { get; set; }
-
         public string Address { get; set; }
-
-
     }
     public enum Gender
     {
         M,
         F
     }
-
 
     public enum BloodType
     {
@@ -56,5 +54,4 @@ namespace BCare.Models
         [Display(Name = "Unknown")]
         Unknown
     }
-
 }

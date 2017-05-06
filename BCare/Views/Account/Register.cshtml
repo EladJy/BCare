@@ -38,11 +38,20 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group col-lg-12">
+                <label asp-for="pfu.Email" class="cols-sm-2 control-label">כתובת מייל</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="pfu.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" />
+                        <span asp-validation-for="pfu.Email"></span>
+                    </div>
+                </div>
+            </div>
             <div class="form-group col-lg-6">
                 <label asp-for="user.LastName" class="cols-sm-2 control-label">שם משפחה</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="user.LastName" name="Last_Name" type="text" class="form-control" tabindex="5" id="name" placeholder="הכנס שם משפחה" />
+                        <input asp-for="user.LastName" name="Last_Name" type="text" class="form-control" tabindex="6" id="name" placeholder="הכנס שם משפחה" />
                         <span asp-validation-for="user.LastName"></span>
                     </div>
                 </div>
@@ -51,7 +60,7 @@
                 <label asp-for="user.FirstName" class="cols-sm-2 control-label">שם פרטי</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="user.FirstName" name="First_Name" type="text" class="form-control" tabindex="4" id="name" placeholder="הכנס שם פרטי" />
+                        <input asp-for="user.FirstName" name="First_Name" type="text" class="form-control" tabindex="5" id="name" placeholder="הכנס שם פרטי" />
                         <span asp-validation-for="user.FirstName"></span>
                     </div>
                 </div>
@@ -69,7 +78,7 @@
                 <label asp-for="user.BirthDate" class="cols-sm-2 control-label">תאריך לידה</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="user.BirthDate" name="date" type="date" class="form-control" tabindex="8" id="name" placeholder="הכנס תאריך לידה" />
+                        <input asp-for="user.BirthDate" name="Birth_Date" type="date" class="form-control" tabindex="8" id="name" placeholder="הכנס תאריך לידה" />
                         <span asp-validation-for="user.BirthDate"></span>
                     </div>
                 </div>

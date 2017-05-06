@@ -35,10 +35,10 @@ namespace BCare.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, bool isDoctor)
+        public IActionResult Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, string Email, bool isDoctor)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            context.Register(User_ID, First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, username, password, isDoctor);
+            context.Register(User_ID, First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, username, password,Email, isDoctor);
             return RedirectToAction("Index","Home");
         }
 
@@ -82,7 +82,20 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            //context.getIdByUserName(cookie.Substring(10));
+            return View();
+        }
+
+        public IActionResult updateDetails()        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            var userDetails = context.GetUserDetailsByID(context.GetIDByUserName(cookie.Substring(10)));
+            return View(userDetails);
+        }
+        [HttpPost]
+        public IActionResult updateDetails(string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string password, string Email)
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+
             return View();
         }
     }

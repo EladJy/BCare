@@ -11,9 +11,20 @@ namespace BCare.Models
         public int PremID { get; set; }
         //primary key//foreign key
         public int UserID { get; set; }
+        public PremissionName PremissionType { get; set; }
         public string UserName { get; set; }
         //password
         public string PWHash { get; set; }
         public string Email { get; set; }
     }
+
+    public enum PremissionName
+    {
+        Anonym,
+        User,
+        Doctor,
+        Developer,
+        Admin
+
+    };
 }

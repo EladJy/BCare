@@ -71,9 +71,9 @@ namespace BCare.data
             return false;
         }
 
-        public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, bool isDoctor)
+        public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password,string email, bool isDoctor)
         {
-            int permissionID=1;
+            string permissionUser="Anonym";
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -91,14 +91,15 @@ namespace BCare.data
                 cmd.Parameters.Clear();
                
                 if (isDoctor==true)
-                    permissionID = 3;
+                    permissionUser = "Doctor";
                 else
-                    permissionID = 2;
+                    permissionUser = "User";
 
-                MySqlCommand cmd2 = new MySqlCommand("INSERT INTO premission_for_users VALUES (@Prem_ID, @User_ID, @User_Name, @PW_Hash)", conn);
-                cmd2.Parameters.AddWithValue("@Prem_ID", permissionID);
+                MySqlCommand cmd2 = new MySqlCommand("INSERT INTO premission_for_users VALUES (@Premission_Name, @User_ID, @User_Name, @PW_Hash,@Email)", conn);
+                cmd2.Parameters.AddWithValue("@Premission_Name", permissionUser);
                 cmd2.Parameters.AddWithValue("@User_ID", User_ID);
                 cmd2.Parameters.AddWithValue("@User_Name", username);
+                cmd2.Parameters.AddWithValue("@Email", email);
 
                 var sha512 = SHA512.Create();
                 byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -278,6 +279,7 @@ namespace BCare.data
 
         public int GetIDByUserName(string userName)
         {
+            int ID;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -286,9 +288,10 @@ namespace BCare.data
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     reader.Read();
-                    return reader.GetInt32("User_ID");
+                    ID = reader.GetInt32("User_ID");
                 }
                 conn.Close();
+                return ID;
             }
         }
 

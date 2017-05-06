@@ -337,7 +337,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(" FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -346,17 +346,22 @@ namespace BCare.data
                         BloodTestViewModel BTVM = new BloodTestViewModel();
                         Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
                         Enum.TryParse(reader.GetString("Gender"), out Gender gender);
-                        BTVM.user = new User()
+                        // Check NULL Values , works !
+                        if(reader["Address"] != DBNull.Value)
                         {
-                            UserID = reader.GetInt32("User_ID"),
-                            Address = reader.GetString("Address"),
-                            BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
-                            FirstName = reader.GetString("First_Name"),
-                            LastName = reader.GetString("Last_Name"),
-                            Gender = gender,
-                            BloodType = BT,
-                            HMOID = reader.GetInt32("HMO_ID")
-                        };
+                            BTVM.user = new User()
+                            {
+                                UserID = reader.GetInt32("User_ID"),
+                                Address = reader.GetString("Address"),
+                                BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
+                                FirstName = reader.GetString("First_Name"),
+                                LastName = reader.GetString("Last_Name"),
+                                Gender = gender,
+                                BloodType = BT,
+                                HMOID = reader.GetInt32("HMO_ID")
+                            };
+                        }
+
                         Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
                         BTVM.bloodTest = new blood_test()
                         {

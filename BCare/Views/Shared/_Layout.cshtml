@@ -61,38 +61,42 @@
         </div>
         @*Aside*@
         <aside class="col-md-3">
-            
+
             <header>
                 <h3>התחברות</h3>
             </header>
             <section>
 
                 @if (Context.Request.Cookies["Session"] == null)
-                    {
-                        <form asp-controller="Home" asp-action="Login" method="post">
+                {
+                    <form asp-controller="Home" asp-action="Login" method="post">
+                        <div>
+                            <div><b>שם משתמש</b></div>
                             <div>
-                                <div><b>שם משתמש</b></div>
-                                <div>
-                                    <div class="input-group">
-                                        <input type="text" placeholder="שם משתמש" name="username" required>
-                                    </div>
+                                <div class="input-group">
+                                    <input type="text" placeholder="שם משתמש" name="username" required>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <div><b>סיסמה</b></div>
                             <div>
-                                <div><b>סיסמה</b></div>
-                                <div>
-                                    <div class="input-group">
-                                        <input type="password" placeholder="סיסמה" name="password" required>
-                                    </div>
+                                <div class="input-group">
+                                    <input type="password" placeholder="סיסמה" name="password" required>
                                 </div>
                             </div>
-                                <button class="btn btn-danger" id="loginButton" type="submit">התחבר</button>
-                        </form>
-                    } else
-                    {
-                        <p>שלום, @Context.Request.Cookies["Session"].Substring(10)</p>
-                        <button class="btn btn-danger" id="loginButton" type="submit" onclick="location.href='@Url.Action("LogOut", "Home")'">התנתק</button>
-                    }
+                        </div>
+                        <button class="btn btn-danger" id="loginButton" type="submit">התחבר</button>
+                    </form>
+                    <div align="center">
+                        <a asp-controller="Account" asp-action="Register"><b>עדיין לא רשום? הירשם עכשו</b></a>
+                    </div>
+                }
+                else
+                {
+                    <p>שלום, @Context.Request.Cookies["Session"].Substring(10)</p>
+                    <button class="btn btn-danger" id="loginButton" type="submit" onclick="location.href='@Url.Action("LogOut", "Home")'">התנתק</button>
+                }
 
             </section>
             <header>
@@ -102,10 +106,15 @@
                 <p>שלום לכולם,</p><p>אתם אחלה אנשים שבעולם.</p>
             </section>
             <header>
-                <h3>בדיקה 1</h3>
+                <h3>5 התרופות הפופלריות</h3>
             </header>
             <section>
-בלה בלה
+                @for (int i = 0; i < 5; i++)
+                {
+                    <div>
+                        @(i + 1). <span class="top5 n-@i"></span>
+                    </div>
+                }
             </section>
         </aside>
     </div>
@@ -113,8 +122,8 @@
     <footer>
         <div>
             <section id="about">
-                <h3>About</h3>
-                <p>&copy Momlazim - 2016.</p>
+                <h3>אודות</h3>
+                <p>&copy BCare - 2017.</p>
             </section>
         </div>
     </footer>

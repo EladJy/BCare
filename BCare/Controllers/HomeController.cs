@@ -64,5 +64,13 @@ namespace BCare.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public JsonResult top5()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            var products = context.TopFiveMedications();
+            return Json(products);
+        }
     }
 }

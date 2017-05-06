@@ -150,21 +150,43 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
-                        Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
-                        Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
-                        SOMIList.Add(new supplements_or_medication_info()
+                        if(reader["Code_Type"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
                         {
-                            SomID = reader.GetInt32("SOM_ID"),
-                            PharmID = reader.GetInt32("Pharm_ID"),
-                            SOMName = reader.GetString("SOM_Name"),
-                            ServingAmount= reader.GetInt32("Serving_Amount"),
-                            ProductCode= reader.GetString("Product_Code"),   
-                            CodeType = CT,                
-                            InHealthPlan = IHP,                 
-                            WithMedicalPrescription = WMP
+                            Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
+                            Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
+                            Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
+                            Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
+                            SOMIList.Add(new supplements_or_medication_info()
+                            {
+                                SomID = reader.GetInt32("SOM_ID"),
+                                PharmID = reader.GetInt32("Pharm_ID"),
+                                SOMName = reader.GetString("SOM_Name"),
+                                ServingAmount = reader.GetInt32("Serving_Amount"),
+                                AmountType = AT,
+                                ProductCode = reader.GetString("Product_Code"),
+                                CodeType = CT,
+                                InHealthPlan = IHP,
+                                WithMedicalPrescription = WMP,
+                                ProductImageURL = reader.GetString("ProductImage_URL")
+                            });
+                        } else
+                        {
+                            Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
+                            Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
+                            Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
+                            SOMIList.Add(new supplements_or_medication_info()
+                            {
+                                SomID = reader.GetInt32("SOM_ID"),
+                                PharmID = reader.GetInt32("Pharm_ID"),
+                                SOMName = reader.GetString("SOM_Name"),
+                                ServingAmount = reader.GetInt32("Serving_Amount"),
+                                AmountType = AT,
+                                InHealthPlan = IHP,
+                                WithMedicalPrescription = WMP,
+                                ProductImageURL = reader.GetString("ProductImage_URL")
+                            });
+                        }
 
-                    });
                     }
                 }
                 conn.Close();
@@ -384,7 +406,7 @@ namespace BCare.data
                         {
                             BOA_ID = reader.GetInt32("BOA_ID"),
                             BOA_Name = reader.GetString("BOA_Name"),
-                            info = reader.GetString("Info"),
+                            //info = reader.GetString("Info"),
                             MeasurementUnit = reader.GetString("Measurement_Unit"),
                             MenMax = reader.GetDouble("Men_Max"),
                             MenMin = reader.GetDouble("Men_Min"),

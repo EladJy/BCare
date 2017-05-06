@@ -14,12 +14,21 @@ namespace BCare.Models
         public int PharmID { get; set; }
         public string SOMName { get; set; }
         public int ServingAmount { get; set; }
+        public AmountType AmountType { get; set; }
         public string ProductCode { get; set; }
-        public CodeType CodeType { get; set; }
+        public Nullable<CodeType> CodeType { get; set; }
         public InHealthPlan InHealthPlan { get; set; }
         public WithMedicalPrescription WithMedicalPrescription { get; set; }
+        public string ProductImageURL { get; set; }
     }
 
+    public enum AmountType
+    {
+        Liquid,
+        Powder,
+        Pill,
+        Spray
+    }
     public enum CodeType
     {
         [Display(Name = "UPC-A")]

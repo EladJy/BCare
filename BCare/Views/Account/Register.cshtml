@@ -4,135 +4,141 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+@if (Context.Request.Cookies["Session"] == null)
+{
+    <div class="main-login main-center col-md-8 col-lg-offset-2">
+        <form method="post" asp-controller="Account" asp-action="Register">
+            <div asp-validation-summary="ModelOnly"></div>
 
-<div class="main-login main-center col-md-8 col-lg-offset-2">
-    <form method="post" asp-controller="Account" asp-action="Register">
-        <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group col-lg-12">
+                <label asp-for="user.UserID" class="cols-sm-2 control-label">תעודת זהות</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="user.UserID" name="User_ID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" />
+                        <span asp-validation-for="user.UserID"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="pfu.PWHash" class="cols-sm-2 control-label">סיסמה</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="pfu.PWHash" name="password" type="password" class="form-control" tabindex="3" id="name" placeholder="הכנס סיסמה" />
+                        <span asp-validation-for="pfu.PWHash"></span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="form-group col-lg-12">
-            <label asp-for="user.UserID" class="cols-sm-2 control-label">תעודת זהות</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="user.UserID" name="User_ID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" />
-                    <span asp-validation-for="user.UserID"></span>
+            <div class="form-group col-lg-6">
+                <label asp-for="pfu.UserName" class="cols-sm-2 control-label">שם משתמש</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="pfu.UserName" name="username" type="text" class="form-control" tabindex="2" id="name" placeholder="הכנס שם משתמש" />
+                        <span asp-validation-for="pfu.UserName"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group col-lg-6">
-            <label asp-for="pfu.PWHash" class="cols-sm-2 control-label">סיסמה</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="pfu.PWHash" name="password" type="password" class="form-control" tabindex="3" id="name" placeholder="הכנס סיסמה" />
-                    <span asp-validation-for="pfu.PWHash"></span>
+            <div class="form-group col-lg-6">
+                <label asp-for="user.LastName" class="cols-sm-2 control-label">שם משפחה</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="user.LastName" name="Last_Name" type="text" class="form-control" tabindex="5" id="name" placeholder="הכנס שם משפחה" />
+                        <span asp-validation-for="user.LastName"></span>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="form-group col-lg-6">
+                <label asp-for="user.FirstName" class="cols-sm-2 control-label">שם פרטי</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="user.FirstName" name="First_Name" type="text" class="form-control" tabindex="4" id="name" placeholder="הכנס שם פרטי" />
+                        <span asp-validation-for="user.FirstName"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-12">
+                <label asp-for="user.Address" class="cols-sm-2 control-label">כתובת</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="user.Address" name="Address" type="text" class="form-control" tabindex="7" id="name" placeholder="הכנס כתובת" />
+                        <span asp-validation-for="user.Address"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-12">
+                <label asp-for="user.BirthDate" class="cols-sm-2 control-label">תאריך לידה</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <input asp-for="user.BirthDate" name="date" type="date" class="form-control" tabindex="8" id="name" placeholder="הכנס תאריך לידה" />
+                        <span asp-validation-for="user.BirthDate"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-4">
+                <label asp-for="isDoctor" class="cols-sm-2 control-label">דוקטור?</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        כן\לא: <input asp-for="isDoctor" type="checkbox" value="true" tabindex="12" name="isDoctor" />
+                        <span asp-validation-for="isDoctor"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-lg-4">
+                <label asp-for="hmo.HMOID" class="cols-sm-2 control-label">קופת חולים</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <select asp-for="hmo.HMOID" name="HMO_ID" tabindex="11" style="width:120px" required>
+                            @foreach (var item in ViewBag.ListHMO)
+                            {
+                                <option value="@item.HMOID">@item.HMOName</option>
 
-        <div class="form-group col-lg-6">
-            <label asp-for="pfu.UserName" class="cols-sm-2 control-label">שם משתמש</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="pfu.UserName" name="username" type="text" class="form-control" tabindex="2" id="name" placeholder="הכנס שם משתמש" />
-                    <span asp-validation-for="pfu.UserName"></span>
+                            }
+                        </select>
+                        <span asp-validation-for="hmo.HMOID"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group col-lg-6">
-            <label asp-for="user.LastName" class="cols-sm-2 control-label">שם משפחה</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="user.LastName" name="Last_Name" type="text" class="form-control" tabindex="5" id="name" placeholder="הכנס שם משפחה" />
-                    <span asp-validation-for="user.LastName"></span>
+            <div class="form-group col-lg-2">
+                <label asp-for="user.BloodType" class="cols-sm-2 control-label">סוג דם</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <select asp-for="user.BloodType" name="Blood_Type" tabindex="10" required>
+                            <option value="O+">O+</option>
+                            <option value="P-">P+</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="HH">HH</option>
+                            <option value="Unknown">לא ידוע</option>
+                            <!-- other options..... -->
+                        </select>
+                        <span asp-validation-for="user.BloodType"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group col-lg-6">
-            <label asp-for="user.FirstName" class="cols-sm-2 control-label">שם פרטי</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="user.FirstName" name="First_Name" type="text" class="form-control" tabindex="4" id="name" placeholder="הכנס שם פרטי" />
-                    <span asp-validation-for="user.FirstName"></span>
+            <div class="form-group col-lg-2">
+                <label asp-for="user.Gender" class="cols-sm-2 control-label">מין</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <select asp-for="user.Gender" name="Gender" tabindex="9" required>
+                            <option value="M">זכר</option>
+                            <option value="F">נקבה</option>
+                            <!-- other options..... -->
+                        </select>
+                        <span asp-validation-for="user.Gender"></span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group col-lg-12">
-            <label asp-for="user.Address" class="cols-sm-2 control-label">כתובת</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="user.Address" name="Address" type="text" class="form-control" tabindex="7" id="name" placeholder="הכנס כתובת" />
-                    <span asp-validation-for="user.Address"></span>
-                </div>
+            <div class="form-group ">
+                <button type="submit" class="btn btn-danger btn-lg btn-block login-button">הרשמה</button>
             </div>
-        </div>
-        <div class="form-group col-lg-12">
-            <label asp-for="user.BirthDate" class="cols-sm-2 control-label">תאריך לידה</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <input asp-for="user.BirthDate" name="date" type="date" class="form-control" tabindex="8" id="name" placeholder="הכנס תאריך לידה" />
-                    <span asp-validation-for="user.BirthDate"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="isDoctor" class="cols-sm-2 control-label">דוקטור?</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    כן\לא: <input asp-for="isDoctor" type="checkbox" value="true" tabindex="12" name="isDoctor" />
-                    <span asp-validation-for="isDoctor"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col-lg-4">
-            <label asp-for="hmo.HMOID" class="cols-sm-2 control-label">קופת חולים</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <select asp-for="hmo.HMOID" name="HMO_ID" tabindex="11" style="width:120px" required>
-                        @foreach (var item in ViewBag.ListHMO)
-                        {
-                            <option value="@item.HMOID">@item.HMOName</option>
-
-                        }
-                    </select>
-                    <span asp-validation-for="hmo.HMOID"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col-lg-2">
-            <label asp-for="user.BloodType" class="cols-sm-2 control-label">סוג דם</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <select asp-for="user.BloodType" name="Blood_Type" tabindex="10" required>
-                        <option value="O+">O+</option>
-                        <option value="P-">P+</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="HH">HH</option>
-                        <option value="Unknown">לא ידוע</option>
-                        <!-- other options..... -->
-                    </select>
-                    <span asp-validation-for="user.BloodType"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col-lg-2">
-            <label asp-for="user.Gender" class="cols-sm-2 control-label">מין</label>
-            <div class="cols-sm-10">
-                <div class="input-group">
-                    <select asp-for="user.Gender" name="Gender" tabindex="9" required>
-                        <option value="M">זכר</option>
-                        <option value="F">נקבה</option>
-                        <!-- other options..... -->
-                    </select>
-                    <span asp-validation-for="user.Gender"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group ">
-            <button type="submit" class="btn btn-danger btn-lg btn-block login-button">הרשמה</button>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+}
+else
+{
+    <p>אתה מחובר למערכת.</p>
+}

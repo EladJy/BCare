@@ -517,7 +517,7 @@ aside {
 ------------------------------*/
 footer {
     position: absolute;
-    left: 0;
+    right: 0;
     width: 100%;
     background: #222;
 }
@@ -525,10 +525,11 @@ footer {
         display: table;
         margin: 0 auto;
         padding: 15px 0;
-        width: 940px;
+        width: 80%;
         color: #777;
     }
         footer div section {
+            direction : rtl;
             display: table-cell;
             width: 300px;
         }
@@ -589,7 +590,7 @@ footer {
     box-sizing: border-box;
     width: 330px;
     max-width: 100%;
-    padding: 175px 0 30px;
+    padding: 175px 0 20px;
     margin: 0 0 1em 1em;
     position: relative;
     text-align: center;
@@ -620,11 +621,11 @@ footer {
 }
 
 .item-title {
-    font-size: 22px;
+    font-size: 18px;
     line-height: 1em;
     color: #555;
     font-weight: normal;
-    margin: 16px 0 0;
+    margin: 10px 0 0;
 }
 
 .item-description {

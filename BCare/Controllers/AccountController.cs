@@ -27,7 +27,11 @@ namespace BCare.Controllers
         public IActionResult Register()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            ViewBag.ListHMO = context.GetAllHMO();
+            String cookie = Request.Cookies["Session"];
+            if(cookie == null)
+            {
+                ViewBag.ListHMO = context.GetAllHMO();
+            }
             return View();
         }
         [HttpPost]
@@ -46,8 +50,7 @@ namespace BCare.Controllers
             {
                 ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
             }
-            ViewBag.UserBloodTest = context.GetUserTests(ViewBag.UserID);
-            return View();
+            return View(context.GetUserTests(ViewBag.UserID));
         }
 
         public IActionResult BloodTestResult(int id)

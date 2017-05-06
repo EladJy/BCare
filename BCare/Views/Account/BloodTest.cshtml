@@ -1,4 +1,4 @@
-﻿@model BCare.Models.blood_test
+﻿@model IEnumerable<BCare.Models.blood_test>
 @{
     ViewBag.Title = "הבדיקות שלי";
 }
@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in ViewBag.UserBloodTest)
+            @foreach (var item in Model)
             {
                 <tr>
                     <td>@item.BTestDate</td>

@@ -33,8 +33,6 @@ namespace BCare.Models
     }
 
 
-
-
     public enum BloodType
     {
         [Display(Name = "O+")]

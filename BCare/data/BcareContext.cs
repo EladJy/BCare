@@ -38,6 +38,7 @@ namespace BCare.data
                         });
                     }
                 }
+                conn.Close();
             }
 
             return users;
@@ -65,6 +66,7 @@ namespace BCare.data
                         }
                     }
                 }
+                conn.Close();
             }
             return false;
         }
@@ -72,18 +74,6 @@ namespace BCare.data
         public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, bool isDoctor)
         {
             int permissionID=1;
-            //int userId = GenerateAutoID();
-            // User newUser = new User()
-            //{
-            //    UserID = userId,
-            //    HMOID = HMOID,
-            //    FirstName = firstname,
-            //    LastName = lastname,
-            //    Gender = new Gender (),
-            //    BirthDate = Convert.ToDateTime(birhdate),
-            //    BloodType = new BloodType(),
-            //    Address = address
-            //};
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -117,8 +107,8 @@ namespace BCare.data
                 cmd2.Parameters.AddWithValue("@PW_Hash", hashedPassword);
                 cmd2.ExecuteNonQuery();
                 cmd2.Parameters.Clear();
+                conn.Close();
             }
-           // return newUser;
         }
 
         private int GenerateAutoID()
@@ -197,10 +187,10 @@ namespace BCare.data
                         {
                             HMOID = reader.GetInt32("HMO_ID"),
                             HMOName = reader.GetString("HMO_NAME")
-                            //BDocName = reader.GetString("BDoc_Name")
                         });
                     }
                 }
+                conn.Close();
             }
             return HMOList;
         }
@@ -223,63 +213,16 @@ namespace BCare.data
                             BTestID = reader.GetInt32("BTest_ID"),
                             BUserID = reader.GetInt32("BUser_ID"),
                             BTestDate = reader.GetDateTime("BTest_Date"),
-                            DoctorName = "אמירן גונקו",
+                            DoctorName = reader.GetString("Doctor_Name"),
                             IsPregnant = IP
-                            //BDocID = reader.GetInt32("Doctor_ID");
-
                         });
                     }
                 }
+                conn.Close();
             }
             return testsForUser;
         }
 
-        //public List<blood_component> GetTestResultByID (int testId)
-        //{
-        //    List<blood_test_data> bloodTestResult = new List<blood_test_data>();
-        //    List<blood_component> bloodComponents = new List<blood_component>();
-
-        //    using (MySqlConnection conn = GetConnection())
-        //    {
-        //        conn.Open();
-                
-        //        MySqlCommand cmd = new MySqlCommand("Select * from blood_test_data WHERE BTest_ID=@TestID", conn);
-        //        cmd.Parameters.AddWithValue("@TestID", testId);
-        //        using (MySqlDataReader reader = cmd.ExecuteReader())
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                bloodTestResult.Add(new blood_test_data()
-        //                {
-        //                    BTestID = reader.GetInt32("BTest_ID"),
-        //                    BCompID = reader.GetInt32("BComp_ID"),
-        //                    Value = reader.GetDouble("Value")
-        //                });
-        //            }
-        //        }
-
-        //        MySqlCommand cmd2 = new MySqlCommand("Select * FROM blood_component INNER JOIN blood_test_data WHERE blood_test_data.BTest_ID=@TestID and blood_test_data.BComp_ID=blood_component.BComp_ID", conn);
-        //        cmd2.Parameters.AddWithValue("@TestID", testId);
-        //        //MySqlCommand cmd2 = new MySqlCommand("Select * from blood_component", conn);
-        //        using (MySqlDataReader reader = cmd2.ExecuteReader())
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                bloodComponents.Add(new blood_component()
-        //                {
-        //                    BCompID = reader.GetInt32("BComp_ID"),
-        //                    BCompName = reader.GetString("BComp_Name"),
-        //                    MeasurementUnit = reader.GetString("Measurement_Unit"),
-        //                    MenMax = reader.GetDouble("Men_Max"),
-        //                    MenMin = reader.GetDouble("Men_Min"),
-        //                    WomenMax = reader.GetDouble("Women_Max"),
-        //                    WomenMin = reader.GetDouble("Women_Min")
-        //                });
-        //            }
-        //        }
-        //    }
-        //    return bloodComponents;
-        //}
 
         public void GetSOMByID(int SOM_ID)
         {
@@ -307,6 +250,7 @@ namespace BCare.data
                         SOMI.WithMedicalPrescription = WMP;
                     }
                 }
+                conn.Close();
             }
         }
 
@@ -322,6 +266,7 @@ namespace BCare.data
                     reader.Read();
                     return reader.GetInt32("User_ID");
                 }
+                conn.Close();
             }
         }
 
@@ -348,11 +293,12 @@ namespace BCare.data
                         user.HMOID = reader.GetInt32("HMO_ID");
                     }
                 }
+                conn.Close();
             }
             return user;
         }
 
-        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string mail)
+        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email)
         {
             User user = new User();
             using (MySqlConnection conn = GetConnection())
@@ -378,9 +324,10 @@ namespace BCare.data
                     cmd2.Parameters.AddWithValue("@User_ID", User_ID);
                     cmd2.Parameters.AddWithValue("@userName", userName);
                     cmd2.Parameters.AddWithValue("@hashedPassword", hashedPassword);
-                    cmd2.Parameters.AddWithValue("@Email", mail);
+                    cmd2.Parameters.AddWithValue("@Email", Email);
                     cmd2.ExecuteNonQuery();
                 }
+                conn.Close();
             }
         }
 
@@ -390,8 +337,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT blood_test.*,users.*,blood_test_data.*,blood_or_additive_component.BOA_ID,blood_or_additive_component.BOA_Name,blood_or_additive_component.Measurement_Unit,blood_or_additive_component.Men_Min,blood_or_additive_component.Men_Max,blood_or_additive_component.Women_Min,blood_or_additive_component.Women_Max,blood_or_additive_component.Pregnant_Min,blood_or_additive_component.Pregnant_Max,IFNULL(blood_or_additive_component.info,' ')as info" +
-                                    " FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
+                MySqlCommand cmd = new MySqlCommand(" FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -403,7 +349,7 @@ namespace BCare.data
                         BTVM.user = new User()
                         {
                             UserID = reader.GetInt32("User_ID"),
-                            //Address = reader.GetString("Address"),
+                            Address = reader.GetString("Address"),
                             BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
                             FirstName = reader.GetString("First_Name"),
                             LastName = reader.GetString("Last_Name"),
@@ -445,6 +391,7 @@ namespace BCare.data
                         BTVMList.Add(BTVM);
                     }
                 }
+                conn.Close();
             }
             return BTVMList;
         }

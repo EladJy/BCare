@@ -43,24 +43,25 @@ namespace BCare.data
 
             return users;
         }
-        public bool Login(string username , string password)
+        public bool Login(string username, string password)
         {
             User user = new User();
             using (MySqlConnection conn = GetConnection())
             {
-  
+
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM premission_for_users", conn);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        if(username.Equals(reader.GetString("User_Name")))
+                        if (username.Equals(reader.GetString("User_Name")))
                         {
                             var sha512 = SHA512.Create();
                             byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(password));
                             string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
-                            if (hashedPassword.Equals(reader.GetString("PW_Hash"))) {
+                            if (hashedPassword.Equals(reader.GetString("PW_Hash")))
+                            {
                                 return true;
                             }
                         }
@@ -71,9 +72,9 @@ namespace BCare.data
             return false;
         }
 
-        public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password,string email, bool isDoctor)
+        public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, string email, bool isDoctor)
         {
-            string permissionUser="Anonym";
+            string permissionUser = "Anonym";
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -89,8 +90,8 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@Address", Address);
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
-               
-                if (isDoctor==true)
+
+                if (isDoctor == true)
                     permissionUser = "Doctor";
                 else
                     permissionUser = "User";
@@ -104,7 +105,7 @@ namespace BCare.data
                 var sha512 = SHA512.Create();
                 byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(password));
                 string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
-                
+
                 cmd2.Parameters.AddWithValue("@PW_Hash", hashedPassword);
                 cmd2.ExecuteNonQuery();
                 cmd2.Parameters.Clear();
@@ -126,18 +127,28 @@ namespace BCare.data
             return i;
         }
 
-        public long CountTestsByID(int User_ID)
+        public blood_test GetBloodTestByID(int testID)
         {
-            long count;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(BTest_ID) FROM blood_test WHERE BUser_ID=@User_ID", conn);
-                cmd.Parameters.AddWithValue("@User_ID", User_ID);
-                count = Convert.ToInt64(cmd.ExecuteScalar());
-                conn.Close(); 
+                blood_test bt = new blood_test();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM blood_test WHERE BTest_ID=@BTest_ID", conn);
+                cmd.Parameters.AddWithValue("@BTest_ID", testID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
+                    bt.BTestID = reader.GetInt32("BTest_ID");
+                    bt.BUserID = reader.GetInt32("BUser_ID");
+                    bt.DoctorName = reader.GetString("Doctor_Name");
+                    bt.BTestDate = Convert.ToDateTime(reader.GetString("BTest_Date"));
+                    bt.IsPregnant = IP;
+                }
+                conn.Close();
+                return bt;
             }
-            return count;
+
         }
 
         public List<supplements_or_medication_info> TopFiveMedications()
@@ -151,7 +162,7 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        if(reader["Code_Type"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
+                        if (reader["Code_Type"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
                         {
                             Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
                             Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
@@ -170,7 +181,8 @@ namespace BCare.data
                                 WithMedicalPrescription = WMP,
                                 ProductImageURL = reader.GetString("ProductImage_URL")
                             });
-                        } else
+                        }
+                        else
                         {
                             Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
                             Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
@@ -195,7 +207,7 @@ namespace BCare.data
             return SOMIList;
         }
 
-        public List <health_maintenance_organizations> GetAllHMO()
+        public List<health_maintenance_organizations> GetAllHMO()
         {
             List<health_maintenance_organizations> HMOList = new List<health_maintenance_organizations>();
             using (MySqlConnection conn = GetConnection())
@@ -305,7 +317,8 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    while (reader.Read()) {  
+                    while (reader.Read())
+                    {
                         user.UserID = reader.GetInt32("User_ID");
                         user.FirstName = reader.GetString("First_Name");
                         user.LastName = reader.GetString("Last_Name");
@@ -329,7 +342,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                if ((firstName.Length != 0)&&(lastName.Length!=0))
+                if ((firstName.Length != 0) && (lastName.Length != 0))
                 {
                     MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address WHERE User_ID =@User_ID ", conn);
                     cmd.Parameters.AddWithValue("@User_ID", User_ID);
@@ -357,8 +370,8 @@ namespace BCare.data
         }
 
         public List<BloodTestViewModel> GetTestResultByID(int testId)
-        {   
-            List <BloodTestViewModel> BTVMList = new List <BloodTestViewModel>();
+        {
+            List<BloodTestViewModel> BTVMList = new List<BloodTestViewModel>();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -372,7 +385,7 @@ namespace BCare.data
                         Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
                         Enum.TryParse(reader.GetString("Gender"), out Gender gender);
                         // Check NULL Values , works !
-                        if(reader["Address"] != DBNull.Value)
+                        if (reader["Address"] != DBNull.Value)
                         {
                             BTVM.user = new User()
                             {

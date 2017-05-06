@@ -34,6 +34,10 @@ table {
     table-layout: fixed;
 }
 
+ul {
+    margin-top: 10px;
+}
+
 th {
     background-color: #cc1a1c;
     color: #ffffff;

@@ -92,7 +92,11 @@
                         }
         </tbody>
     </table>
-                        } else if(ViewBag.Message == "NoTests")
+    <div class="form-group ">
+        <button asp-controller="Account" onclick="location.href='@Url.Action("AnalyzeTest", "Account",new { id = ViewBag.UserTestResult[0].bloodTest.BTestID})'" class="btn btn-danger btn-lg btn-block login-button">ניתוח נתונים</button>
+    </div>
+                        }
+                        else if (ViewBag.Message == "NoTests")
                         {
                             <h4>אין בדיקות דם זמינות למשתמש זה</h4>
                         } else

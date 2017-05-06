@@ -14,9 +14,9 @@ namespace BCare.Models
         public int UserID { get; set; }
         //foreign key
         public int HMOID { get; set; }
-        [StringLength(15), Required]
+        [StringLength(50, MinimumLength = 2)]
         public string FirstName { get; set; }
-        [StringLength(15), Required]
+        [StringLength(50, MinimumLength = 2)]
         public string LastName { get; set; }
         //enum F\M
         public Gender Gender { get; set; }

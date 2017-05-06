@@ -14,7 +14,7 @@
                 <label asp-for="user.UserID" class="cols-sm-2 control-label">תעודת זהות</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="user.UserID" name="User_ID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" />
+                        <input asp-for="user.UserID" name="User_ID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" required />
                         <span asp-validation-for="user.UserID"></span>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                 <label asp-for="pfu.PWHash" class="cols-sm-2 control-label">סיסמה</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.PWHash" name="password" type="password" class="form-control" tabindex="3" id="name" placeholder="הכנס סיסמה" />
+                        <input asp-for="pfu.PWHash" name="password" type="password" class="form-control" tabindex="3" id="name" placeholder="הכנס סיסמה" required />
                         <span asp-validation-for="pfu.PWHash"></span>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                 <label asp-for="pfu.UserName" class="cols-sm-2 control-label">שם משתמש</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.UserName" name="username" type="text" class="form-control" tabindex="2" id="name" placeholder="הכנס שם משתמש" />
+                        <input asp-for="pfu.UserName" name="username" type="text" class="form-control" tabindex="2" id="name" placeholder="הכנס שם משתמש" required />
                         <span asp-validation-for="pfu.UserName"></span>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 <label asp-for="pfu.Email" class="cols-sm-2 control-label">כתובת מייל</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" />
+                        <input asp-for="pfu.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" required/>
                         <span asp-validation-for="pfu.Email"></span>
                     </div>
                 </div>

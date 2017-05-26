@@ -1,10 +1,10 @@
 ﻿@model BCare.Models.UserDetailViewModel
-@{
-    ViewBag.Title = "יצירת משתמש";
-}
+    @{
+        ViewBag.Title = "הבדיקות שלי";
+    }
 
-<h2>@ViewData["Title"]</h2>
-@if (Context.Request.Cookies["Session"] == null)
+    <h2>@ViewData["Title"]</h2>
+@if (Context.Request.Cookies["Session"] != null)
 {
     <div class="main-login main-center col-md-8 col-lg-offset-2">
         <form method="post" asp-controller="Account" asp-action="Register">
@@ -14,7 +14,7 @@
                 <label asp-for="user.UserID" class="cols-sm-2 control-label">תעודת זהות</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="user.UserID" name="User_ID" value="user.UserID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" required />
+                        <input asp-for="user.UserID" name="User_ID" value="user.userID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" required />
                         <span asp-validation-for="user.UserID"></span>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 <label asp-for="pfu.Email" class="cols-sm-2 control-label">כתובת מייל</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" required/>
+                        <input asp-for="pfu.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" required />
                         <span asp-validation-for="pfu.Email"></span>
                     </div>
                 </div>
@@ -149,5 +149,5 @@
 }
 else
 {
-    <p>אתה מחובר למערכת.</p>
+    <p>אתה מנותק כעת מהמערכת.</p>
 }

@@ -118,5 +118,14 @@ namespace BCare.Controllers
             String cookie = Request.Cookies["Session"];
             return View();
         }
+
+        public IActionResult Details()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            ViewBag.ListHMO = context.GetAllHMO();
+            UserDetailViewModel userDetails = context.GetUserDetailsByID(context.GetIDByUserName(cookie.Substring(10)));
+            return View(userDetails);
+        }
     }
 }

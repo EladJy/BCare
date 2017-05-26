@@ -7,8 +7,6 @@ namespace BCare.Models
 {
     public class premission_for_users
     {
-        //primary key
-        public int PremID { get; set; }
         //primary key//foreign key
         public int UserID { get; set; }
         public PremissionName PremissionType { get; set; }

@@ -307,33 +307,53 @@ namespace BCare.data
             }
         }
 
-        public User GetUserDetailsByID(int User_ID)
+        public UserDetailViewModel GetUserDetailsByID(int User_ID)
         {
-            User user = new User();
+            UserDetailViewModel userDetails = new UserDetailViewModel();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select * from users WHERE User_ID=@User_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM users INNER JOIN premission_for_users ON users.User_ID=premission_for_users.User_ID WHERE users.User_ID=@User_ID", conn);
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        user.UserID = reader.GetInt32("User_ID");
-                        user.FirstName = reader.GetString("First_Name");
-                        user.LastName = reader.GetString("Last_Name");
-                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
-                        user.Gender = gender;
-                        user.Address = reader.GetString("Address");
-                        user.BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date"));
                         Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
-                        user.BloodType = BT;
-                        user.HMOID = reader.GetInt32("HMO_ID");
+                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
+                        Enum.TryParse(reader.GetString("Premission_Name"), out PremissionName premissionName);
+                        userDetails.user = new User()
+                        {
+                            UserID = reader.GetInt32("User_ID"),
+                            FirstName = reader.GetString("First_Name"),
+                            LastName = reader.GetString("Last_Name"),
+                            Gender = gender,
+                            Address = reader.GetString("Address"),
+                            BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
+                            BloodType = BT,
+                            HMOID = reader.GetInt32("HMO_ID"),
+                        };
+                        userDetails.pfu = new premission_for_users()
+                        {
+                            UserID = reader.GetInt32("User_ID"),
+                            Email = reader.GetString("Email"),
+                            PremissionType = premissionName,
+                            PWHash = reader.GetString("PW_Hash"),
+                            UserName = reader.GetString("User_Name")
+                        };
+                    }
+                    if(userDetails.pfu.PremissionType.Equals("Doctor"))
+                    {
+                        userDetails.isDoctor = true;
+                    }
+                    else
+                    {
+                        userDetails.isDoctor = false;
                     }
                 }
                 conn.Close();
             }
-            return user;
+            return userDetails;
         }
 
         public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email)

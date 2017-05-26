@@ -21,7 +21,7 @@ namespace BCare.Controllers
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-
+            Models.GA.Population po = new Models.GA.Population();
             return View();
         }
 

@@ -50,6 +50,10 @@ table th:nth-last-child(1) {
     border-radius: 15px 0px 0px 0px;
 }
 
+#selectBT {
+    direction: ltr;
+}
+
 
 /*.table td:last-child {
     border-left: 1px solid #cc1a1c;

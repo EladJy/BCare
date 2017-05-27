@@ -241,7 +241,8 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT Premission_Name FROM users WHERE User_ID=userId", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT Premission_Name FROM users WHERE User_ID=@UserID", conn);
+                cmd.Parameters.AddWithValue("@userID", userId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     reader.Read();
@@ -387,7 +388,12 @@ namespace BCare.data
         {
             string permissionUser = "User";
             User user = new User();
-            using (MySqlConnection conn = GetConnection())
+            bool isAdministrator = isAdmin(User_ID);
+            if(isAdministrator)
+            {
+                permissionUser = "Admin";
+            }
+                using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
                 if ((firstName.Length != 0) && (lastName.Length != 0) && pwd != null)
@@ -401,7 +407,7 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@HMO_ID", HMOID);
                     cmd.Parameters.AddWithValue("@Blood_Type", bloodType);
                     cmd.Parameters.AddWithValue("@Address", Address);
-                    if (isDoctor == true)
+                    if (isDoctor == true && !isAdministrator)
                         permissionUser = "Doctor";
                     cmd.Parameters.AddWithValue("@permissionUser", permissionUser);
                     var sha512 = SHA512.Create();
@@ -424,7 +430,7 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@Address", Address);
                     cmd.Parameters.AddWithValue("@userName", userName);
                     cmd.Parameters.AddWithValue("@Email", Email);
-                    if (isDoctor == true)
+                    if (isDoctor == true && !isAdministrator)
                         permissionUser = "Doctor";
                     cmd.Parameters.AddWithValue("@permissionUser", permissionUser);
                     cmd.ExecuteNonQuery();

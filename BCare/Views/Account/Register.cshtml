@@ -111,7 +111,7 @@
                 <label asp-for="user.BloodType" class="cols-sm-2 control-label">סוג דם</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <select asp-for="user.BloodType" name="Blood_Type" tabindex="10" required>
+                        <select asp-for="user.BloodType" id="selectBT" name="Blood_Type" tabindex="10" required>
                             <option value="Oplus">O+</option>
                             <option value="Ominus">O-</option>
                             <option value="Aplus">A+</option>
@@ -121,7 +121,7 @@
                             <option value="ABplus">AB+</option>
                             <option value="ABminus">AB-</option>
                             <option value="HH">HH</option>
-                            <option value="Unknown">לא ידוע</option>
+                            <option value="Unknown">Unknown</option>
                             <!-- other options..... -->
                         </select>
                         <span asp-validation-for="user.BloodType"></span>

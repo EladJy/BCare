@@ -156,7 +156,7 @@ namespace BCare.data
                                 SomID = reader.GetInt32("SOM_ID"),
                                 PharmID = reader.GetInt32("Pharm_ID"),
                                 SOMName = reader.GetString("SOM_Name"),
-                                //ServingAmount = reader.GetInt32("Serving_Amount"),/
+                                //ServingAmount = reader.GetInt32("Serving_Amount"),
                                 //AmountType = AT,
                                 ProductCode = reader.GetString("Product_Code"),
                                 CodeType = CT,

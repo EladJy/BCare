@@ -13,7 +13,17 @@ namespace BCare.Models
         public int SomID { get; set; }
         public int MyProperty { get; set; }
         public Double Value { get; set; }
-        public string MeasurementUnit { get; set; }
-
+        public MeasurementUnit MeasurementUnit { get; set; }
+    }
+    public enum MeasurementUnit
+    {
+        gram,
+        milligram,
+        microgram,
+        units,
+        KU,
+        milliliter,
+        millimole,
+        NotInList
     }
 }

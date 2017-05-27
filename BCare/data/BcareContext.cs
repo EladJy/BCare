@@ -202,6 +202,7 @@ namespace BCare.data
         public List<health_maintenance_organizations> GetAllHMO()
         {
             List<health_maintenance_organizations> HMOList = new List<health_maintenance_organizations>();
+        
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -220,6 +221,64 @@ namespace BCare.data
                 conn.Close();
             }
             return HMOList;
+        }
+
+        public List <Tuple<string,int>> countUsersByBloodTypeStats()
+        {
+            List<Tuple<string, int>> countBloodType = new List<Tuple<string, int>>();
+
+            return countBloodType;
+        }
+
+        public List<presComment> getPrescriptionDetails(int presID)
+        {
+            List<presComment> commentsAndPres = new List<presComment>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT prescription.Pres_ID, rating, review_or_feedback.Text as review_text, prescription_details.Amount_To_Consume_Per_Day, prescription_details.Days_To_Consume, prescription_details.Text as pres_text , prescription.Recomendor_ID , prescription.Pres_Date, review_or_feedback.Review_Date , review_or_feedback.RFUser_ID FROM (review_or_feedback INNER JOIN prescription_details ON PDpres_ID = RFPres_ID) INNER JOIN prescription ON RFPres_ID=Pres_ID", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        commentsAndPres.Add(new presComment()
+                        {
+                            Pres_ID = reader.GetInt32("Pres_ID"),
+                            Rating = reader.GetInt32("rating"),
+                            review_text = reader.GetString("Text"),
+                            Amount_To_Consume_Per_Day = reader.GetInt32("Amount_To_Consume_Per_Day"),
+                            Days_To_Consume = reader.GetInt32("Days_To_Consume"),
+                            pres_text = reader.GetString("pres_text"),
+                            Recomender_ID = reader.GetInt32("Recomendor_ID"),
+                            Pres_Date = reader.GetDateTime("Pres_Date"),
+                            Review_Date = reader.GetDateTime("Review_Dates"),
+                            RFUser_ID = reader.GetInt32 ("RFUser_ID")
+                        });
+                    }
+                    conn.Close();
+                }
+            }
+            return commentsAndPres;
+        }
+
+        public List<Tuple<string,int>> countUsersByHMOStats()
+        {
+            List<Tuple<string, int>> countHMO = new List<Tuple<string, int>>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(User_ID),HMO_NAME FROM users INNER JOIN health_maintenance_organizations WHERE users.HMO_ID=health_maintenance_organizations.HMO_ID GROUP BY health_maintenance_organizations.HMO_ID ORDER BY COUNT(User_ID) DESC", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        countHMO.Add(Tuple.Create(reader.GetString("HMO_NAME"), reader.GetInt32("COUNT(User_ID)")));
+                    }
+                    conn.Close();
+                }
+            } 
+            return countHMO;
         }
 
         public long CountTestsByID(int User_ID)

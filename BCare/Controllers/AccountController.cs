@@ -17,7 +17,6 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             //context.Register(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod", "MashaG", "1234", false);
             //List<blood_test> BT = context.GetUserTests(34928267);
-            context.UpdateUserDetails(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "A+", "Abraham Ofer 11 Ashdod", "Shelly", "1234", "gunko@gmail.com");
             //List<BloodTestViewModel> BTD = context.GetTestResultByID(1);
             //long counter = context.CountTestsByID(304442254);
             //List<supplements_or_medication_info> SOMI = context.TopFiveMedications();
@@ -99,11 +98,11 @@ namespace BCare.Controllers
             return View(userDetails);
         }
         [HttpPost]
-        public IActionResult updateDetails(string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string userName, string password, string Email)
+        public IActionResult updateDetails(string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string userName, string password, string Email , bool isDoctor)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            context.UpdateUserDetails(context.GetIDByUserName(cookie.Substring(10)), First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, userName, password, Email);
+            context.UpdateUserDetails(context.GetIDByUserName(cookie.Substring(10)), First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, userName, password, Email, isDoctor);
             return RedirectToAction("Index", "Home");
         }
 

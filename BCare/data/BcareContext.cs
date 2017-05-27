@@ -74,7 +74,7 @@ namespace BCare.data
 
         public void Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, string email, bool isDoctor)
         {
-            string permissionUser = "Anonym";
+            string permissionUser = "User";
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -349,7 +349,7 @@ namespace BCare.data
                             UserName = reader.GetString("User_Name")
                         };
                     }
-                    if(userDetails.user.PremissionType.Equals("Doctor"))
+                    if(userDetails.user.PremissionType.ToString().Equals("Doctor"))
                     {
                         userDetails.isDoctor = true;
                     }
@@ -363,15 +363,16 @@ namespace BCare.data
             return userDetails;
         }
 
-        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email)
+        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email , bool isDoctor)
         {
+            string permissionUser = "User";
             User user = new User();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
                 if ((firstName.Length != 0) && (lastName.Length != 0) && pwd != null)
                 {
-                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address. User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE @UserID =users.User_ID ", conn);
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name,Premission_Name = @permissionUser , Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address. User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE @UserID =users.User_ID ", conn);
                     cmd.Parameters.AddWithValue("@UserID", User_ID);
                     cmd.Parameters.AddWithValue("@First_Name", firstName);
                     cmd.Parameters.AddWithValue("@Last_Name", lastName);
@@ -380,6 +381,9 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@HMO_ID", HMOID);
                     cmd.Parameters.AddWithValue("@Blood_Type", bloodType);
                     cmd.Parameters.AddWithValue("@Address", Address);
+                    if (isDoctor == true)
+                        permissionUser = "Doctor";
+                    cmd.Parameters.AddWithValue("@permissionUser", permissionUser);
                     var sha512 = SHA512.Create();
                     byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(pwd));
                     string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
@@ -389,7 +393,7 @@ namespace BCare.data
                     cmd.ExecuteNonQuery();
                 } else
                 {
-                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address, User_Name = @userName, Email = @Email WHERE @UserID =users.User_ID ", conn);
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name,Premission_Name = @permissionUser ,Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address, User_Name = @userName, Email = @Email WHERE @UserID =users.User_ID ", conn);
                     cmd.Parameters.AddWithValue("@UserID", User_ID);
                     cmd.Parameters.AddWithValue("@First_Name", firstName);
                     cmd.Parameters.AddWithValue("@Last_Name", lastName);
@@ -400,6 +404,9 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@Address", Address);
                     cmd.Parameters.AddWithValue("@userName", userName);
                     cmd.Parameters.AddWithValue("@Email", Email);
+                    if (isDoctor == true)
+                        permissionUser = "Doctor";
+                    cmd.Parameters.AddWithValue("@permissionUser", permissionUser);
                     cmd.ExecuteNonQuery();
                 }
                 conn.Close();

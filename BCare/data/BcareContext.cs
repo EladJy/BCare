@@ -281,7 +281,7 @@ namespace BCare.data
                         SOMI.SomID = reader.GetInt32("SOM_ID");
                         SOMI.PharmID = reader.GetInt32("Pharm_ID");
                         SOMI.SOMName = reader.GetString("SOM_NAME");
-                        //SOMI.ServingAmount = reader.GetInt32("Serving_Amount");
+                        SOMI.ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box");
                         SOMI.ProductCode = reader.GetString("Product_Code");
                         Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
                         SOMI.CodeType = CT;
@@ -289,6 +289,11 @@ namespace BCare.data
                         SOMI.InHealthPlan = IHP;
                         Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
                         SOMI.WithMedicalPrescription = WMP;
+                        SOMI.MoreInformation = reader.GetString("MoreInformation");
+                        Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
+                        SOMI.ServingFormType = ST;
+                        Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
+                        SOMI.ServingFormUnit = SU;
                     }
                 }
                 conn.Close();

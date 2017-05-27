@@ -125,8 +125,15 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
             ViewBag.ListHMO = context.GetAllHMO();
-            UserDetailViewModel userDetails = context.GetUserDetailsByID(context.GetIDByUserName(cookie.Substring(10)));
-            return View(userDetails);
+            if(cookie != null)
+            {
+                UserDetailViewModel userDetails = context.GetUserDetailsByID(context.GetIDByUserName(cookie.Substring(10)));
+                return View(userDetails);
+            } else
+            {
+                return View();
+            }
+            
         }
     }
 }

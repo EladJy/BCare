@@ -236,6 +236,26 @@ namespace BCare.data
                 return count;
         }
 
+        public bool isAdmin(int userId)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT Premission_Name FROM users WHERE User_ID=userId", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    Enum.TryParse(reader.GetString("Premission_Name"), out PremissionName PN);
+                    if (PN.ToString().Equals("Admin"))
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            }
+        }
+
         public List<blood_test> GetUserTests(int userId)
         {
             List<blood_test> testsForUser = new List<blood_test>();

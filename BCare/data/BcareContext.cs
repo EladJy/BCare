@@ -110,20 +110,6 @@ namespace BCare.data
             }
         }
 
-        private int GenerateAutoID()
-        {
-            int i;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select Count (User_ID) from users", conn);
-                i = Convert.ToInt32(cmd.ExecuteScalar());
-                conn.Close();
-                i++;
-            }
-            return i;
-        }
-
         public blood_test GetBloodTestByID(int testID)
         {
             using (MySqlConnection conn = GetConnection())

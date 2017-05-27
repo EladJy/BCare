@@ -15,12 +15,9 @@ namespace BCare.Models
         public double MenMin { get; set; }
         public double MenMax { get; set; }
         public double WomenMin { get; set; }
-      
         public double WomenMax { get; set; }
         public double PregnantMin { get; set; }
-
         public double PregnantMax { get; set; }
         public string info { get; set; }
-
     }
 }

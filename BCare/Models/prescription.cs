@@ -11,5 +11,6 @@ namespace BCare.Models
         public int PresID { get; set; }
         public int PBTestID { get; set; }
         public DateTime PresDate { get; set; }
+        public int RecommenderID { get; set; }
     }
 }

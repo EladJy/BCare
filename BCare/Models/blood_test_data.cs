@@ -12,6 +12,5 @@ namespace BCare.Models
         //primary key//foreign key
         public int BCompID { get; set; }
         public double Value { get; set; }
-
     }
 }

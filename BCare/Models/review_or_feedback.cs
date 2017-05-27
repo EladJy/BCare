@@ -7,8 +7,6 @@ namespace BCare.Models
 {
     public class review_or_feedback
     {
-
-
         //primary key
         public int RFUserID { get; set; }
         //foreign key //primary key
@@ -16,7 +14,6 @@ namespace BCare.Models
         //foreign key
         public int RFPresID { get; set; }
         public DateTime ReviewDate { get; set; }
-
         public Rating Rating { get; set; }
         public string Text { get; set; }
     }
@@ -33,8 +30,5 @@ namespace BCare.Models
         h = 8,
         i = 9,
         j = 10
-
     };
-
-
 }

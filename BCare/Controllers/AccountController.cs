@@ -14,10 +14,10 @@ namespace BCare.Controllers
         BcareContext context;
         public IActionResult Index()
         {
-            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            //context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             //context.Register(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "AB+", "Abraham Ofer 11 Ashdod", "MashaG", "1234", false);
             //List<blood_test> BT = context.GetUserTests(34928267);
-            context.UpdateUserDetails(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "A+", "Abraham Ofer 11 Ashdod", "Shelly", "1234", "gunko@gmail.com");
+            //context.UpdateUserDetails(319253365, "Maria", "Gunko", "F" , "06-01-1992",7, "A+", "Abraham Ofer 11 Ashdod", "Shelly", "1234", "gunko@gmail.com");
             //List<BloodTestViewModel> BTD = context.GetTestResultByID(1);
             //long counter = context.CountTestsByID(304442254);
             //List<supplements_or_medication_info> SOMI = context.TopFiveMedications();

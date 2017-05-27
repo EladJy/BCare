@@ -7,7 +7,6 @@ namespace BCare.Models
 {
     public class pharmaceutical_company
     {
-
         //primary key//foreign key
         public int PharmID { get; set; }
         public string PharmName { get; set; }

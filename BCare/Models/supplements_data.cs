@@ -8,10 +8,9 @@ namespace BCare.Models
     public class supplements_data
     {
         //primary key
-        public int AdtvID { get; set; }
+        public int BoaID { get; set; }
         //foreign key//primary key
         public int SomID { get; set; }
-        public int MyProperty { get; set; }
         public Double Value { get; set; }
         public MeasurementUnit MeasurementUnit { get; set; }
     }

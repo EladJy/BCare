@@ -13,5 +13,7 @@ namespace BCare.Models
         //primary key//foreign key
         public int PDSom_ID { get; set; }
         public int AmountToConsume { get; set; }
+        public int DaysToConsume { get; set; }
+        public string Text { get; set; }
     }
 }

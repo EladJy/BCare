@@ -145,10 +145,11 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        if (reader["Code_Type"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
+                        if (reader["MoreInformation"] != DBNull.Value && reader["ProductImage_URL"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
                         {
                             Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
-                            //Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
+                            Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
+                            Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
                             Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
                             Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
                             SOMIList.Add(new supplements_or_medication_info()
@@ -156,18 +157,22 @@ namespace BCare.data
                                 SomID = reader.GetInt32("SOM_ID"),
                                 PharmID = reader.GetInt32("Pharm_ID"),
                                 SOMName = reader.GetString("SOM_Name"),
-                                //ServingAmount = reader.GetInt32("Serving_Amount"),
-                                //AmountType = AT,
+                                ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
+                                ServingFormType = ST,
+                                ServingFormUnit = SU,
                                 ProductCode = reader.GetString("Product_Code"),
                                 CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
-                                //ProductImageURL = reader.GetString("ProductImage_URL")
+                                MoreInformation = reader.GetString("MoreInformation"),
+                                ProductImageURL = reader.GetString("ProductImage_URL")
                             });
                         }
                         else
                         {
-                            //Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
+                            Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
+                            Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
+                            Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
                             Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
                             Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
                             SOMIList.Add(new supplements_or_medication_info()
@@ -175,11 +180,15 @@ namespace BCare.data
                                 SomID = reader.GetInt32("SOM_ID"),
                                 PharmID = reader.GetInt32("Pharm_ID"),
                                 SOMName = reader.GetString("SOM_Name"),
-                                //ServingAmount = reader.GetInt32("Serving_Amount"),
-                                //AmountType = AT,
+                                ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
+                                ServingFormType = ST,
+                                ServingFormUnit = SU,
+                                CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
-                                ProductImageURL = reader.GetString("ProductImage_URL")
+                                ProductCode  = "abc",
+                                MoreInformation = "abc",
+                                ProductImageURL = "abc"
                             });
                         }
 

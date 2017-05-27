@@ -11,8 +11,6 @@ namespace BCare.Models
         public int MarketID { get; set; }
         //foreign key
         public int MSomID { get; set; }
-        public string Saller { get; set; }
-
         public double Price { get; set; }
     }
 }

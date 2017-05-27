@@ -213,6 +213,20 @@ namespace BCare.data
             return HMOList;
         }
 
+        public long CountTestsByID(int User_ID)
+        {
+            long count;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(BTest_ID) FROM blood_test WHERE BUser_ID=@User_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                count = Convert.ToInt64(cmd.ExecuteScalar());
+                conn.Close();
+            }
+                return count;
+        }
+
         public List<blood_test> GetUserTests(int userId)
         {
             List<blood_test> testsForUser = new List<blood_test>();

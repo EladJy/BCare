@@ -52,7 +52,7 @@ namespace BCare.Models
         [Display(Name = "O+")]
         Oplus,
         [Display(Name = "O-")]
-        Pminus,
+        Ominus,
         [Display(Name = "A+")]
         Aplus,
         [Display(Name = "A-")]

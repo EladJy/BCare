@@ -7,43 +7,43 @@
 @if (Context.Request.Cookies["Session"] != null)
 {
     <div class="main-login main-center col-md-8 col-lg-offset-2">
-        <form method="post" asp-controller="Account" asp-action="Register">
+        <form method="post" asp-controller="Account" asp-action="UpdateDetails">
             <div asp-validation-summary="ModelOnly"></div>
 
             <div class="form-group col-lg-12">
                 <label asp-for="user.UserID" class="cols-sm-2 control-label">תעודת זהות</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="user.UserID" name="User_ID" value="user.userID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" required />
+                        <input asp-for="user.UserID" name="User_ID" type="number" class="form-control" id="name" tabindex="1" placeholder="הכנס מספר תעודת זהות" required disabled />
                         <span asp-validation-for="user.UserID"></span>
                     </div>
                 </div>
             </div>
             <div class="form-group col-lg-6">
-                <label asp-for="pfu.PWHash" class="cols-sm-2 control-label">סיסמה</label>
+                <label asp-for="user.PWHash" class="cols-sm-2 control-label">סיסמה</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.PWHash" name="password" type="password" class="form-control" tabindex="3" id="name" placeholder="הכנס סיסמה" required />
-                        <span asp-validation-for="pfu.PWHash"></span>
+                        <input asp-for="user.PWHash" name="password" type="password" class="form-control" tabindex="3" id="name" placeholder="הכנס סיסמה" />
+                        <span asp-validation-for="user.PWHash"></span>
                     </div>
                 </div>
             </div>
 
             <div class="form-group col-lg-6">
-                <label asp-for="pfu.UserName" class="cols-sm-2 control-label">שם משתמש</label>
+                <label asp-for="user.UserName" class="cols-sm-2 control-label">שם משתמש</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.UserName" name="username" type="text" class="form-control" tabindex="2" id="name" placeholder="הכנס שם משתמש" required />
-                        <span asp-validation-for="pfu.UserName"></span>
+                        <input asp-for="user.UserName" name="username" type="text" class="form-control" tabindex="2" id="name" placeholder="הכנס שם משתמש" required />
+                        <span asp-validation-for="user.UserName"></span>
                     </div>
                 </div>
             </div>
             <div class="form-group col-lg-12">
-                <label asp-for="pfu.Email" class="cols-sm-2 control-label">כתובת מייל</label>
+                <label asp-for="user.Email" class="cols-sm-2 control-label">כתובת מייל</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <input asp-for="pfu.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" required />
-                        <span asp-validation-for="pfu.Email"></span>
+                        <input asp-for="user.Email" name="Email" type="email" class="form-control" id="name" tabindex="4" placeholder="הכנס כתובת מייל" required />
+                        <span asp-validation-for="user.Email"></span>
                     </div>
                 </div>
             </div>
@@ -93,17 +93,17 @@
                 </div>
             </div>
             <div class="form-group col-lg-4">
-                <label asp-for="hmo.HMOID" class="cols-sm-2 control-label">קופת חולים</label>
+                <label asp-for="user.HMOID" class="cols-sm-2 control-label">קופת חולים</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <select asp-for="hmo.HMOID" name="HMO_ID" tabindex="11" style="width:120px" required>
+                        <select asp-for="user.HMOID" name="HMO_ID" tabindex="11" style="width:120px" required>
                             @foreach (var item in ViewBag.ListHMO)
                             {
                                 <option value="@item.HMOID">@item.HMOName</option>
 
                             }
                         </select>
-                        <span asp-validation-for="hmo.HMOID"></span>
+                        <span asp-validation-for="user.HMOID"></span>
                     </div>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                 <label asp-for="user.BloodType" class="cols-sm-2 control-label">סוג דם</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
-                        <select asp-for="user.BloodType" name="Blood_Type" tabindex="10" required>
+                        <select asp-for="@Model.user.BloodType" name="Blood_Type" tabindex="10" required>
                             <option value="O+">O+</option>
                             <option value="P-">P+</option>
                             <option value="A+">A+</option>
@@ -142,7 +142,7 @@
                 </div>
             </div>
             <div class="form-group ">
-                <button type="submit" class="btn btn-danger btn-lg btn-block login-button">הרשמה</button>
+                <button type="submit" class="btn btn-danger btn-lg btn-block login-button">עדכון פרטים</button>
             </div>
         </form>
     </div>

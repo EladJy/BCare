@@ -99,11 +99,12 @@ namespace BCare.Controllers
             return View(userDetails);
         }
         [HttpPost]
-        public IActionResult updateDetails(string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string password, string Email)
+        public IActionResult updateDetails(string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string userName, string password, string Email)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-
-            return View();
+            String cookie = Request.Cookies["Session"];
+            context.UpdateUserDetails(context.GetIDByUserName(cookie.Substring(10)), First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, userName, password, Email);
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult AnalyzeTest(int id)

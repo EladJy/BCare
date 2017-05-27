@@ -50,7 +50,7 @@ namespace BCare.data
             {
 
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM premission_for_users", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM users", conn);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -78,7 +78,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO users VALUES (@User_ID, @First_Name, @Last_Name, @Gender, @Birth_Date, @HMO_ID, @Blood_Type, @Address) ", conn);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO users VALUES (@User_ID, @First_Name, @Last_Name, @Gender, @Birth_Date, @HMO_ID, @Blood_Type, @Address.@Premission_Name, @User_ID, @User_Name, @PW_Hash,@Email) ", conn);
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 cmd.Parameters.AddWithValue("@First_Name", First_Name);
                 cmd.Parameters.AddWithValue("@Last_Name", Last_Name);
@@ -88,27 +88,24 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@HMO_ID", HMO_ID);
                 cmd.Parameters.AddWithValue("@Blood_Type", Blood_Type);
                 cmd.Parameters.AddWithValue("@Address", Address);
-                cmd.ExecuteNonQuery();
-                cmd.Parameters.Clear();
 
                 if (isDoctor == true)
                     permissionUser = "Doctor";
                 else
                     permissionUser = "User";
 
-                MySqlCommand cmd2 = new MySqlCommand("INSERT INTO premission_for_users VALUES (@Premission_Name, @User_ID, @User_Name, @PW_Hash,@Email)", conn);
-                cmd2.Parameters.AddWithValue("@Premission_Name", permissionUser);
-                cmd2.Parameters.AddWithValue("@User_ID", User_ID);
-                cmd2.Parameters.AddWithValue("@User_Name", username);
-                cmd2.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Premission_Name", permissionUser);
+                cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                cmd.Parameters.AddWithValue("@User_Name", username);
+                cmd.Parameters.AddWithValue("@Email", email);
 
                 var sha512 = SHA512.Create();
                 byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(password));
                 string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
 
-                cmd2.Parameters.AddWithValue("@PW_Hash", hashedPassword);
-                cmd2.ExecuteNonQuery();
-                cmd2.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@PW_Hash", hashedPassword);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
                 conn.Close();
             }
         }
@@ -165,7 +162,7 @@ namespace BCare.data
                         if (reader["Code_Type"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
                         {
                             Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
-                            Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
+                            //Enum.TryParse(reader.GetString("Amount_Type"), out AmountType AT);
                             Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
                             Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
                             SOMIList.Add(new supplements_or_medication_info()
@@ -173,13 +170,13 @@ namespace BCare.data
                                 SomID = reader.GetInt32("SOM_ID"),
                                 PharmID = reader.GetInt32("Pharm_ID"),
                                 SOMName = reader.GetString("SOM_Name"),
-                                ServingAmount = reader.GetInt32("Serving_Amount"),
-                                AmountType = AT,
+                                //ServingAmount = reader.GetInt32("Serving_Amount"),
+                                //AmountType = AT,
                                 ProductCode = reader.GetString("Product_Code"),
                                 CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
-                                ProductImageURL = reader.GetString("ProductImage_URL")
+                                //ProductImageURL = reader.GetString("ProductImage_URL")
                             });
                         }
                         else
@@ -295,7 +292,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("Select * from premission_for_users WHERE User_Name=@User_Name", conn);
+                MySqlCommand cmd = new MySqlCommand("Select * from users WHERE User_Name=@User_Name", conn);
                 cmd.Parameters.AddWithValue("@User_Name", userName);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -313,7 +310,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM users INNER JOIN premission_for_users ON users.User_ID=premission_for_users.User_ID WHERE users.User_ID=@User_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM users WHERE users.User_ID=@User_ID", conn);
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -332,17 +329,13 @@ namespace BCare.data
                             BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
                             BloodType = BT,
                             HMOID = reader.GetInt32("HMO_ID"),
-                        };
-                        userDetails.pfu = new premission_for_users()
-                        {
-                            UserID = reader.GetInt32("User_ID"),
                             Email = reader.GetString("Email"),
                             PremissionType = premissionName,
                             PWHash = reader.GetString("PW_Hash"),
                             UserName = reader.GetString("User_Name")
                         };
                     }
-                    if(userDetails.pfu.PremissionType.Equals("Doctor"))
+                    if(userDetails.user.PremissionType.Equals("Doctor"))
                     {
                         userDetails.isDoctor = true;
                     }
@@ -362,10 +355,10 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                if ((firstName.Length != 0) && (lastName.Length != 0))
+                if ((firstName.Length != 0) && (lastName.Length != 0) && pwd != null)
                 {
-                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address WHERE User_ID =@User_ID ", conn);
-                    cmd.Parameters.AddWithValue("@User_ID", User_ID);
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address. User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE @UserID =users.User_ID ", conn);
+                    cmd.Parameters.AddWithValue("@UserID", User_ID);
                     cmd.Parameters.AddWithValue("@First_Name", firstName);
                     cmd.Parameters.AddWithValue("@Last_Name", lastName);
                     cmd.Parameters.AddWithValue("@Gender", Gender);
@@ -373,17 +366,27 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@HMO_ID", HMOID);
                     cmd.Parameters.AddWithValue("@Blood_Type", bloodType);
                     cmd.Parameters.AddWithValue("@Address", Address);
-                    cmd.ExecuteNonQuery();
-
                     var sha512 = SHA512.Create();
                     byte[] bytes = sha512.ComputeHash(Encoding.UTF8.GetBytes(pwd));
                     string hashedPassword = BitConverter.ToString(bytes).Replace("-", "");
-                    MySqlCommand cmd2 = new MySqlCommand("UPDATE premission_for_users SET User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE User_ID =@User_ID ", conn);
-                    cmd2.Parameters.AddWithValue("@User_ID", User_ID);
-                    cmd2.Parameters.AddWithValue("@userName", userName);
-                    cmd2.Parameters.AddWithValue("@hashedPassword", hashedPassword);
-                    cmd2.Parameters.AddWithValue("@Email", Email);
-                    cmd2.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@userName", userName);
+                    cmd.Parameters.AddWithValue("@hashedPassword", hashedPassword);
+                    cmd.Parameters.AddWithValue("@Email", Email);
+                    cmd.ExecuteNonQuery();
+                } else
+                {
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name, Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address, User_Name = @userName, Email = @Email WHERE @UserID =users.User_ID ", conn);
+                    cmd.Parameters.AddWithValue("@UserID", User_ID);
+                    cmd.Parameters.AddWithValue("@First_Name", firstName);
+                    cmd.Parameters.AddWithValue("@Last_Name", lastName);
+                    cmd.Parameters.AddWithValue("@Gender", Gender);
+                    cmd.Parameters.AddWithValue("@Birth_Date", Convert.ToDateTime(birth));
+                    cmd.Parameters.AddWithValue("@HMO_ID", HMOID);
+                    cmd.Parameters.AddWithValue("@Blood_Type", bloodType);
+                    cmd.Parameters.AddWithValue("@Address", Address);
+                    cmd.Parameters.AddWithValue("@userName", userName);
+                    cmd.Parameters.AddWithValue("@Email", Email);
+                    cmd.ExecuteNonQuery();
                 }
                 conn.Close();
             }

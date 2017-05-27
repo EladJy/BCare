@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BCare.Models
@@ -20,11 +21,26 @@ namespace BCare.Models
         public string LastName { get; set; }
         //enum F\M
         public Gender Gender { get; set; }
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
         public BloodType BloodType { get; set; }
         public string Address { get; set; }
+        public PremissionName PremissionType { get; set; }
+        public string UserName { get; set; }
+        //password
+        public string PWHash { get; set; }
+        public string Email { get; set; }
     }
+
+    public enum PremissionName
+    {
+        Anonym,
+        User,
+        Doctor,
+        Developer,
+        Admin
+
+    };
     public enum Gender
     {
         M,

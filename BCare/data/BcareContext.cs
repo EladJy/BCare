@@ -498,74 +498,67 @@ namespace BCare.data
             }
         }
 
-        public List<BloodTestViewModel> GetTestResultByID(int testId)
+        public BloodTestViewModel GetTestResultByID(int testId)
         {
-            List<BloodTestViewModel> BTVMList = new List<BloodTestViewModel>();
+            BloodTestViewModel BTVM = new BloodTestViewModel();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM (((blood_test INNER JOIN users ON blood_test.BUser_ID=users.User_ID) INNER JOIN blood_test_data ON blood_test_data.BTest_ID=blood_test.BTest_ID) INNER JOIN blood_or_additive_component ON blood_or_additive_component.BOA_ID=blood_test_data.BComp_ID) WHERE blood_test.BTest_ID=@TestID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT b.BUser_ID , b.Doctor_Name , b.BTest_Date , b.IsPregnant FROM blood_test b WHERE b.BTest_ID = @TestID", conn);
                 cmd.Parameters.AddWithValue("@TestID", testId);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        BloodTestViewModel BTVM = new BloodTestViewModel();
-                        Enum.TryParse(reader.GetString("Blood_Type"), out BloodType BT);
-                        Enum.TryParse(reader.GetString("Gender"), out Gender gender);
-                        // Check NULL Values , works !
-                        if (reader["Address"] != DBNull.Value)
+                        BTVM.User_ID = reader.GetInt32("BUser_ID");
+                        BTVM.Doctor_Name = reader.GetString("Doctor_Name");
+                        BTVM.BT_Date = reader.GetDateTime("BTest_Date");
+                        BTVM.IsPregnant = reader.GetString("IsPregnant");
+                    }
+                }
+                MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM blood_test_data btd INNER JOIN blood_or_additive_component boa ON btd.BComp_ID = boa.BOA_ID WHERE btd.BTest_ID = @TestID", conn);
+                cmd2.Parameters.AddWithValue("@TestID", testId);
+                using (MySqlDataReader reader = cmd2.ExecuteReader())
+                {
+                    BTVM.BTC = new List<BloodTestCompnentViewModel>();
+                    while (reader.Read())
+                    {
+                        BTVM.BTC.Add(new BloodTestCompnentViewModel
                         {
-                            BTVM.user = new User()
+                            btData = new blood_test_data
                             {
-                                UserID = reader.GetInt32("User_ID"),
-                                Address = reader.GetString("Address"),
-                                BirthDate = Convert.ToDateTime(reader.GetString("Birth_Date")),
-                                FirstName = reader.GetString("First_Name"),
-                                LastName = reader.GetString("Last_Name"),
-                                Gender = gender,
-                                BloodType = BT,
-                                HMOID = reader.GetInt32("HMO_ID")
-                            };
-                        }
-
-                        Enum.TryParse(reader.GetString("IsPregnant"), out IsPregnant IP);
-                        BTVM.bloodTest = new blood_test()
-                        {
-                            BTestID = reader.GetInt32("BTest_ID"),
-                            BUserID = reader.GetInt32("BUser_ID"),
-                            DoctorName = reader.GetString("Doctor_Name"),
-                            BTestDate = Convert.ToDateTime(reader.GetString("BTest_Date")),
-                            IsPregnant = IP
-                        };
-
-
-                        BTVM.btData = new blood_test_data()
-                        {
-                            BCompID = reader.GetInt32("BComp_ID"),
-                            BTestID = reader.GetInt32("BTest_ID"),
-                            Value = reader.GetDouble("Value")
-                        };
-
-                        BTVM.BOAComp = new blood_or_additive_component()
-                        {
-                            BOA_ID = reader.GetInt32("BOA_ID"),
-                            BOA_Name = reader.GetString("BOA_Name"),
-                            //info = reader.GetString("Info"),
-                            MeasurementUnit = reader.GetString("Measurement_Unit"),
-                            MenMax = reader.GetDouble("Men_Max"),
-                            MenMin = reader.GetDouble("Men_Min"),
-                            PregnantMax = reader.GetDouble("Pregnant_Max"),
-                            PregnantMin = reader.GetDouble("Pregnant_Min"),
-                            WomenMax = reader.GetDouble("Women_Max"),
-                            WomenMin = reader.GetDouble("Women_Min")
-                        };
-                        BTVMList.Add(BTVM);
+                                Value = reader.GetInt32("Value"),
+                                BCompID = reader.GetInt32("BComp_ID"),
+                                BTestID = reader.GetInt32("BTest_ID")
+                            },
+                            BOAComp = new blood_or_additive_component
+                            {
+                                BOA_ID = reader.GetInt32("BOA_ID"),
+                                BOA_Name = reader.GetString("BOA_Name"),
+                                //info = reader.GetString("Info"),
+                                MeasurementUnit = reader.GetString("Measurement_Unit"),
+                                MenMax = reader.GetInt32("Men_Max"),
+                                MenMin = reader.GetInt32("Men_Min"),
+                                PregnantMax = reader.GetInt32("Pregnant_Max"),
+                                PregnantMin = reader.GetInt32("Pregnant_Min"),
+                                WomenMax = reader.GetInt32("Women_Max"),
+                                WomenMin = reader.GetInt32("Women_Min"),
+                            }
+                        });
+                    }
+                }
+                MySqlCommand cmd3 = new MySqlCommand("SELECT u.Gender FROM users u WHERE u.User_ID = @User_ID", conn);
+                cmd3.Parameters.AddWithValue("@User_ID", BTVM.User_ID);
+                using (MySqlDataReader reader = cmd3.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        BTVM.UserGender = reader.GetString("Gender");
                     }
                 }
                 conn.Close();
             }
-            return BTVMList;
+            return BTVM;
         }
     }
 }

@@ -7,8 +7,8 @@
 
 @if (ViewBag.Message == "isCorrect")
 {
-<h4><b>תוצאות הפניה שבוצעה בתאריך @ViewBag.UserTestResult[0].bloodTest.BTestDate</b></h4>
-<p><b>שם הרופא: </b>@ViewBag.UserTestResult[0].bloodTest.DoctorName</p>
+<h4><b>תוצאות הפניה שבוצעה בתאריך @Model.BT_Date :</b></h4>
+<p><b>שם הרופא: </b>@Model.Doctor_Name</p>
     <table class="table">
         <thead>
             <tr>
@@ -19,20 +19,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in ViewBag.UserTestResult)
+            @foreach (var item in Model.BTC)
             {
                 <tr>
                     @{
                         double min = 0, max = 0;
                         double value = item.btData.Value;
-                        if (item.user.Gender.ToString() == "M")
+                        if (Model.UserGender.Equals("M"))
                         {
                             min = item.BOAComp.MenMin;
                             max = item.BOAComp.MenMax;
                         }
-                        else if (item.user.Gender.ToString() == "F")
+                        else if (Model.UserGender.Equals("F"))
                         {
-                            if (item.bloodTest.IsPregnant.ToString() == "N")
+                            if (Model.IsPregnant.Equals("N"))
                             {
                                 min = item.BOAComp.WomenMin;
                                 max = item.BOAComp.WomenMax;
@@ -79,11 +79,6 @@
                                     </span>
                                 </div>
                             </div>
-
-
-
-
-
                             &nbsp;
                         </td>
                     }
@@ -93,7 +88,7 @@
         </tbody>
     </table>
     <div class="form-group ">
-        <button asp-controller="Account" onclick="location.href='@Url.Action("AnalyzeTest", "Account",new { id = ViewBag.UserTestResult[0].bloodTest.BTestID})'" class="btn btn-danger btn-lg btn-block login-button">ניתוח נתונים</button>
+        <button asp-controller="Account" onclick="location.href='@Url.Action("AnalyzeTest", "Account",new { id = ViewContext.RouteData.Values["id"]})'" class="btn btn-danger btn-lg btn-block login-button">ניתוח נתונים</button>
     </div>
                         }
                         else if (ViewBag.Message == "NoTests")

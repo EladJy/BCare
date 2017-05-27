@@ -94,7 +94,7 @@
                 }
                 else
                 {
-                    <p>שלום, @Context.Request.Cookies["Session"].Substring(10)</p>
+                    <p>שלום, @Context.Request.Cookies["UserName"]</p>
                     <button class="btn btn-danger" id="loginButton" type="submit" onclick="location.href='@Url.Action("LogOut", "Home")'">התנתק</button>
                 }
 

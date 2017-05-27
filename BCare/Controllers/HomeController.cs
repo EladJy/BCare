@@ -40,7 +40,8 @@ namespace BCare.Controllers
             {
                 CookieOptions options = new CookieOptions();
                 options.Expires = DateTime.Now.AddDays(30);
-                Response.Cookies.Append("Session", RandomString(10) + username, options);
+                Response.Cookies.Append("Session", RandomString(10) + context.GetIDByUserName(username) , options);
+                Response.Cookies.Append("UserName", username , options);
             }
             return RedirectToAction("Index");
 

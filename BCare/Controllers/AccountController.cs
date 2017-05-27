@@ -12,6 +12,8 @@ namespace BCare.Controllers
     public class AccountController : Controller
     {
         BcareContext context;
+
+        
         public IActionResult Index()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
@@ -49,7 +51,7 @@ namespace BCare.Controllers
             String cookie = Request.Cookies["Session"];
             if (cookie != null)
             {
-                ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
+                ViewBag.UserID = Int32.Parse(cookie.Substring(10));
             }
             return View(context.GetUserTests(ViewBag.UserID));
         }
@@ -60,11 +62,11 @@ namespace BCare.Controllers
             String cookie = Request.Cookies["Session"];
             if (cookie != null)
             {
-                ViewBag.UserID = context.GetIDByUserName(cookie.Substring(10));
+                ViewBag.UserID = Int32.Parse(cookie.Substring(10));
                 ViewBag.UserTestResult = context.GetTestResultByID(id);
-                if (ViewBag.UserTestResult.Count != 0)
+                if (ViewBag.UserTestResult.BTC.Count != 0)
                 {
-                    if(ViewBag.UserID == ViewBag.UserTestResult[0].user.UserID)
+                    if(ViewBag.UserID == ViewBag.UserTestResult.User_ID)
                     {
                         ViewBag.Message = "isCorrect";
                     } else
@@ -76,7 +78,7 @@ namespace BCare.Controllers
                     ViewBag.Message = "NoTests";
                 }
             }
-            return View();
+            return View(ViewBag.UserTestResult);
         }
 
         public IActionResult AddBloodTest()
@@ -96,7 +98,7 @@ namespace BCare.Controllers
         public IActionResult UpdateDetails()        {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            var userDetails = context.GetUserDetailsByID(context.GetIDByUserName(cookie.Substring(10)));
+            var userDetails = context.GetUserDetailsByID(Int32.Parse(cookie.Substring(10)));
             return View(userDetails);
         }
         [HttpPost]
@@ -104,7 +106,7 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            context.UpdateUserDetails(context.GetIDByUserName(cookie.Substring(10)), First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, userName, password, Email, isDoctor);
+            context.UpdateUserDetails(Int32.Parse(cookie.Substring(10)), First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, userName, password, Email, isDoctor);
             return RedirectToAction("Index", "Home");
         }
 
@@ -128,7 +130,7 @@ namespace BCare.Controllers
             ViewBag.ListHMO = context.GetAllHMO();
             if(cookie != null)
             {
-                UserDetailViewModel userDetails = context.GetUserDetailsByID(context.GetIDByUserName(cookie.Substring(10)));
+                UserDetailViewModel userDetails = context.GetUserDetailsByID(Int32.Parse(cookie.Substring(10)));
                 return View(userDetails);
             } else
             {

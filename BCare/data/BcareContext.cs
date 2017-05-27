@@ -186,7 +186,7 @@ namespace BCare.data
                                 CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
-                                ProductCode  = "abc",
+                                ProductCode = "abc",
                                 MoreInformation = "abc",
                                 ProductImageURL = "abc"
                             });
@@ -202,7 +202,7 @@ namespace BCare.data
         public List<health_maintenance_organizations> GetAllHMO()
         {
             List<health_maintenance_organizations> HMOList = new List<health_maintenance_organizations>();
-        
+
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -223,45 +223,97 @@ namespace BCare.data
             return HMOList;
         }
 
-        public List <Tuple<string,int>> countUsersByBloodTypeStats()
+        public List<Tuple<string, int>> countUsersByBloodTypeStats()
         {
             List<Tuple<string, int>> countBloodType = new List<Tuple<string, int>>();
 
             return countBloodType;
         }
 
-        public List<presComment> getPrescriptionDetails(int presID)
+        public presCommentViewModel getPrescriptionDetails(int presID)
         {
-            List<presComment> commentsAndPres = new List<presComment>();
+            presCommentViewModel commentsAndPres = new presCommentViewModel();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT prescription.Pres_ID, rating, review_or_feedback.Text as review_text, prescription_details.Amount_To_Consume_Per_Day, prescription_details.Days_To_Consume, prescription_details.Text as pres_text , prescription.Recomendor_ID , prescription.Pres_Date, review_or_feedback.Review_Date , review_or_feedback.RFUser_ID FROM (review_or_feedback INNER JOIN prescription_details ON PDpres_ID = RFPres_ID) INNER JOIN prescription ON RFPres_ID=Pres_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT p.Pres_Date FROM prescription p where p.Pres_ID = @Pres_ID", conn);
+                cmd.Parameters.AddWithValue("@Pres_ID", presID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        commentsAndPres.Add(new presComment()
+                        commentsAndPres.Pres_Date = reader.GetDateTime("Pres_Date");
+                    }
+
+                }
+                MySqlCommand cmd2 = new MySqlCommand("SELECT * FROM prescription_details pd INNER JOIN supplements_or_medication_info somi ON pd.PDSOM_ID = somi.SOM_ID where pd.PDPres_ID = @Pres_ID", conn);
+                cmd2.Parameters.AddWithValue("@Pres_ID", presID);
+                using (MySqlDataReader reader = cmd2.ExecuteReader())
+                {
+                    commentsAndPres.somcList = new List<SOMConsumeViewModel>();
+
+                    while (reader.Read())
+                    {
+                        Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
+                        Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
+                        Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
+                        Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
+                        Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
+                        commentsAndPres.somcList.Add(new SOMConsumeViewModel
                         {
-                            Pres_ID = reader.GetInt32("Pres_ID"),
-                            Rating = reader.GetInt32("rating"),
-                            review_text = reader.GetString("Text"),
-                            Amount_To_Consume_Per_Day = reader.GetInt32("Amount_To_Consume_Per_Day"),
-                            Days_To_Consume = reader.GetInt32("Days_To_Consume"),
-                            pres_text = reader.GetString("pres_text"),
-                            Recomender_ID = reader.GetInt32("Recomendor_ID"),
-                            Pres_Date = reader.GetDateTime("Pres_Date"),
-                            Review_Date = reader.GetDateTime("Review_Dates"),
-                            RFUser_ID = reader.GetInt32 ("RFUser_ID")
+                            pres = new prescription_details
+                            {
+                                AmountToConsume = reader.GetInt32("Amount_To_Consume_Per_Day"),
+                                DaysToConsume = reader.GetInt32("Days_To_Consume"),
+                                PDPresID = reader.GetInt32("PDPres_ID"),
+                                PDSom_ID = reader.GetInt32("PDSOM_ID"),
+                                Text = reader.GetString("Text")
+                            },
+
+                            SOMI = new supplements_or_medication_info
+                            {
+                                SomID = reader.GetInt32("SOM_ID"),
+                                PharmID = reader.GetInt32("Pharm_ID"),
+                                SOMName = reader.GetString("SOM_Name"),
+                                ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
+                                ServingFormType = ST,
+                                ServingFormUnit = SU,
+                                CodeType = CT,
+                                InHealthPlan = IHP,
+                                WithMedicalPrescription = WMP,
+                                ProductCode = reader.GetString("Product_Code"),
+                                MoreInformation = reader.GetString("MoreInformation"),
+                                ProductImageURL = reader.GetString("ProductImage_URL")
+                            }
                         });
                     }
-                    conn.Close();
                 }
+                MySqlCommand cmd3 = new MySqlCommand("SELECT * FROM review_or_feedback rof WHERE rof.RFPres_ID = @Pres_ID", conn);
+                cmd3.Parameters.AddWithValue("@Pres_ID", presID);
+                using (MySqlDataReader reader = cmd3.ExecuteReader())
+                {
+                    commentsAndPres.rofList = new List<review_or_feedback>();
+                    while (reader.Read())
+                    {
+                        Enum.TryParse(reader.GetString("rating"), out Rating rate);
+                        commentsAndPres.rofList.Add(new review_or_feedback
+                        {
+                            Rating = rate,
+                            ReviewDate = reader.GetDateTime("Review_Date"),
+                            RFPresID = reader.GetInt32("RFPres_ID"),
+                            RFSomID = reader.GetInt32("RFSOM_ID"),
+                            RFUserID = reader.GetInt32("RFUser_ID"),
+                            Text = reader.GetString("Text")
+                        });
+                    }
+
+                }
+                conn.Close();
             }
             return commentsAndPres;
         }
 
-        public List<Tuple<string,int>> countUsersByHMOStats()
+        public List<Tuple<string, int>> countUsersByHMOStats()
         {
             List<Tuple<string, int>> countHMO = new List<Tuple<string, int>>();
 
@@ -277,7 +329,7 @@ namespace BCare.data
                     }
                     conn.Close();
                 }
-            } 
+            }
             return countHMO;
         }
 
@@ -292,7 +344,7 @@ namespace BCare.data
                 count = Convert.ToInt64(cmd.ExecuteScalar());
                 conn.Close();
             }
-                return count;
+            return count;
         }
 
         public bool isAdmin(int userId)
@@ -380,6 +432,24 @@ namespace BCare.data
             }
         }
 
+        public string GetUserNameByID(int id)
+        {
+            string userName;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select User_Name from users WHERE User_ID=@User_Name", conn);
+                cmd.Parameters.AddWithValue("@User_ID", id);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    userName = reader.GetString("User_Name");
+                }
+                conn.Close();
+                return userName;
+            }
+        }
+
         public int GetIDByUserName(string userName)
         {
             int ID;
@@ -392,6 +462,24 @@ namespace BCare.data
                 {
                     reader.Read();
                     ID = reader.GetInt32("User_ID");
+                }
+                conn.Close();
+                return ID;
+            }
+        }
+
+        public int GetPresByBloodTest(int bloodTestID)
+        {
+            int ID;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Select Pres_ID from prescription WHERE PBTest_ID=@PBTest_ID", conn);
+                cmd.Parameters.AddWithValue("@PBTest_ID", bloodTestID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    ID = reader.GetInt32("Pres_ID");
                 }
                 conn.Close();
                 return ID;
@@ -429,7 +517,7 @@ namespace BCare.data
                             UserName = reader.GetString("User_Name")
                         };
                     }
-                    if(userDetails.user.PremissionType.ToString().Equals("Doctor"))
+                    if (userDetails.user.PremissionType.ToString().Equals("Doctor"))
                     {
                         userDetails.isDoctor = true;
                     }
@@ -443,16 +531,16 @@ namespace BCare.data
             return userDetails;
         }
 
-        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email , bool isDoctor)
+        public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email, bool isDoctor)
         {
             string permissionUser = "User";
             User user = new User();
             bool isAdministrator = isAdmin(User_ID);
-            if(isAdministrator)
+            if (isAdministrator)
             {
                 permissionUser = "Admin";
             }
-                using (MySqlConnection conn = GetConnection())
+            using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
                 if ((firstName.Length != 0) && (lastName.Length != 0) && pwd != null)
@@ -476,7 +564,8 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@hashedPassword", hashedPassword);
                     cmd.Parameters.AddWithValue("@Email", Email);
                     cmd.ExecuteNonQuery();
-                } else
+                }
+                else
                 {
                     MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name,Premission_Name = @permissionUser ,Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address, User_Name = @userName, Email = @Email WHERE @UserID =users.User_ID ", conn);
                     cmd.Parameters.AddWithValue("@UserID", User_ID);

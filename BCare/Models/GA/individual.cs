@@ -10,7 +10,7 @@ namespace BCare.Models.GA
     {
         List<Genome> genomeList = new List<Genome>();
         public const int indivSize = 5;
-        public double fitnessGrade = 0.0;
+        public float fitnessGrade = 0.0f;
 
         public Individual()
         {
@@ -18,6 +18,18 @@ namespace BCare.Models.GA
             {
                 Genome gen = new Genome();
                 genomeList.Add(gen);
+            }
+        }
+
+        public Individual (Individual A, Individual B)
+        {
+            for (int i = 0; i < A.genomeList.Count / 2; i++)
+            {
+                genomeList.Add(A.genomeList[i]);
+            }
+            for(int i= B.genomeList.Count / 2; i < B.genomeList.Count; i++)
+            {
+                genomeList.Add(A.genomeList[i]);
             }
         }
 

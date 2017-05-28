@@ -223,6 +223,27 @@ namespace BCare.data
             return HMOList;
         }
 
+        public List<double> CompValuesStats (int userID, int compID){ // values of component by tests
+            List<double> testValuesByCompId = new List<double>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT Value FROM blood_test_data INNER JOIN blood_test WHERE BUser_ID=@User_ID AND blood_test_data.BTest_ID = blood_test.BTest_ID AND BComp_ID = @Comp_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", userID);
+                cmd.Parameters.AddWithValue("@Comp_ID", compID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        testValuesByCompId.Add(reader.GetDouble("Value"));
+                    }
+                    conn.Close();
+                }
+            }
+
+            return testValuesByCompId;
+        }
         public List<Tuple<string, int>> countUsersByBloodTypeStats()
         {
             List<Tuple<string, int>> countBloodType = new List<Tuple<string, int>>();

@@ -24,7 +24,8 @@ namespace BCare.Controllers
             //List<supplements_or_medication_info> SOMI = context.TopFiveMedications();
             //List<Tuple<string, int>> listHMO = context.countUsersByHMOStats();
             //List<Tuple<string, int>> listBT = context.countUsersByBloodTypeStats();
-            List<Tuple<string, int>> listBloodTestByDate = context.UserBloodTestByDateStats(39341227);
+            //List<Tuple<string, int>> listBloodTestByDate = context.UserBloodTestByDateStats(39341227);
+            List<double> listCompStats = context.CompValuesStats(39341227, 2);
             return View();
         }
 

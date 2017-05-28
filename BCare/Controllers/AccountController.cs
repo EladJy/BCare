@@ -25,7 +25,7 @@ namespace BCare.Controllers
             //List<Tuple<string, int>> listHMO = context.countUsersByHMOStats();
             //List<Tuple<string, int>> listBT = context.countUsersByBloodTypeStats();
             //List<Tuple<string, int>> listBloodTestByDate = context.UserBloodTestByDateStats(39341227);
-            List<double> listCompStats = context.CompValuesStats(39341227, 2);
+            List<Tuple<DateTime, double>> listCompStats = context.CompValuesStats(39341227, 2);
             return View();
         }
 

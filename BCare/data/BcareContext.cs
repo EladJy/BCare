@@ -223,25 +223,24 @@ namespace BCare.data
             return HMOList;
         }
 
-        public List<double> CompValuesStats (int userID, int compID){ // values of component by tests
-            List<double> testValuesByCompId = new List<double>();
+        public List<Tuple<DateTime, double>> CompValuesStats (int userID, int compID){ // values of component by tests
+            List<Tuple<DateTime, double>> testValuesByCompId = new List<Tuple<DateTime, double>>();
 
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT Value FROM blood_test_data INNER JOIN blood_test WHERE BUser_ID=@User_ID AND blood_test_data.BTest_ID = blood_test.BTest_ID AND BComp_ID = @Comp_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT Value,DATE(BTest_Date) FROM blood_test_data INNER JOIN blood_test WHERE BUser_ID=@User_ID AND blood_test_data.BTest_ID = blood_test.BTest_ID AND BComp_ID = @Comp_ID", conn);
                 cmd.Parameters.AddWithValue("@User_ID", userID);
                 cmd.Parameters.AddWithValue("@Comp_ID", compID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        testValuesByCompId.Add(reader.GetDouble("Value"));
+                        testValuesByCompId.Add(Tuple.Create(reader.GetDateTime("DATE(BTest_Date)"),reader.GetDouble("Value")));
                     }
                     conn.Close();
                 }
             }
-
             return testValuesByCompId;
         }
         public List<Tuple<string, int>> countUsersByBloodTypeStats()

@@ -227,7 +227,41 @@ namespace BCare.data
         {
             List<Tuple<string, int>> countBloodType = new List<Tuple<string, int>>();
 
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(User_ID),Blood_Type FROM users GROUP BY Blood_Type ORDER BY COUNT(User_ID) DESC", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        countBloodType.Add(Tuple.Create(reader.GetString("Blood_Type"), reader.GetInt32("COUNT(User_ID)")));
+                    }
+                    conn.Close();
+                }
+            }
             return countBloodType;
+        }
+
+        public List<Tuple<string, int>> UserBloodTestByDateStats (int userID) // number of blood test per year
+        {
+            List<Tuple<string, int>> countBloodTests = new List<Tuple<string, int>>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(BUser_ID), YEAR(BTest_Date) as Year FROM blood_test WHERE blood_test.BUser_ID=@User_ID GROUP BY Year ORDER BY COUNT(BUser_ID) DESC", conn);
+                cmd.Parameters.AddWithValue("@User_ID", userID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        countBloodTests.Add(Tuple.Create(reader.GetString("Year"), reader.GetInt32("COUNT(BUser_ID)")));
+                    }
+                    conn.Close();
+                }
+            }
+            return countBloodTests;
         }
 
         public presCommentViewModel getPrescriptionDetails(int presID , int bloodID)

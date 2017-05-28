@@ -3,14 +3,14 @@
     function segColor(c) { return { low: "#807dba", mid: "#e08214", high: "#41ab5d" }[c]; }
 
     // compute total for each state.
-    fData.forEach(function (d) { d.total = d.count; });
+    fData.forEach(function (d) { d.total = d.item2; });
 
     // function to handle histogram.
     function histoGram(fD) {
 
         var hG = {}, hGDim = { t: 60, r: 0, b: 50, l: 0 };
         hGDim.w = 800 - hGDim.l - hGDim.r,
-        hGDim.h = 300 - hGDim.t - hGDim.b;
+            hGDim.h = 300 - hGDim.t - hGDim.b;
 
         //create svg for histogram.
         var hGsvg = d3.select(id).append("svg")
@@ -20,25 +20,25 @@
 
         // create function for x-axis mapping.
         var x = d3.scale.ordinal().rangeRoundBands([0, hGDim.w], 0.1)
-                .domain(fD.map(function (d) { return d[0]; }));
+            .domain(fD.map(function (d) { return d[0]; }));
 
         // Add x-axis to the histogram svg.
         hGsvg.append("g").attr("class", "x axis")
-        .attr("transform", "translate(0," + hGDim.h + ")")
-        .call(d3.svg.axis().scale(x).orient("bottom"))
-        .selectAll("text")
-        .style("text-anchor", "middle")
-        .style("font-size", "12px")
-        .attr("dy", "1.5em")
-        .attr("transform", function (d) { return "rotate(-8)" });
+            .attr("transform", "translate(0," + hGDim.h + ")")
+            .call(d3.svg.axis().scale(x).orient("bottom"))
+            .selectAll("text")
+            .style("text-anchor", "middle")
+            .style("font-size", "12px")
+            .attr("dy", "1.5em")
+            .attr("transform", function (d) { return "rotate(-8)" });
 
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
-                .domain([0, d3.max(fD, function (d) { return d[1]; })]);
+            .domain([0, d3.max(fD, function (d) { return d[1]; })]);
 
         // Create bars for histogram to contain rectangles and freq labels.
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
-                .append("g").attr("class", "bar");
+            .append("g").attr("class", "bar");
 
         //create the rectangles.
         bars.append("rect")
@@ -97,18 +97,18 @@
 
     // calculate total frequency by segment for all state.
     var tF = ['low', 'mid', 'high'].map(function (d) {
-        return { type: d, count: d3.sum(fData.map(function (t) { return t.count[d]; })) };
+        return { type: d, count: d3.sum(fData.map(function (t) { return t.count; })) };
     });
 
     // calculate total frequency by state for all segment.
-    var sF = fData.map(function (d) { return [d.name, d.total]; });
+    var sF = fData.map(function (d) { return [d.item1, d.item2]; });
 
     var hG = histoGram(sF); // create the histogram.
     // leg = legend(tF);  // create the legend.
 }
 
-    $(document).ready(function () {
-        $.getJSON('/Graph/GetGraph', function (data) {
-            dashboard('#dashboard', data);
-        });
+$(document).ready(function () {
+    $.getJSON('/Graph/HMOChart', function (data) {
+        dashboard('#dashboard', data);
     });
+});

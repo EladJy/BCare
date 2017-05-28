@@ -9,7 +9,7 @@ namespace BCare.Models
     public class presCommentViewModel
     {
         [DataType(DataType.Date)]
-        public DateTime Pres_Date { get; set; }
+        public DateTime bloodTest_Date { get; set; }
         public List<SOMConsumeViewModel> somcList { get; set; }
         public List<review_or_feedback> rofList { get; set; }
     }

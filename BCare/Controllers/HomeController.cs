@@ -73,5 +73,9 @@ namespace BCare.Controllers
             var products = context.TopFiveMedications();
             return Json(products);
         }
+        public IActionResult Charts()
+        {
+            return View();
+        }
     }
 }

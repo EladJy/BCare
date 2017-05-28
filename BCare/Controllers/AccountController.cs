@@ -114,7 +114,7 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            return View(context.getPrescriptionDetails(context.GetPresByBloodTest(id)));
+            return View(context.getPrescriptionDetails(context.GetPresByBloodTest(id) , id));
         }
         public IActionResult TestInfo()
         {
@@ -136,7 +136,6 @@ namespace BCare.Controllers
             {
                 return View();
             }
-            
         }
     }
 }

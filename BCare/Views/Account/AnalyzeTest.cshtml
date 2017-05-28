@@ -1,9 +1,16 @@
 ﻿@model BCare.Models.presCommentViewModel
 
 <h2>ניתוח נתונים</h2>
-<h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.Pres_Date:</b></h4>
+<h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.bloodTest_Date:</b></h4>
 לאחר ניתוח התוצאות מערכת BCare זיהתה כי ישנו מחסור ב:<br />
-<ul>
+@foreach (var item in Model.somcList)
+{
+    @Html.Raw(@item.pres.Text)
+    <div>כמות צריכה יומית: @item.pres.AmountToConsume</div>
+    <div>ימי צריכה: @item.pres.DaysToConsume</div>
+
+}
+@*<ul>
     <li>Vitamin D</li>
     <li>Vitamin A</li>
 </ul>  
@@ -23,4 +30,19 @@
     <li>אכילת כבד, ביצים, דגים וכו' - רטינול זהו הצורה של הויטמין עצמו.</li>
     <li>אכילת פירות וירקות בעלי צבעים בהירים הנהפכים לויטמין A במגע עם הכבד.</li>
     <li>באופן זה הגוף צורך בטא קרוטן - פגמנט צהוב כתום ממשפחת הקרטנואידים - המקור העיקרי לויטמין A בגוף.</li>
-</ul>
+</ul>*@
+
+<h2>תגובות:</h2>
+<div class="feedbackSection">
+    @foreach (var item in Model.rofList)
+    {
+        <div>
+            <header>
+                ת.ז: @item.RFUserID
+            </header>
+            <span>
+                @item.Text
+            </span>
+        </div>
+    }
+</div>

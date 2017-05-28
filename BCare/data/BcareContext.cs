@@ -230,19 +230,19 @@ namespace BCare.data
             return countBloodType;
         }
 
-        public presCommentViewModel getPrescriptionDetails(int presID)
+        public presCommentViewModel getPrescriptionDetails(int presID , int bloodID)
         {
             presCommentViewModel commentsAndPres = new presCommentViewModel();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT p.Pres_Date FROM prescription p where p.Pres_ID = @Pres_ID", conn);
-                cmd.Parameters.AddWithValue("@Pres_ID", presID);
+                MySqlCommand cmd = new MySqlCommand("SELECT bt.BTest_Date FROM blood_test bt WHERE bt.BTest_ID = @bloodID", conn);
+                cmd.Parameters.AddWithValue("@bloodID", bloodID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        commentsAndPres.Pres_Date = reader.GetDateTime("Pres_Date");
+                        commentsAndPres.bloodTest_Date = reader.GetDateTime("BTest_Date");
                     }
 
                 }

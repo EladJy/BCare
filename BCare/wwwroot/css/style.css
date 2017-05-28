@@ -55,6 +55,14 @@ table th:nth-last-child(1) {
 }
 
 
+    div.feedbackSection div:nth-child(2n+1) {
+        background: #ffdada;
+    }
+
+    div.feedbackSection div:nth-child(2n) {
+        background: #ffffff;
+    }
+
 /*.table td:last-child {
     border-left: 1px solid #cc1a1c;
 

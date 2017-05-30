@@ -20,7 +20,6 @@
     <Content Include="wwwroot\images\testRange\WithinLimitsRight.png" />
     <Content Include="wwwroot\js\aside.js" />
     <Content Include="wwwroot\js\aside.min.js" />
-    <Content Include="wwwroot\js\categoryChart.js" />
     <Content Include="wwwroot\js\hmoChart.js" />
   </ItemGroup>
   <ItemGroup>

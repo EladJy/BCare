@@ -9,38 +9,53 @@ namespace BCare.Models.GA
     public class Population
     {
         private static readonly Random random = new Random();
+        private static readonly object syncLock = new object();
         public List<Individual> arrIndiv = new List<Individual>();
         public List<Individual> nextArrIndiv = new List<Individual>();
-        const int populationSize = 100;
-        int Generation = 1;
-        double fitnessSum;
+        const int populationSize = 50;
+        int generation = 1;
         public Population()
         {
             for(int i=0; i < populationSize; i++)
             {
                 Individual arrGenome = new Individual();
                 arrIndiv.Add(arrGenome);
-                System.Diagnostics.Debug.WriteLine(arrGenome);
+                arrGenome.CalculateFitness();
             }
         }
 
         public void NextGeneration()
         {
-            Generation++;
+            generation++;
             DoBabies(arrIndiv);
             arrIndiv = nextArrIndiv.ToList();
-
+            nextArrIndiv.Clear();
             for(int i = 0; i <arrIndiv.Count;i++)
             {
-                // Mutate(arrIndiv[i]); // Mutation
+                Mutate(arrIndiv[i]); // Mutation
             }
 
-            for (int i = 0; i < arrIndiv.Count; i++)
+            //for (int i = 0; i < arrIndiv.Count; i++)
+            //{
+            //    arrIndiv[i].CalculateFitness();
+            //}
+        }
+
+        public void Mutate(Individual indiv)
+        {
+            if(RandomNumber(0,100) < 5)
             {
-                // arrIndiv[i].CalculateFitness();
+                indiv.Mutate();
             }
         }
 
+        public static int RandomNumber(int min, int max)
+        {
+            lock (syncLock)
+            { // synchronize
+                return random.Next(min, max);
+            }
+        }
         public void DoBabies(List<Individual> indivList)
         {
             List<Individual> geneDads = new List<Individual>();
@@ -48,7 +63,7 @@ namespace BCare.Models.GA
 
             for (int i = 0; i < indivList.Count; i++)
             {
-                if(i % 2 == 0)
+                if(i < indivList.Count/2)
                 {
                     geneDads.Add(indivList[i]);
                 } else
@@ -61,8 +76,21 @@ namespace BCare.Models.GA
             {
                 Individual geneBabyA = new Individual(geneDads[i], geneMoms[i]);
                 Individual geneBabyB = new Individual(geneMoms[i], geneDads[i]);
+                geneBabyA.CalculateFitness();
+                geneBabyB.CalculateFitness();
                 nextArrIndiv.Add(geneBabyA);
                 nextArrIndiv.Add(geneBabyB);
+            }
+            nextArrIndiv.Sort();
+        }
+
+        public void WriteNextGeneration()
+        {
+            // just write the top 20
+            System.Diagnostics.Debug.WriteLine("Generation {0}\n", generation);
+            for (int i = 0; i < populationSize; i++)
+            {
+                System.Diagnostics.Debug.WriteLine(((Individual)arrIndiv[i]).ToString() + " fitness: " + ((Individual)arrIndiv[i]).fitnessGrade);
             }
         }
     }

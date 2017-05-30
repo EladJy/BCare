@@ -22,6 +22,12 @@ namespace BCare.Controllers
         {
             ViewData["Message"] = "Your application description page.";
             Models.GA.Population po = new Models.GA.Population();
+            po.WriteNextGeneration();
+            for(int i=0; i < 50; i++)
+            {
+                po.NextGeneration();
+                po.WriteNextGeneration();
+            }
             return View();
         }
 

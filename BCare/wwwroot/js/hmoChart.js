@@ -59,7 +59,7 @@
 
         function mouseover(d) {  // utility function to be called on mouseover.
             // filter for selected state.
-            var st = fData.filter(function (s) { return s.name == d[0]; })[0],
+            var st = fData.filter(function (s) { return s.name === d[0]; })[0],
                 nD = d3.keys(st.count).map(function (s) { return { type: s, count: st.count[s] }; });
 
             // call update functions of pie-chart and legend.

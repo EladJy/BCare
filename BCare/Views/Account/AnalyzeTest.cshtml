@@ -1,7 +1,7 @@
 ﻿@model BCare.Models.presCommentViewModel
 
 <h2>ניתוח נתונים</h2>
-<h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.bloodTest_Date:</b></h4>
+<h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.bloodTest_Date.ToString("dd/MM/yyyy"):</b></h4>
 לאחר ניתוח התוצאות מערכת BCare זיהתה כי ישנו מחסור ב:<br />
 @foreach (var item in Model.somcList)
 {
@@ -34,14 +34,14 @@
 
 <h2>תגובות:</h2>
 <div class="feedbackSection">
-    @foreach (var item in Model.rofList)
+    @foreach (var item in Model.rofvmList)
     {
         <div>
             <header>
-                ת.ז: @item.RFUserID
+                שם: @item.first_Name @item.last_Name
             </header>
             <span>
-                @item.Text
+                @item.rof.Text
             </span>
         </div>
     }

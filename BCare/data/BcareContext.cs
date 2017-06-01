@@ -78,7 +78,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO users VALUES (@User_ID, @First_Name, @Last_Name, @Gender, @Birth_Date, @HMO_ID, @Blood_Type, @Address.@Premission_Name, @User_ID, @User_Name, @PW_Hash,@Email) ", conn);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO users VALUES (@User_ID, @First_Name, @Last_Name, @Gender, @Birth_Date, @HMO_ID, @Blood_Type, @Address,@Premission_Name, @User_Name, @PW_Hash,@Email) ", conn);
                 cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 cmd.Parameters.AddWithValue("@First_Name", First_Name);
                 cmd.Parameters.AddWithValue("@Last_Name", Last_Name);
@@ -95,7 +95,6 @@ namespace BCare.data
                     permissionUser = "User";
 
                 cmd.Parameters.AddWithValue("@Premission_Name", permissionUser);
-                cmd.Parameters.AddWithValue("@User_ID", User_ID);
                 cmd.Parameters.AddWithValue("@User_Name", username);
                 cmd.Parameters.AddWithValue("@Email", email);
 
@@ -145,9 +144,8 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        if (reader["MoreInformation"] != DBNull.Value && reader["ProductImage_URL"] != DBNull.Value && reader["Product_Code"] != DBNull.Value)
+                        if (reader["MoreInformation"] != DBNull.Value && reader["ProductImage_URL"] != DBNull.Value)
                         {
-                            Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
                             Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
                             Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
                             Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
@@ -160,8 +158,6 @@ namespace BCare.data
                                 ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
                                 ServingFormType = ST,
                                 ServingFormUnit = SU,
-                                ProductCode = reader.GetString("Product_Code"),
-                                CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
                                 MoreInformation = reader.GetString("MoreInformation"),
@@ -170,7 +166,6 @@ namespace BCare.data
                         }
                         else
                         {
-                            Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
                             Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
                             Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
                             Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
@@ -183,10 +178,8 @@ namespace BCare.data
                                 ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
                                 ServingFormType = ST,
                                 ServingFormUnit = SU,
-                                CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
-                                ProductCode = "abc",
                                 MoreInformation = "abc",
                                 ProductImageURL = "abc"
                             });
@@ -308,7 +301,6 @@ namespace BCare.data
 
                     while (reader.Read())
                     {
-                        Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
                         Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
                         Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
                         Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
@@ -332,32 +324,35 @@ namespace BCare.data
                                 ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
                                 ServingFormType = ST,
                                 ServingFormUnit = SU,
-                                CodeType = CT,
                                 InHealthPlan = IHP,
                                 WithMedicalPrescription = WMP,
-                                ProductCode = reader.GetString("Product_Code"),
                                 MoreInformation = reader.GetString("MoreInformation"),
                                 ProductImageURL = reader.GetString("ProductImage_URL")
                             }
                         });
                     }
                 }
-                MySqlCommand cmd3 = new MySqlCommand("SELECT * FROM review_or_feedback rof WHERE rof.RFPres_ID = @Pres_ID", conn);
+                MySqlCommand cmd3 = new MySqlCommand("SELECT rof.* , u.First_Name , u.Last_Name FROM review_or_feedback rof INNER JOIN users u ON rof.RFUser_ID= u.User_ID WHERE rof.RFPres_ID = @Pres_ID", conn);
                 cmd3.Parameters.AddWithValue("@Pres_ID", presID);
                 using (MySqlDataReader reader = cmd3.ExecuteReader())
                 {
-                    commentsAndPres.rofList = new List<review_or_feedback>();
+                    commentsAndPres.rofvmList = new List<review_or_feedback_ViewModel>();
                     while (reader.Read())
                     {
                         Enum.TryParse(reader.GetString("rating"), out Rating rate);
-                        commentsAndPres.rofList.Add(new review_or_feedback
+                        commentsAndPres.rofvmList.Add(new review_or_feedback_ViewModel
                         {
-                            Rating = rate,
-                            ReviewDate = reader.GetDateTime("Review_Date"),
-                            RFPresID = reader.GetInt32("RFPres_ID"),
-                            RFSomID = reader.GetInt32("RFSOM_ID"),
-                            RFUserID = reader.GetInt32("RFUser_ID"),
-                            Text = reader.GetString("Text")
+                            rof = new review_or_feedback
+                            {
+                                Rating = rate,
+                                ReviewDate = reader.GetDateTime("Review_Date"),
+                                RFPresID = reader.GetInt32("RFPres_ID"),
+                                RFSomID = reader.GetInt32("RFSOM_ID"),
+                                RFUserID = reader.GetInt32("RFUser_ID"),
+                                Text = reader.GetString("Text")
+                            },
+                            first_Name = reader.GetString("First_Name"),
+                            last_Name = reader.GetString("Last_Name")
                         });
                     }
 
@@ -468,9 +463,6 @@ namespace BCare.data
                         SOMI.PharmID = reader.GetInt32("Pharm_ID");
                         SOMI.SOMName = reader.GetString("SOM_NAME");
                         SOMI.ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box");
-                        SOMI.ProductCode = reader.GetString("Product_Code");
-                        Enum.TryParse(reader.GetString("Code_Type"), out CodeType CT);
-                        SOMI.CodeType = CT;
                         Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
                         SOMI.InHealthPlan = IHP;
                         Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);

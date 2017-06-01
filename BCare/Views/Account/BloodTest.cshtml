@@ -18,7 +18,7 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.BTestDate</td>
+                    <td>@item.BTestDate.ToString("dd/MM/yyyy")</td>
                     <td>@item.DoctorName</td>
                     <td><a asp-controller="Account" asp-action="BloodTestResult" asp-route-id="@item.BTestID">להצגת התוצאות</a></td>
                 </tr>

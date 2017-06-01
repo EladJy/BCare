@@ -28,22 +28,25 @@ namespace BCare.Controllers
             List<Tuple<DateTime, double>> listCompStats = context.CompValuesStats(39341227, 2);
             return View();
         }
-
+        
         public IActionResult Register()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
             if(cookie == null)
             {
-                ViewBag.ListHMO = context.GetAllHMO();
+                List < health_maintenance_organizations > listHMO = context.GetAllHMO();
+                ViewBag.ListHMO = new SelectList(listHMO, "HMOID", "HMOName");
+
             }
             return View();
         }
         [HttpPost]
-        public IActionResult Register(int User_ID, string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string username, string password, string Email, bool isDoctor)
+        public IActionResult Register(UserDetailViewModel newUser)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            context.Register(User_ID, First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, username, password,Email, isDoctor);
+            context.Register(newUser.user.UserID, newUser.user.FirstName, newUser.user.LastName, newUser.user.Gender.ToString(), newUser.user.BirthDate.ToString(), newUser.user.HMOID,
+                newUser.user.BloodType.ToString(), newUser.user.Address, newUser.user.UserName, newUser.user.PWHash, newUser.user.Email, newUser.isDoctor);
             return RedirectToAction("Index","Home");
         }
 
@@ -104,11 +107,12 @@ namespace BCare.Controllers
             return View(userDetails);
         }
         [HttpPost]
-        public IActionResult updateDetails(string First_Name, string Last_Name, string Gender, string Birth_Date, int HMO_ID, string Blood_Type, string Address, string userName, string password, string Email , bool isDoctor)
+        public IActionResult updateDetails(UserDetailViewModel userUpdated)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            context.UpdateUserDetails(Int32.Parse(cookie.Substring(10)), First_Name, Last_Name, Gender, Birth_Date, HMO_ID, Blood_Type, Address, userName, password, Email, isDoctor);
+            context.UpdateUserDetails(Int32.Parse(cookie.Substring(10)), userUpdated.user.FirstName, userUpdated.user.LastName, userUpdated.user.Gender.ToString(), userUpdated.user.BirthDate.ToString(),
+                userUpdated.user.HMOID, userUpdated.user.BloodType.ToString(), userUpdated.user.Address, userUpdated.user.UserName, userUpdated.user.PWHash, userUpdated.user.Email, userUpdated.isDoctor);
             return RedirectToAction("Index", "Home");
         }
 
@@ -129,10 +133,12 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            ViewBag.ListHMO = context.GetAllHMO();
-            if(cookie != null)
+            List<health_maintenance_organizations> listHMO = context.GetAllHMO();
+            ViewBag.ListHMO = new SelectList(listHMO, "HMOID", "HMOName");
+            if (cookie != null)
             {
                 UserDetailViewModel userDetails = context.GetUserDetailsByID(Int32.Parse(cookie.Substring(10)));
+                userDetails.user.PWHash = "";
                 return View(userDetails);
             } else
             {

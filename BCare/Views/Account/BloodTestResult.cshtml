@@ -7,7 +7,7 @@
 
 @if (ViewBag.Message == "isCorrect")
 {
-<h4><b>תוצאות הפניה שבוצעה בתאריך @Model.BT_Date :</b></h4>
+<h4><b>תוצאות הפניה שבוצעה בתאריך @Model.BT_Date.ToString("dd/MM/yyyy"):</b></h4>
 <p><b>שם הרופא: </b>@Model.Doctor_Name</p>
     <table class="table">
         <thead>

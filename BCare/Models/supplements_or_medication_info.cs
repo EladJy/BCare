@@ -16,8 +16,6 @@ namespace BCare.Models
         public int ServingAmountInBox { get; set; }
         public ServingType ServingFormType { get; set; }
         public MeasurementUnit ServingFormUnit { get; set; }
-        public string ProductCode { get; set; }
-        public Nullable<CodeType> CodeType { get; set; }
         public InHealthPlan InHealthPlan { get; set; }
         public WithMedicalPrescription WithMedicalPrescription { get; set; }
         public string MoreInformation { get; set; }
@@ -31,16 +29,6 @@ namespace BCare.Models
         Pill,
         Tablets,
         Spray
-    }
-    public enum CodeType
-    {
-        [Display(Name = "UPC-A")]
-        UPCA,
-        [Display(Name = "EAN")]
-        EAN,
-        [Display(Name = "UPC-E")]
-        UPCE,
-        Other
     }
     public enum InHealthPlan
     {

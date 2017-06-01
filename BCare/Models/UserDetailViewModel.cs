@@ -10,6 +10,7 @@ namespace BCare.Models
     public class UserDetailViewModel
     {
         public User user { get; set; }
+        [Display(Name = "דוקטור?")]
         public Boolean isDoctor { get; set; }
 
     }

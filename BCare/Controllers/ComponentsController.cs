@@ -15,6 +15,8 @@ namespace BCare.Controllers
         BcareContext context;
         public IActionResult Info(int id)
         {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            ViewBag.Info = context.getComponentInfo(id);
             return View();
         }
     }

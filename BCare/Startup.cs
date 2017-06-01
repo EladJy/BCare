@@ -29,6 +29,7 @@ namespace BCare
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession(/* options go here */);
             // Add framework services.
             services.AddMvc();
             services.Add(new ServiceDescriptor(typeof(BcareContext), new BcareContext(Configuration.GetConnectionString("DefaultConnection"))));
@@ -50,6 +51,7 @@ namespace BCare
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseSession();
             app.UseStaticFiles();
             app.UseCors("AllowAll");
             app.UseMvc(routes =>

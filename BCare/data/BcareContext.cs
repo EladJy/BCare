@@ -362,6 +362,25 @@ namespace BCare.data
             return commentsAndPres;
         }
 
+        public string getComponentInfo(int boaID)
+        {
+            string info="";
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT BOA_Name , boa.Info from blood_or_additive_component boa WHERE boa.BOA_ID = @boa_ID", conn);
+                cmd.Parameters.AddWithValue("@boa_ID", boaID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        info = "<h2>" + reader.GetString("BOA_Name") + "</h2>" + reader.GetString("Info");
+                    }
+                    conn.Close();
+                }
+            }
+            return info;
+        }
         public List<Tuple<string, int>> countUsersByHMOStats()
         {
             List<Tuple<string, int>> countHMO = new List<Tuple<string, int>>();

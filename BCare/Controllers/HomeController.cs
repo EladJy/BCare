@@ -12,9 +12,12 @@ namespace BCare.Controllers
 {
     public class HomeController : Controller
     {
+        string error;
         BcareContext context;
         public IActionResult Index()
         {
+            if(TempData["errorMessage"] != null)
+                ViewBag.Error = TempData["errorMessage"];
             return View();
         }
 
@@ -39,20 +42,21 @@ namespace BCare.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string username , string password)
+        public IActionResult Login(string username, string password)
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            if (context.Login(username,password))
+            if (context.Login(username, password))
             {
                 CookieOptions options = new CookieOptions();
                 options.Expires = DateTime.Now.AddDays(30);
-                Response.Cookies.Append("Session", RandomString(10) + context.GetIDByUserName(username) , options);
-                Response.Cookies.Append("UserName", username , options);
+                Response.Cookies.Append("Session", RandomString(10) + context.GetIDByUserName(username), options);
+                Response.Cookies.Append("UserName", username, options);
+            } else
+            {
+                TempData["errorMessage"] = "שם המשתמש או הסיסמה לא תקינים";
             }
             return RedirectToAction("Index");
-
         }
-
         private static Random random = new Random();
         public static string RandomString(int length)
         {

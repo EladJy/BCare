@@ -43,7 +43,7 @@
                                 max = item.BOAComp.PregnantMax;
                             }
                         }
-                        <td><a asp-controller="Account" asp-action="TestInfo" dir="ltr">@item.BOAComp.BOA_Name</a></td>
+                        <td><a asp-controller="Components" asp-action="Info" asp-route-id="@item.BOAComp.BOA_ID" dir="ltr">@item.BOAComp.BOA_Name</a></td>
                         @if (value < min || value > max)
                     {
                             <td class="text-danger"><b>*@value</b></td>

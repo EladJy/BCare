@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BCare.data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +13,18 @@ namespace BCare.Models.GA
         private static readonly object syncLock = new object();
         public List<Individual> arrIndiv = new List<Individual>();
         public List<Individual> nextArrIndiv = new List<Individual>();
-        const int populationSize = 50;
+        public List<Individual> bestList = new List<Individual>();
+        const int populationSize = 20;
         int generation = 1;
-        public Population()
+        public Population(int btID , BcareContext context)
         {
             for(int i=0; i < populationSize; i++)
             {
-                Individual arrGenome = new Individual();
+                Individual arrGenome = new Individual(btID , context);
                 arrIndiv.Add(arrGenome);
                 arrGenome.CalculateFitness();
             }
+            arrIndiv.Sort();
         }
 
         public void NextGeneration()
@@ -35,10 +38,11 @@ namespace BCare.Models.GA
                 Mutate(arrIndiv[i]); // Mutation
             }
 
-            //for (int i = 0; i < arrIndiv.Count; i++)
-            //{
-            //    arrIndiv[i].CalculateFitness();
-            //}
+            for (int i = 0; i < arrIndiv.Count; i++)
+            {
+                arrIndiv[i].CalculateFitness();
+            }
+            arrIndiv.Sort();
         }
 
         public void Mutate(Individual indiv)
@@ -76,12 +80,11 @@ namespace BCare.Models.GA
             {
                 Individual geneBabyA = new Individual(geneDads[i], geneMoms[i]);
                 Individual geneBabyB = new Individual(geneMoms[i], geneDads[i]);
-                geneBabyA.CalculateFitness();
-                geneBabyB.CalculateFitness();
+                //geneBabyA.CalculateFitness();
+                //geneBabyB.CalculateFitness();
                 nextArrIndiv.Add(geneBabyA);
                 nextArrIndiv.Add(geneBabyB);
             }
-            nextArrIndiv.Sort();
         }
 
         public void WriteNextGeneration()

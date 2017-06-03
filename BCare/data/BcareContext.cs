@@ -109,6 +109,53 @@ namespace BCare.data
             }
         }
 
+        public double GetEffectOnComp(int boaID , int somID)
+        {
+            double effect = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT ace.Effect FROM active_component_effect_in_med ace WHERE ace.ACEM_BOA_ID = @Boa_ID AND ace.ACEM_SOM_ID = @Som_ID", conn);
+                cmd.Parameters.AddWithValue("@Boa_ID", boaID);
+                cmd.Parameters.AddWithValue("@Som_ID", somID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        effect = reader.GetDouble("Effect");
+                    }
+                }
+                conn.Close();
+            }
+            return effect;
+        }
+
+        public List<active_component_effect_in_med> getAllEffects()
+        {
+            List<active_component_effect_in_med> aceList = new List<active_component_effect_in_med>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM active_component_effect_in_med", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        aceList.Add(new active_component_effect_in_med()
+                        {
+                            ACEM_ATC_ID = reader.GetString("ACEM_ATC_ID"),
+                            ACEM_BOA_ID = reader.GetInt32("ACEM_BOA_ID"),
+                            ACEM_SOM_ID = reader.GetInt32("ACEM_SOM_ID"),
+                            Effect = reader.GetInt32("Effect")
+                        });
+                    }
+                }
+                conn.Close();
+            }
+
+            return aceList;
+        }
         public blood_test GetBloodTestByID(int testID)
         {
             using (MySqlConnection conn = GetConnection())
@@ -216,7 +263,8 @@ namespace BCare.data
             return HMOList;
         }
 
-        public List<Tuple<DateTime, double>> CompValuesStats (int userID, int compID){ // values of component by tests
+        public List<Tuple<DateTime, double>> CompValuesStats(int userID, int compID)
+        { // values of component by tests
             List<Tuple<DateTime, double>> testValuesByCompId = new List<Tuple<DateTime, double>>();
 
             using (MySqlConnection conn = GetConnection())
@@ -229,7 +277,7 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        testValuesByCompId.Add(Tuple.Create(reader.GetDateTime("DATE(BTest_Date)"),reader.GetDouble("Value")));
+                        testValuesByCompId.Add(Tuple.Create(reader.GetDateTime("DATE(BTest_Date)"), reader.GetDouble("Value")));
                     }
                     conn.Close();
                 }
@@ -256,7 +304,7 @@ namespace BCare.data
             return countBloodType;
         }
 
-        public List<Tuple<string, int>> UserBloodTestByDateStats (int userID) // number of blood test per year
+        public List<Tuple<string, int>> UserBloodTestByDateStats(int userID) // number of blood test per year
         {
             List<Tuple<string, int>> countBloodTests = new List<Tuple<string, int>>();
 
@@ -277,7 +325,7 @@ namespace BCare.data
             return countBloodTests;
         }
 
-        public presCommentViewModel getPrescriptionDetails(int presID , int bloodID)
+        public presCommentViewModel getPrescriptionDetails(int presID, int bloodID)
         {
             presCommentViewModel commentsAndPres = new presCommentViewModel();
             using (MySqlConnection conn = GetConnection())
@@ -364,7 +412,7 @@ namespace BCare.data
 
         public string getComponentInfo(int boaID)
         {
-            string info="";
+            string info = "";
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -551,6 +599,40 @@ namespace BCare.data
             }
         }
 
+        public List<supplements_or_medication_info> GetAllMed()
+        {
+            List<supplements_or_medication_info> listMed = new List<supplements_or_medication_info>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * from supplements_or_medication_info", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Enum.TryParse(reader.GetString("Serving_Form_Type"), out ServingType ST);
+                        Enum.TryParse(reader.GetString("Serving_Form_Unit"), out MeasurementUnit SU);
+                        Enum.TryParse(reader.GetString("In_Health_Plan"), out InHealthPlan IHP);
+                        Enum.TryParse(reader.GetString("With_Medical_Prescription"), out WithMedicalPrescription WMP);
+                        listMed.Add(new supplements_or_medication_info()
+                        {
+                            SomID = reader.GetInt32("SOM_ID"),
+                            PharmID = reader.GetInt32("Pharm_ID"),
+                            SOMName = reader.GetString("SOM_Name"),
+                            ServingAmountInBox = reader.GetInt32("Serving_Amount_In_Box"),
+                            ServingFormType = ST,
+                            ServingFormUnit = SU,
+                            InHealthPlan = IHP,
+                            WithMedicalPrescription = WMP,
+                            MoreInformation = "abc",
+                            ProductImageURL = "abc"
+                        });
+                    }
+                }
+                conn.Close();
+            }
+            return listMed;
+        }
         public UserDetailViewModel GetUserDetailsByID(int User_ID)
         {
             UserDetailViewModel userDetails = new UserDetailViewModel();

@@ -33,14 +33,20 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            List<Tuple<string, int>> listHMO = context.UserBloodTestByDateStats(Int32.Parse(cookie.Substring(10)));
-            return Json(listHMO);
+            if(cookie != null)
+            {
+                List<Tuple<string, int>> listHMO = context.UserBloodTestByDateStats(Int32.Parse(cookie.Substring(10))); return Json(listHMO);
+            }
+            return Json("");
         }
 
         public IActionResult Stats()
         {
             String cookie = Request.Cookies["Session"];
-            ViewBag.UserID = Int32.Parse(cookie.Substring(10));
+            if(cookie != null)
+            {
+                ViewBag.UserID = Int32.Parse(cookie.Substring(10));
+            }
             return View();
         }
         public IActionResult Register()
@@ -127,6 +133,13 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
+            Models.GA.Population po = new Models.GA.Population(id , context);
+            po.WriteNextGeneration();
+            for (int i = 0; i < 99; i++)
+            {
+                po.NextGeneration();
+                po.WriteNextGeneration();
+            }
             return View(context.getPrescriptionDetails(context.GetPresByBloodTest(id) , id));
         }
         public IActionResult TestInfo()

@@ -67,7 +67,7 @@ function dashboard(id, data) {
 function updateData(id, data) {
         data.forEach(function (d) {
             d.date = formatDate.parse(d.item1);
-            d.close = +d.item2;
+            d.close = +d.item2+5;
         });
 
         // Scale the range of the data again 
@@ -86,7 +86,11 @@ function updateData(id, data) {
             .call(xAxis);
         svg.select(".y.axis") // change the y axis
             .duration(750)
-            .call(yAxis);
+            .call(yAxis)
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em");
 }
 
 

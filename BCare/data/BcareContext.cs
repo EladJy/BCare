@@ -263,7 +263,7 @@ namespace BCare.data
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(BUser_ID), YEAR(BTest_Date) as Year FROM blood_test WHERE blood_test.BUser_ID=@User_ID GROUP BY Year ORDER BY COUNT(BUser_ID) DESC", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(BUser_ID), YEAR(BTest_Date) as Year FROM blood_test WHERE blood_test.BUser_ID=314118456 GROUP BY Year ORDER BY YEAR(BTest_Date) ASC", conn);
                 cmd.Parameters.AddWithValue("@User_ID", userID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -374,7 +374,7 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        info = "<h2>" + reader.GetString("BOA_Name") + "</h2>" + reader.GetString("Info");
+                        info = "<h2 style=\"direction: ltr; text-align:right;\">" + reader.GetString("BOA_Name") + "</h2>" + reader.GetString("Info");
                     }
                     conn.Close();
                 }

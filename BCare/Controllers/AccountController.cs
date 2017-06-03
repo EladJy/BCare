@@ -29,6 +29,20 @@ namespace BCare.Controllers
             return View();
         }
         
+        public JsonResult BtCount()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            List<Tuple<string, int>> listHMO = context.UserBloodTestByDateStats(Int32.Parse(cookie.Substring(10)));
+            return Json(listHMO);
+        }
+
+        public IActionResult Stats()
+        {
+            String cookie = Request.Cookies["Session"];
+            ViewBag.UserID = Int32.Parse(cookie.Substring(10));
+            return View();
+        }
         public IActionResult Register()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
@@ -87,13 +101,6 @@ namespace BCare.Controllers
         }
 
         public IActionResult AddBloodTest()
-        {
-            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
-            String cookie = Request.Cookies["Session"];
-            return View();
-        }
-
-        public IActionResult Stats()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];

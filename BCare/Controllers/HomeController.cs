@@ -12,7 +12,6 @@ namespace BCare.Controllers
 {
     public class HomeController : Controller
     {
-        string error;
         BcareContext context;
         public IActionResult Index()
         {

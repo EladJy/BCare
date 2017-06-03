@@ -1,0 +1,19 @@
+﻿<script src="~/js/btChart.js" asp-append-version="true"></script>
+@{
+    ViewBag.Title = "סטטיסטיקה ומעקב";
+}
+
+<h2>@ViewData["Title"]</h2>
+<h3>כמות בדיקות דם עבור כל שנה:</h3>
+<div id="option">
+    <input name="updateButton" id="updateButton"
+           type="button"
+           value="Update" />
+</div>
+<div id='btCount'></div>
+@if(ViewBag.UserID != null) {
+
+} else {
+<h2>You are not logged in!</h2>
+}
+

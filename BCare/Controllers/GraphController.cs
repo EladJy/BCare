@@ -18,7 +18,6 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             List<Tuple<string, int>> listHMO = context.countUsersByHMOStats();
-            var bla = Json(listHMO);
             return Json(listHMO);
         }
     }

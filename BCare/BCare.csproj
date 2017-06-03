@@ -20,6 +20,9 @@
     <Content Include="wwwroot\images\testRange\WithinLimitsRight.png" />
     <Content Include="wwwroot\js\aside.js" />
     <Content Include="wwwroot\js\aside.min.js" />
+    <Content Include="wwwroot\js\btChart.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="wwwroot\js\hmoChart.js" />
   </ItemGroup>
   <ItemGroup>

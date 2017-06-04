@@ -813,6 +813,58 @@ namespace BCare.data
             return avg;
         }
 
+        public List<blog> getAllPostsInBlog()
+        {
+            List <blog> blogPosts= new List<blog>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM blog", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        blogPosts.Add(new blog ()
+                        { 
+                        PostID = reader.GetInt32("Post_ID"),
+                        PostAuthorID = reader.GetInt32("Post_Author"),
+                        PostDate = reader.GetDateTime("Post_Date"),
+                        PostContent = reader.GetString("Post_Content"),
+                        PostTitle = reader.GetString("Post_Title"),
+                        PostModified = reader.GetDateTime("Post_Modified")
+                        });
+                    }
+                }
+                conn.Close();
+            }
+            return blogPosts;
+        }
+
+        public blog getPostByID (int PostID)
+        {
+            blog BLOG = new blog();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM blog WHERE Post_ID=@PostID ", conn);
+                cmd.Parameters.AddWithValue("PostID", PostID);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        BLOG.PostID = reader.GetInt32("Post_ID");
+                        BLOG.PostAuthorID = reader.GetInt32("Post_Author");
+                        BLOG.PostDate = reader.GetDateTime("Post_Date");
+                        BLOG.PostContent = reader.GetString("Post_Content");
+                        BLOG.PostTitle= reader.GetString("Post_Title");
+                        BLOG.PostModified = reader.GetDateTime("Post_Modified");
+                    }
+                }
+                conn.Close();
+            }
+            return BLOG;
+        }
+
         public void SetNewPost(int PostID, int authorID, string date, string content, string title, string dateModify)
         {
             using (MySqlConnection conn = GetConnection())

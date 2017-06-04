@@ -25,6 +25,7 @@ namespace BCare.Models.GA
                 arrGenome.CalculateFitness();
             }
             arrIndiv.Sort();
+            bestList.Add(arrIndiv[0]);
         }
 
         public void NextGeneration()
@@ -43,6 +44,7 @@ namespace BCare.Models.GA
                 arrIndiv[i].CalculateFitness();
             }
             arrIndiv.Sort();
+            bestList.Add(arrIndiv[0]);
         }
 
         public void Mutate(Individual indiv)
@@ -89,11 +91,12 @@ namespace BCare.Models.GA
 
         public void WriteNextGeneration()
         {
+            bestList.Sort();
             // just write the top 20
             System.Diagnostics.Debug.WriteLine("Generation {0}\n", generation);
-            for (int i = 0; i < populationSize; i++)
+            for (int i = 0; i < bestList.Count; i++)
             {
-                System.Diagnostics.Debug.WriteLine(((Individual)arrIndiv[i]).ToString() + " fitness: " + ((Individual)arrIndiv[i]).fitnessGrade);
+                System.Diagnostics.Debug.WriteLine(((Individual)bestList[i]).ToString() + " fitness: " + ((Individual)bestList[i]).fitnessGrade);
             }
         }
     }

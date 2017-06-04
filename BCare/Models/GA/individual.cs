@@ -18,6 +18,9 @@ namespace BCare.Models.GA
         public const int indivSize = 6;
         public double fitnessGrade = 100.0;
         public const int EXECPTION = 50;
+        public const int PRICE = 10;
+        public const int FEEDBACK = 10;
+        public const int NUM_OF_MEDICATIONS = 30;
 
         public Individual(int btID, BcareContext context)
         {
@@ -62,6 +65,7 @@ namespace BCare.Models.GA
                 BTVM = contextIndv.GetTestResultByID(bloodTestID);
             }
             double amountPerComp = EXECPTION / (double)BTVM.BTC.Count;
+            double amountPerMed = NUM_OF_MEDICATIONS / (double)indivSize-1;
             List<active_component_effect_in_med> aceList = contextIndv.getAllEffects();
             for (int i = 0; i < BTVM.BTC.Count; i++)
             {
@@ -108,14 +112,14 @@ namespace BCare.Models.GA
                 double avg = (min + max) / 2;
                 if (value < min)
                 {
-                    fitnessGrade = fitnessGrade - ((value / avg) * amountPerComp);
+                    fitnessGrade = fitnessGrade - ((1 - (value / avg)) * amountPerComp);
                 }
                 else if (value > max)
                 {
-                    fitnessGrade = fitnessGrade - ((avg / value) * amountPerComp);
+                    fitnessGrade = fitnessGrade - ((1 - (avg / value)) * amountPerComp);
                 }
+                fitnessGrade = fitnessGrade - amountPerMed * (hs.Count-1); // 10% of fitness
             }
-
 
         }
 

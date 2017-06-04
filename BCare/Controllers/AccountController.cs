@@ -13,7 +13,7 @@ namespace BCare.Controllers
     {
         BcareContext context;
 
-        
+
         public IActionResult Index()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
@@ -26,14 +26,17 @@ namespace BCare.Controllers
             //List<Tuple<string, int>> listBT = context.countUsersByBloodTypeStats();
             //List<Tuple<string, int>> listBloodTestByDate = context.UserBloodTestByDateStats(39341227);
             List<Tuple<DateTime, double>> listCompStats = context.CompValuesStats(39341227, 2);
+            //context.SetNewComment(314118456,5,1,"04-06-2017",4,"Veru helpful");
+            //context.DeleteComment(314118456, 5, 1);
+            //context.UpdateComment(314118456, 5, 1, "04-06-2017", 2, "Not So Good");
             return View();
         }
-        
+
         public JsonResult BtCount()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            if(cookie != null)
+            if (cookie != null)
             {
                 List<Tuple<string, int>> listHMO = context.UserBloodTestByDateStats(Int32.Parse(cookie.Substring(10))); return Json(listHMO);
             }
@@ -43,7 +46,7 @@ namespace BCare.Controllers
         public IActionResult Stats()
         {
             String cookie = Request.Cookies["Session"];
-            if(cookie != null)
+            if (cookie != null)
             {
                 ViewBag.UserID = Int32.Parse(cookie.Substring(10));
             }
@@ -53,9 +56,9 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            if(cookie == null)
+            if (cookie == null)
             {
-                List < health_maintenance_organizations > listHMO = context.GetAllHMO();
+                List<health_maintenance_organizations> listHMO = context.GetAllHMO();
                 ViewBag.ListHMO = new SelectList(listHMO, "HMOID", "HMOName");
 
             }
@@ -67,7 +70,7 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             context.Register(newUser.user.UserID, newUser.user.FirstName, newUser.user.LastName, newUser.user.Gender.ToString(), newUser.user.BirthDate.ToString(), newUser.user.HMOID,
                 newUser.user.BloodType.ToString(), newUser.user.Address, newUser.user.UserName, newUser.user.PWHash, newUser.user.Email, newUser.isDoctor);
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult BloodTest()
@@ -91,14 +94,16 @@ namespace BCare.Controllers
                 ViewBag.UserTestResult = context.GetTestResultByID(id);
                 if (ViewBag.UserTestResult.BTC.Count != 0)
                 {
-                    if(ViewBag.UserID == ViewBag.UserTestResult.User_ID)
+                    if (ViewBag.UserID == ViewBag.UserTestResult.User_ID)
                     {
                         ViewBag.Message = "isCorrect";
-                    } else
+                    }
+                    else
                     {
                         ViewBag.Message = "ErrorID";
                     }
-                } else
+                }
+                else
                 {
                     ViewBag.Message = "NoTests";
                 }
@@ -113,7 +118,8 @@ namespace BCare.Controllers
             return View();
         }
 
-        public IActionResult UpdateDetails()        {
+        public IActionResult UpdateDetails()
+        {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
             var userDetails = context.GetUserDetailsByID(Int32.Parse(cookie.Substring(10)));
@@ -134,18 +140,26 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
             int presId = context.GetPresByBloodTest(id);
-            if(presId == 0)
+            if (presId == 0)
             {
                 Models.GA.Population po = new Models.GA.Population(id, context);
-                po.WriteNextGeneration();
                 for (int i = 0; i < 99; i++)
                 {
                     po.NextGeneration();
-                    po.WriteNextGeneration();
                 }
+                po.WriteNextGeneration();
                 return View();
-            } else
+            }
+            else
             {
+                Models.GA.Population po = new Models.GA.Population(id, context);
+                //po.WriteNextGeneration();
+                for (int i = 0; i < 99; i++)
+                {
+                    po.NextGeneration();
+                }
+                po.WriteNextGeneration();
+                return View();
                 presCommentViewModel prescription = context.getPrescriptionDetails(presId, id);
                 return View(prescription);
             }
@@ -168,7 +182,8 @@ namespace BCare.Controllers
                 UserDetailViewModel userDetails = context.GetUserDetailsByID(Int32.Parse(cookie.Substring(10)));
                 userDetails.user.PWHash = "";
                 return View(userDetails);
-            } else
+            }
+            else
             {
                 return View();
             }

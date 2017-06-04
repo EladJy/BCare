@@ -853,6 +853,21 @@ namespace BCare.data
                 conn.Close();
             }
         }
+
+        public void DeletePost(int Post_ID)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("DELETE FROM blog WHERE Post_ID=@Post_ID", conn);
+                cmd.Parameters.AddWithValue("@Post_ID", Post_ID);
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
+
         public BloodTestViewModel GetTestResultByID(int testId)
         {
             BloodTestViewModel BTVM = new BloodTestViewModel();

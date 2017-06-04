@@ -32,6 +32,7 @@ namespace BCare.Controllers
             //context.SetNewPost(1, 34928267 , "04-06-2017", "BLA BLA", "Great Site", "04-06-2017");
             //context.UpdatePost(1, 34928267, "04-06-2017", "ALB ALB", "Great Site :)", "04-06-2017");
             //double avg = context.GetAvgRatingBySOMID(5);
+            //context.DeletePost(1);
             return View();
         }
         

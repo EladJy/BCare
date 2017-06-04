@@ -583,7 +583,7 @@ namespace BCare.data
 
         public int GetPresByBloodTest(int bloodTestID)
         {
-            int ID;
+            int ID = 0;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -592,7 +592,10 @@ namespace BCare.data
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     reader.Read();
-                    ID = reader.GetInt32("Pres_ID");
+                    if (reader.HasRows)
+                    {
+                        ID = reader.GetInt32("Pres_ID");
+                    }
                 }
                 conn.Close();
                 return ID;

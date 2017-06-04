@@ -133,14 +133,22 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            Models.GA.Population po = new Models.GA.Population(id , context);
-            po.WriteNextGeneration();
-            for (int i = 0; i < 99; i++)
+            int presId = context.GetPresByBloodTest(id);
+            if(presId == 0)
             {
-                po.NextGeneration();
+                Models.GA.Population po = new Models.GA.Population(id, context);
                 po.WriteNextGeneration();
+                for (int i = 0; i < 99; i++)
+                {
+                    po.NextGeneration();
+                    po.WriteNextGeneration();
+                }
+                return View();
+            } else
+            {
+                presCommentViewModel prescription = context.getPrescriptionDetails(presId, id);
+                return View(prescription);
             }
-            return View(context.getPrescriptionDetails(context.GetPresByBloodTest(id) , id));
         }
         public IActionResult TestInfo()
         {

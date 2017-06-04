@@ -225,6 +225,30 @@ p.Login {
     margin-left: 5px;
 }
 /*=============================
+    RATING
+  =============================*/
+.rating {
+    float: left;
+    width: 150px;
+    height: 25px;
+    margin: 2px 0px 0px 2px;
+}
+.star-a {
+    background: url(../images/rating/star1.png) center center no-repeat;
+}
+.star-b {
+    background: url(../images/rating/star2.png) center center no-repeat;
+}
+.star-c {
+    background: url(../images/rating/star3.png) center center no-repeat;
+}
+.star-d {
+    background: url(../images/rating/star4.png) center center no-repeat;
+}
+.star-e {
+    background: url(../images/rating/star5.png) center center no-repeat;
+}
+/*=============================
     TEST
   =============================*/
 

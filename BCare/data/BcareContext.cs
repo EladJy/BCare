@@ -796,6 +796,23 @@ namespace BCare.data
             }
         }
 
+        public double GetAvgRatingBySOMID(int SOM_ID)
+        {
+            double avg;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT AVG(rating) FROM review_or_feedback WHERE RFSOM_ID=@SOM_ID", conn);
+                cmd.Parameters.AddWithValue("SOM_ID", SOM_ID);
+
+                avg = (double) cmd.ExecuteScalar();
+               
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+            return avg;
+        }
+
         public void SetNewPost(int PostID, int authorID, string date, string content, string title, string dateModify)
         {
             using (MySqlConnection conn = GetConnection())

@@ -758,6 +758,8 @@ namespace BCare.data
             }
         }
 
+       
+
         public void UpdateComment(int UserID, int SomID, int PresID, string date, int rating, string text)
         {
             using (MySqlConnection conn = GetConnection())
@@ -794,6 +796,46 @@ namespace BCare.data
             }
         }
 
+        public void SetNewPost(int PostID, int authorID, string date, string content, string title, string dateModify)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO blog VALUES (@Post_ID, @Post_Author, @Post_Date, @Post_Content, @Post_Title, @Post_Modified) ", conn);
+                cmd.Parameters.AddWithValue("@Post_ID", PostID);
+                cmd.Parameters.AddWithValue("@Post_Author", authorID);
+                DateTime dt = Convert.ToDateTime(date);
+                cmd.Parameters.AddWithValue("@Post_Date", dt);
+                cmd.Parameters.AddWithValue("@Post_Content", content);
+                cmd.Parameters.AddWithValue("@Post_Title", title);
+                DateTime dt2 = Convert.ToDateTime(dateModify);
+                cmd.Parameters.AddWithValue("@Post_Modified", dt2);
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
+        public void UpdatePost(int PostID, int authorID, string date, string content, string title, string dateModify)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("Update blog SET Post_Content=@Post_Content, Post_Title=@Post_Title, Post_Modified=@Post_Modified WHERE Post_ID=@Post_ID AND Post_Author=@Post_Author", conn);
+                cmd.Parameters.AddWithValue("@Post_ID", PostID);
+                cmd.Parameters.AddWithValue("@Post_Author", authorID);
+                DateTime dt = Convert.ToDateTime(date);
+                cmd.Parameters.AddWithValue("@Post_Date", dt);
+                cmd.Parameters.AddWithValue("@Post_Content", content);
+                cmd.Parameters.AddWithValue("@Post_Title", title);
+                DateTime dt2 = Convert.ToDateTime(dateModify);
+                cmd.Parameters.AddWithValue("@Post_Modified", dt2);
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
         public BloodTestViewModel GetTestResultByID(int testId)
         {
             BloodTestViewModel BTVM = new BloodTestViewModel();

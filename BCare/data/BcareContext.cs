@@ -681,6 +681,7 @@ namespace BCare.data
             return userDetails;
         }
 
+
         public void UpdateUserDetails(int User_ID, string firstName, string lastName, string Gender, string birth, int HMOID, string bloodType, string Address, string userName, string pwd, string Email, bool isDoctor)
         {
             string permissionUser = "User";
@@ -733,6 +734,62 @@ namespace BCare.data
                     cmd.Parameters.AddWithValue("@permissionUser", permissionUser);
                     cmd.ExecuteNonQuery();
                 }
+                conn.Close();
+            }
+        }
+
+        public void SetNewComment(int UserID, int SomID, int PresID, string date, int rating, string text)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO review_or_feedback VALUES (@User_ID, @Som_ID, @Pres_ID, @Com_Date, @Com_Rating, @Com_Content) ", conn);
+                cmd.Parameters.AddWithValue("@User_ID", UserID);
+                cmd.Parameters.AddWithValue("@Som_ID", SomID);
+                cmd.Parameters.AddWithValue("@Pres_ID", PresID);
+                DateTime dt = Convert.ToDateTime(date);
+                cmd.Parameters.AddWithValue("@Com_Date", dt);
+                cmd.Parameters.AddWithValue("@Com_Rating", rating);
+                cmd.Parameters.AddWithValue("@Com_Content", text);
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
+
+        public void UpdateComment(int UserID, int SomID, int PresID, string date, int rating, string text)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("UPDATE review_or_feedback SET Review_Date=@Com_Date, rating=@Com_Rating, Text=@Com_Content  WHERE RFUser_ID=@User_ID AND RFSOM_ID=@Som_ID AND RFPres_ID=@Pres_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", UserID);
+                cmd.Parameters.AddWithValue("@Som_ID", SomID);
+                cmd.Parameters.AddWithValue("@Pres_ID", PresID);
+                DateTime dt = Convert.ToDateTime(date);
+                cmd.Parameters.AddWithValue("@Com_Date", dt);
+                cmd.Parameters.AddWithValue("@Com_Rating", rating);
+                cmd.Parameters.AddWithValue("@Com_Content", text);
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
+
+        public void DeleteComment(int UserID, int SomID, int PresID)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("DELETE FROM review_or_feedback WHERE RFUser_ID=@User_ID AND RFSOM_ID=@Som_ID AND RFPres_ID=@Pres_ID", conn);
+                cmd.Parameters.AddWithValue("@User_ID", UserID);
+                cmd.Parameters.AddWithValue("@Som_ID", SomID);
+                cmd.Parameters.AddWithValue("@Pres_ID", PresID);
+          
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
                 conn.Close();
             }
         }

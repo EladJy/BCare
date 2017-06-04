@@ -26,6 +26,9 @@ namespace BCare.Controllers
             //List<Tuple<string, int>> listBT = context.countUsersByBloodTypeStats();
             //List<Tuple<string, int>> listBloodTestByDate = context.UserBloodTestByDateStats(39341227);
             List<Tuple<DateTime, double>> listCompStats = context.CompValuesStats(39341227, 2);
+            //context.SetNewComment(314118456,5,1,"04-06-2017",4,"Veru helpful");
+            //context.DeleteComment(314118456, 5, 1);
+            //context.UpdateComment(314118456, 5, 1, "04-06-2017", 2, "Not So Good");
             return View();
         }
         

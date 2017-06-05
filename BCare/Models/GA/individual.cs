@@ -59,7 +59,7 @@ namespace BCare.Models.GA
 
         public void CalculateFitness()
         {
-
+            fitnessGrade = 100;
             if (BTVM == null)
             {
                 BTVM = new BloodTestViewModel();
@@ -70,6 +70,7 @@ namespace BCare.Models.GA
             double amountOnPres = MEDICAL_PRESCRIPTION / (double)genomeList.Count;
             double amountOnPlan = IN_HEALTH_PLAN / (double)genomeList.Count;
             List<active_component_effect_in_med> aceList = contextIndv.getAllEffects();
+            Dictionary<int, double> avgDic = contextIndv.GetAvgRating();
             for (int i = 0; i < BTVM.BTC.Count; i++)
             {
                 double min = 0;
@@ -117,7 +118,12 @@ namespace BCare.Models.GA
                     {
                         fitnessGrade = fitnessGrade - amountOnPres;
                     }
-                    double avgRating = contextIndv.GetAvgRatingBySOMID(genomeList[j].med.SomID);
+                    double avgRating = 5;
+                    avgDic.TryGetValue(genomeList[j].med.SomID,out double avgRate);
+                    if(avgRate != 0)
+                    {
+                        avgRating = avgRate;
+                    }
                     fitnessGrade = fitnessGrade - (PRICE - avgRating * 2);
                     
                 }

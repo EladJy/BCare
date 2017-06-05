@@ -14,7 +14,9 @@ namespace BCare.Models.GA
         public List<Individual> arrIndiv = new List<Individual>();
         public List<Individual> nextArrIndiv = new List<Individual>();
         public List<Individual> bestList = new List<Individual>();
+        List<int> listOfIndexes = new List<int>();
         const int populationSize = 20;
+        bool[] arrCheck = new bool[populationSize];
         int generation = 1;
         public Population(int btID , BcareContext context)
         {
@@ -24,7 +26,7 @@ namespace BCare.Models.GA
                 arrIndiv.Add(arrGenome);
                 arrGenome.CalculateFitness();
             }
-            arrIndiv.Sort();
+            //arrIndiv.Sort();
             bestList.Add(arrIndiv[0]);
         }
 
@@ -37,19 +39,20 @@ namespace BCare.Models.GA
             for(int i = 0; i <arrIndiv.Count;i++)
             {
                 Mutate(arrIndiv[i]); // Mutation
-            }
-
-            for (int i = 0; i < arrIndiv.Count; i++)
-            {
                 arrIndiv[i].CalculateFitness();
             }
-            arrIndiv.Sort();
+
+            //for (int i = 0; i < arrIndiv.Count; i++)
+            //{
+            //    arrIndiv[i].CalculateFitness();
+            //}
+            //arrIndiv.Sort();
             bestList.Add(arrIndiv[0]);
         }
 
         public void Mutate(Individual indiv)
         {
-            if(RandomNumber(0,100) < 5)
+            if(RandomNumber(0,100) < 3)
             {
                 indiv.Mutate();
             }
@@ -62,31 +65,68 @@ namespace BCare.Models.GA
                 return random.Next(min, max);
             }
         }
+
+        public int generateIfExist(int max)
+        {
+            int number = 0;
+            do
+            {
+              number = RandomNumber(0, max);
+            } while (arrCheck[listOfIndexes[number]]);
+            arrCheck[listOfIndexes[number]] = true;
+            return listOfIndexes[number];
+        }
         public void DoBabies(List<Individual> indivList)
         {
-            List<Individual> geneDads = new List<Individual>();
-            List<Individual> geneMoms = new List<Individual>();
+            // 1. For on all indiv list
+            // sum of fitness grade from all indiv
+            // create array of sums 
+            // 2. on half list random from 0 to sum
+            // select with random number -->50babies
+            // 3. the second half 
 
+            //List<Individual> geneDads = new List<Individual>();
+            //List<Individual> geneMoms = new List<Individual>();
+
+            int sumOfIndiv = 0;
             for (int i = 0; i < indivList.Count; i++)
             {
-                if(i < indivList.Count/2)
-                {
-                    geneDads.Add(indivList[i]);
-                } else
-                {
-                    geneMoms.Add(indivList[i]);
-                }
+                sumOfIndiv = sumOfIndiv + Convert.ToInt32(indivList[i].fitnessGrade);
+                listOfIndexes.AddRange(Enumerable.Repeat(i, Convert.ToInt32(indivList[i].fitnessGrade)));
+                //if(i < indivList.Count/2)
+                //{
+                //    geneDads.Add(indivList[i]);
+                //} else
+                //{
+                //    geneMoms.Add(indivList[i]);
+                //}
+            }
+            arrCheck = new bool[indivList.Count];
+            for (int i = 0; i < indivList.Count / 2; i++)
+            {
+                int number = generateIfExist(sumOfIndiv);
+                nextArrIndiv.Add(indivList[number]);
+
             }
 
-            for(int i=0; i < indivList.Count /2; i++)
+            arrCheck = new bool[indivList.Count];
+            for (int i = 0; i < indivList.Count / 2; i++)
             {
-                Individual geneBabyA = new Individual(geneDads[i], geneMoms[i]);
-                Individual geneBabyB = new Individual(geneMoms[i], geneDads[i]);
-                //geneBabyA.CalculateFitness();
-                //geneBabyB.CalculateFitness();
-                nextArrIndiv.Add(geneBabyA);
-                nextArrIndiv.Add(geneBabyB);
+                int dad = generateIfExist(sumOfIndiv);
+                int mom = generateIfExist(sumOfIndiv);
+                Individual geneBaby = new Individual(indivList[dad], indivList[mom]);
+                nextArrIndiv.Add(geneBaby);
             }
+
+            //for (int i=0; i < indivList.Count /2; i++)
+            //{
+            //    Individual geneBabyA = new Individual(geneDads[i], geneMoms[i]);
+            //    Individual geneBabyB = new Individual(geneMoms[i], geneDads[i]);
+            //    //geneBabyA.CalculateFitness();
+            //    //geneBabyB.CalculateFitness();
+            //    nextArrIndiv.Add(geneBabyA);
+            //    nextArrIndiv.Add(geneBabyB);
+            //}
         }
 
         public void WriteNextGeneration()

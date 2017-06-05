@@ -109,7 +109,7 @@ namespace BCare.data
             }
         }
 
-        public double GetEffectOnComp(int boaID , int somID)
+        public double GetEffectOnComp(int boaID, int somID)
         {
             double effect = 0;
             using (MySqlConnection conn = GetConnection())
@@ -758,7 +758,7 @@ namespace BCare.data
             }
         }
 
-       
+
 
         public void UpdateComment(int UserID, int SomID, int PresID, string date, int rating, string text)
         {
@@ -789,13 +789,38 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@User_ID", UserID);
                 cmd.Parameters.AddWithValue("@Som_ID", SomID);
                 cmd.Parameters.AddWithValue("@Pres_ID", PresID);
-          
+
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
                 conn.Close();
             }
         }
-
+        public Dictionary<int, double> GetAvgRating()
+        {
+            Dictionary<int, double> avgDic = new Dictionary<int, double>();
+            double avg = 5;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT rof.RFSOM_ID, AVG(rating) as avgRating FROM review_or_feedback rof GROUP BY rof.RFSOM_ID", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.HasRows)
+                        {
+                            if (reader["avgRating"] != DBNull.Value)
+                            {
+                                avg = reader.GetDouble("avgRating");
+                            }
+                        }
+                        avgDic.Add(reader.GetInt32("RFSOM_ID"), avg);
+                    }
+                }
+                conn.Close();
+            }
+            return avgDic;
+        }
         public double GetAvgRatingBySOMID(int SOM_ID)
         {
             double avg = 5;
@@ -809,7 +834,7 @@ namespace BCare.data
                     reader.Read();
                     if (reader.HasRows)
                     {
-                        if(reader["avgRating"] != DBNull.Value)
+                        if (reader["avgRating"] != DBNull.Value)
                         {
                             avg = reader.GetDouble("avgRating");
                         }
@@ -823,7 +848,7 @@ namespace BCare.data
 
         public List<blog> getAllPostsInBlog()
         {
-            List <blog> blogPosts= new List<blog>();
+            List<blog> blogPosts = new List<blog>();
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -832,14 +857,14 @@ namespace BCare.data
                 {
                     while (reader.Read())
                     {
-                        blogPosts.Add(new blog ()
-                        { 
-                        PostID = reader.GetInt32("Post_ID"),
-                        PostAuthorID = reader.GetInt32("Post_Author"),
-                        PostDate = reader.GetDateTime("Post_Date"),
-                        PostContent = reader.GetString("Post_Content"),
-                        PostTitle = reader.GetString("Post_Title"),
-                        PostModified = reader.GetDateTime("Post_Modified")
+                        blogPosts.Add(new blog()
+                        {
+                            PostID = reader.GetInt32("Post_ID"),
+                            PostAuthorID = reader.GetInt32("Post_Author"),
+                            PostDate = reader.GetDateTime("Post_Date"),
+                            PostContent = reader.GetString("Post_Content"),
+                            PostTitle = reader.GetString("Post_Title"),
+                            PostModified = reader.GetDateTime("Post_Modified")
                         });
                     }
                 }
@@ -848,7 +873,7 @@ namespace BCare.data
             return blogPosts;
         }
 
-        public blog getPostByID (int PostID)
+        public blog getPostByID(int PostID)
         {
             blog BLOG = new blog();
             using (MySqlConnection conn = GetConnection())
@@ -864,7 +889,7 @@ namespace BCare.data
                         BLOG.PostAuthorID = reader.GetInt32("Post_Author");
                         BLOG.PostDate = reader.GetDateTime("Post_Date");
                         BLOG.PostContent = reader.GetString("Post_Content");
-                        BLOG.PostTitle= reader.GetString("Post_Title");
+                        BLOG.PostTitle = reader.GetString("Post_Title");
                         BLOG.PostModified = reader.GetDateTime("Post_Modified");
                     }
                 }

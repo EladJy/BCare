@@ -15,7 +15,7 @@ namespace BCare.Models.GA
         public List<Individual> nextArrIndiv = new List<Individual>();
         public List<Individual> bestList = new List<Individual>();
         List<int> listOfIndexes = new List<int>();
-        const int populationSize = 20;
+        const int populationSize = 250;
         bool[] arrCheck = new bool[populationSize];
         int generation = 1;
         public Population(int btID , BcareContext context)
@@ -89,6 +89,7 @@ namespace BCare.Models.GA
             //List<Individual> geneMoms = new List<Individual>();
 
             int sumOfIndiv = 0;
+            listOfIndexes.Clear();
             for (int i = 0; i < indivList.Count; i++)
             {
                 sumOfIndiv = sumOfIndiv + Convert.ToInt32(indivList[i].fitnessGrade);

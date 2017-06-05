@@ -12,7 +12,8 @@ namespace BCare.Controllers
     public class AccountController : Controller
     {
         BcareContext context;
-
+        private static readonly Random random = new Random();
+        private static readonly object syncLock = new object();
 
         public IActionResult Index()
         {
@@ -137,25 +138,44 @@ namespace BCare.Controllers
 
         public IActionResult AnalyzeTest(int id)
         {
+            int presId;
+            presCommentViewModel prescription;
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            int presId = context.GetPresByBloodTest(id);
+            presId = context.GetPresByBloodTest(id);
             if (presId == 0)
             {
                 Models.GA.Population po = new Models.GA.Population(id, context);
-                for (int i = 0; i < 49; i++)
+                for (int i = 0; i < 1549; i++)
                 {
                     po.NextGeneration();
                 }
                 po.WriteNextGeneration();
-                return View();
+                Models.GA.Individual bestResult = po.bestList[0];
+                context.SetNewPrescription(id, DateTime.Now, 123123123);
+                presId = context.GetPresByBloodTest(id);
+                foreach (int med in bestResult.hashMed)
+                {
+                    context.SetNewPrescriptionDetails(presId, med, RandomNumber(1, 3), RandomNumber(5, 8), "");
+                }
+                prescription = context.getPrescriptionDetails(presId, id);
+                return View(prescription);
             }
             else
             {
-                presCommentViewModel prescription = context.getPrescriptionDetails(presId, id);
+                prescription = context.getPrescriptionDetails(presId, id);
                 return View(prescription);
             }
         }
+
+        public static int RandomNumber(int min, int max)
+        {
+            lock (syncLock)
+            { // synchronize
+                return random.Next(min, max);
+            }
+        }
+
         public IActionResult TestInfo()
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;

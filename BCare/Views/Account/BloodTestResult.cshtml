@@ -88,7 +88,7 @@
         </tbody>
     </table>
     <div class="form-group ">
-        <button asp-controller="Account" onclick="location.href='@Url.Action("AnalyzeTest", "Account",new { id = ViewContext.RouteData.Values["id"]})'" class="btn btn-danger btn-lg btn-block login-button">ניתוח נתונים</button>
+        <button id="analyzeButton" asp-controller="Account" onclick="location.href='@Url.Action("AnalyzeTest", "Account",new { id = ViewContext.RouteData.Values["id"]})'" class="btn btn-danger btn-lg btn-block login-button">ניתוח נתונים</button>
     </div>
                         }
                         else if (ViewBag.Message == "NoTests")
@@ -99,8 +99,30 @@
                             <h3>אל תנסה, אתה לא תצליח!</h3>
                         }
 
+<div class="loading" align="center">
+    אנא המתן , מנתחים את הבדיקה.<br />
+    <br />
+    <img src="~/images/loading.gif" height="50" width="50" alt="" />
+</div>
 
 <script>
+    $('#analyzeButton').click(function () {
+
+        ShowProgress();
+    });
+
+    function ShowProgress() {
+        setTimeout(function () {
+            var modal = $('<div />');
+            modal.addClass("modal");
+            $('body').append(modal);
+            var loading = $(".loading");
+            loading.show();
+            var top = Math.max($(window).height() / 2 - loading[0].offsetHeight / 2, 0);
+            var left = Math.max($(window).width() / 2 - loading[0].offsetWidth / 2, 0);
+            loading.css({ top: top, left: left });
+        }, 200);
+    }
     $(document).ready(function () {
         loadSliderStyles();
     });

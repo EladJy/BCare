@@ -11,9 +11,11 @@ namespace BCare.Models.GA
     {
         static BcareContext contextIndv;
         static int bloodTestID;
+        static Dictionary<int, double> avgDic = null;
+        static List<active_component_effect_in_med> aceList = null;
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
-        List<Genome> genomeList = new List<Genome>();
+        public List<Genome> genomeList = new List<Genome>();
         static BloodTestViewModel BTVM;
         public const int indivSize = 6;
         public double fitnessGrade = 100.0;
@@ -22,6 +24,9 @@ namespace BCare.Models.GA
         public const int MEDICAL_PRESCRIPTION = 5;
         public const int IN_HEALTH_PLAN = 5;
         public const int NUM_OF_MEDICATIONS = 30;
+        public bool noExecptions = false;
+        public string text = "";
+        public HashSet<int> hashMed;
 
         public Individual(int btID, BcareContext context)
         {
@@ -56,7 +61,6 @@ namespace BCare.Models.GA
             Genome newGenome = new Genome(contextIndv);
             genomeList[MutationIndex] = newGenome;
         }
-
         public void CalculateFitness()
         {
             fitnessGrade = 100;
@@ -64,13 +68,14 @@ namespace BCare.Models.GA
             {
                 BTVM = new BloodTestViewModel();
                 BTVM = contextIndv.GetTestResultByID(bloodTestID);
+                avgDic = contextIndv.GetAvgRating();
+                aceList = contextIndv.getAllEffects();
             }
             double amountPerComp = EXECPTION / (double)BTVM.BTC.Count;
             double amountPerMed = NUM_OF_MEDICATIONS / (double)(indivSize-1);
             double amountOnPres = MEDICAL_PRESCRIPTION / (double)genomeList.Count;
             double amountOnPlan = IN_HEALTH_PLAN / (double)genomeList.Count;
-            List<active_component_effect_in_med> aceList = contextIndv.getAllEffects();
-            Dictionary<int, double> avgDic = contextIndv.GetAvgRating();
+            int countGoods = 0;
             for (int i = 0; i < BTVM.BTC.Count; i++)
             {
                 double min = 0;
@@ -95,10 +100,21 @@ namespace BCare.Models.GA
                     }
                 }
                 value = BTVM.BTC[i].btData.Value;
-                HashSet<int> hs = new HashSet<int>();
+                if(value > min && value < max)
+                {
+                    countGoods++;
+                }
+                if(value < min)
+                {
+                    text = text + "<li>מחסור ב " + BTVM.BTC[i].BOAComp.BOA_Name + "</li>";
+                } else if(value > min)
+                {
+                    text = text + "<li>עודף ב " + BTVM.BTC[i].BOAComp.BOA_Name + "</li>";
+                }
+                hashMed = new HashSet<int>();
                 for (int j = 0; j < genomeList.Count; j++)
                 {
-                    if (!hs.Contains(genomeList[j].med.SomID))
+                    if (!hashMed.Contains(genomeList[j].med.SomID))
                     {
                         for (int k = 0; k < aceList.Count; k++)
                         {
@@ -108,13 +124,13 @@ namespace BCare.Models.GA
                             }
                             //value = BTVM.BTC[i].btData.Value + contextIndv.GetEffectOnComp(BTVM.BTC[i].BOAComp.BOA_ID, genomeList[j].med.SomID) * ((max - min) / 100);
                         }
-                        hs.Add(genomeList[j].med.SomID);
+                        hashMed.Add(genomeList[j].med.SomID);
                     }
                     if (genomeList[j].med.InHealthPlan.ToString().Equals("N"))
                     {
                         fitnessGrade = fitnessGrade - amountOnPlan;
                     }
-                    if(genomeList[j].med.WithMedicalPrescription.ToString().Equals("N"))
+                    if(genomeList[j].med.WithMedicalPrescription.ToString().Equals("Y"))
                     {
                         fitnessGrade = fitnessGrade - amountOnPres;
                     }
@@ -138,7 +154,12 @@ namespace BCare.Models.GA
                 {
                     fitnessGrade = fitnessGrade - ((1 - (avg / value)) * amountPerComp);
                 }
-                fitnessGrade = fitnessGrade - amountPerMed * (hs.Count-1); // 30% of fitness
+                fitnessGrade = fitnessGrade - amountPerMed * (hashMed.Count-1); // 30% of fitness
+            }
+            if(countGoods == BTVM.BTC.Count)
+            {
+                noExecptions = true;
+                text = "כל הבדיקות יצאו תקינות!";
             }
 
         }
@@ -159,6 +180,11 @@ namespace BCare.Models.GA
             { // synchronize
                 return random.Next(min, max);
             }
+        }
+
+        public int getIndvSize()
+        {
+            return indivSize;
         }
     }
 }

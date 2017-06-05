@@ -757,7 +757,37 @@ namespace BCare.data
                 conn.Close();
             }
         }
-
+        public void SetNewPrescription(int PBTest_ID, DateTime Pres_Date, int Recomendor_ID)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO prescription(PBTest_ID, Pres_Date, Recomendor_ID) VALUES (@PBTest_ID, @Pres_Date, @Recomendor_ID) ", conn);
+                cmd.Parameters.AddWithValue("@PBTest_ID", PBTest_ID);
+                DateTime dt = Convert.ToDateTime(Pres_Date);
+                cmd.Parameters.AddWithValue("@Pres_Date", dt);
+                cmd.Parameters.AddWithValue("@Recomendor_ID", Recomendor_ID);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
+        public void SetNewPrescriptionDetails(int PDPres_ID, int PDSOM_ID, int Amount_To_Consume_Per_Day, int Days_To_Consume,string text)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO prescription_details VALUES (@PDPres_ID, @PDSOM_ID, @Amount_To_Consume_Per_Day, @Days_To_Consume, @text) ", conn);
+                cmd.Parameters.AddWithValue("@PDPres_ID", PDPres_ID);
+                cmd.Parameters.AddWithValue("@PDSOM_ID", PDSOM_ID);
+                cmd.Parameters.AddWithValue("@Amount_To_Consume_Per_Day", Amount_To_Consume_Per_Day);
+                cmd.Parameters.AddWithValue("@Days_To_Consume", Days_To_Consume);
+                cmd.Parameters.AddWithValue("@text", text);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
 
 
         public void UpdateComment(int UserID, int SomID, int PresID, string date, int rating, string text)

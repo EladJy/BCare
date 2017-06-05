@@ -143,7 +143,7 @@ namespace BCare.Controllers
             if (presId == 0)
             {
                 Models.GA.Population po = new Models.GA.Population(id, context);
-                for (int i = 0; i < 99; i++)
+                for (int i = 0; i < 49; i++)
                 {
                     po.NextGeneration();
                 }
@@ -154,7 +154,7 @@ namespace BCare.Controllers
             {
                 Models.GA.Population po = new Models.GA.Population(id, context);
                 //po.WriteNextGeneration();
-                for (int i = 0; i < 99; i++)
+                for (int i = 0; i < 49; i++)
                 {
                     po.NextGeneration();
                 }

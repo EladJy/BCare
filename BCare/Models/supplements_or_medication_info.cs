@@ -32,12 +32,12 @@ namespace BCare.Models
     }
     public enum InHealthPlan
     {
-        Yes,
-        No
+        Y,
+        N
     }
     public enum WithMedicalPrescription
     {
-        Yes,
-        No
+        Y,
+        N
     }
 }

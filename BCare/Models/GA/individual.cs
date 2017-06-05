@@ -19,7 +19,8 @@ namespace BCare.Models.GA
         public double fitnessGrade = 100.0;
         public const int EXECPTION = 50;
         public const int PRICE = 10;
-        public const int FEEDBACK = 10;
+        public const int MEDICAL_PRESCRIPTION = 5;
+        public const int IN_HEALTH_PLAN = 5;
         public const int NUM_OF_MEDICATIONS = 30;
 
         public Individual(int btID, BcareContext context)
@@ -65,7 +66,9 @@ namespace BCare.Models.GA
                 BTVM = contextIndv.GetTestResultByID(bloodTestID);
             }
             double amountPerComp = EXECPTION / (double)BTVM.BTC.Count;
-            double amountPerMed = NUM_OF_MEDICATIONS / (double)indivSize-1;
+            double amountPerMed = NUM_OF_MEDICATIONS / (double)(indivSize-1);
+            double amountOnPres = MEDICAL_PRESCRIPTION / (double)genomeList.Count;
+            double amountOnPlan = IN_HEALTH_PLAN / (double)genomeList.Count;
             List<active_component_effect_in_med> aceList = contextIndv.getAllEffects();
             for (int i = 0; i < BTVM.BTC.Count; i++)
             {
@@ -106,6 +109,17 @@ namespace BCare.Models.GA
                         }
                         hs.Add(genomeList[j].med.SomID);
                     }
+                    if (genomeList[j].med.InHealthPlan.ToString().Equals("N"))
+                    {
+                        fitnessGrade = fitnessGrade - amountOnPlan;
+                    }
+                    if(genomeList[j].med.WithMedicalPrescription.ToString().Equals("N"))
+                    {
+                        fitnessGrade = fitnessGrade - amountOnPres;
+                    }
+                    double avgRating = contextIndv.GetAvgRatingBySOMID(genomeList[j].med.SomID);
+                    fitnessGrade = fitnessGrade - (PRICE - avgRating * 2);
+                    
                 }
                 if (value < 0)
                     value = 0.000000000001;
@@ -118,7 +132,7 @@ namespace BCare.Models.GA
                 {
                     fitnessGrade = fitnessGrade - ((1 - (avg / value)) * amountPerComp);
                 }
-                fitnessGrade = fitnessGrade - amountPerMed * (hs.Count-1); // 10% of fitness
+                fitnessGrade = fitnessGrade - amountPerMed * (hs.Count-1); // 30% of fitness
             }
 
         }

@@ -120,9 +120,9 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@Som_ID", somID);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
+                    reader.Read();
                     if (reader.HasRows)
                     {
-                        reader.Read();
                         effect = reader.GetDouble("Effect");
                     }
                 }
@@ -798,16 +798,24 @@ namespace BCare.data
 
         public double GetAvgRatingBySOMID(int SOM_ID)
         {
-            double avg;
+            double avg = 5;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SELECT AVG(rating) FROM review_or_feedback WHERE RFSOM_ID=@SOM_ID", conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT AVG(rating) as avgRating FROM review_or_feedback WHERE RFSOM_ID=@SOM_ID", conn);
                 cmd.Parameters.AddWithValue("SOM_ID", SOM_ID);
-
-                avg = (double) cmd.ExecuteScalar();
-               
-                cmd.Parameters.Clear();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    if (reader.HasRows)
+                    {
+                        if(reader["avgRating"] != DBNull.Value)
+                        {
+                            avg = reader.GetDouble("avgRating");
+                        }
+                    }
+                    cmd.Parameters.Clear();
+                }
                 conn.Close();
             }
             return avg;

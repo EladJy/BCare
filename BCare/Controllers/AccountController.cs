@@ -152,14 +152,6 @@ namespace BCare.Controllers
             }
             else
             {
-                Models.GA.Population po = new Models.GA.Population(id, context);
-                //po.WriteNextGeneration();
-                for (int i = 0; i < 49; i++)
-                {
-                    po.NextGeneration();
-                }
-                po.WriteNextGeneration();
-                return View();
                 presCommentViewModel prescription = context.getPrescriptionDetails(presId, id);
                 return View(prescription);
             }

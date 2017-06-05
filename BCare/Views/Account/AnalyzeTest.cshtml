@@ -2,13 +2,13 @@
 
 <h2>ניתוח נתונים</h2>
 <h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.bloodTest_Date.ToString("dd/MM/yyyy"):</b></h4>
-לאחר ניתוח התוצאות מערכת BCare זיהתה כי ישנו מחסור ב:<br />
+לאחר ניתוח התוצאות מערכת <b>BCare</b> זיהתה:<br />
 @foreach (var item in Model.somcList)
 {
     @Html.Raw(@item.pres.Text)
     <div>כמות צריכה יומית: @item.pres.AmountToConsume</div>
     <div>ימי צריכה: @item.pres.DaysToConsume</div>
-
+    <br />
 }
 @*<ul>
     <li>Vitamin D</li>
@@ -32,10 +32,12 @@
     <li>באופן זה הגוף צורך בטא קרוטן - פגמנט צהוב כתום ממשפחת הקרטנואידים - המקור העיקרי לויטמין A בגוף.</li>
 </ul>*@
 
+
 <h2>תגובות:</h2>
 <div class="feedbackSection">
     @foreach (var item in Model.rofvmList)
     {
+
         <div>
             <header>
                 <b><u>שם:</u></b> @item.first_Name @item.last_Name

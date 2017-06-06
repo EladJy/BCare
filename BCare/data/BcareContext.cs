@@ -277,8 +277,8 @@ namespace BCare.data
                     {
                         BOAList.Add(Tuple.Create(reader.GetInt32("BOA_ID"), reader.GetString("BOA_Name")));
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return BOAList;
         }
@@ -323,9 +323,9 @@ namespace BCare.data
                         {
                             BOARange.Add(Tuple.Create(reader.GetDouble("Women_Min"), reader.GetDouble("Women_Max")));
                         }
-                        conn.Close();
                     }
                 }
+                conn.Close();
             }
             return BOARange;
         }
@@ -347,8 +347,8 @@ namespace BCare.data
                     {
                         testValuesByCompId.Add(Tuple.Create(reader.GetDateTime("DATE(BTest_Date)"), reader.GetDouble("Value")));
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return testValuesByCompId;
         }
@@ -366,8 +366,8 @@ namespace BCare.data
                     {
                         countBloodType.Add(Tuple.Create(reader.GetString("Blood_Type"), reader.GetInt32("COUNT(User_ID)")));
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return countBloodType;
         }
@@ -387,8 +387,8 @@ namespace BCare.data
                     {
                         countBloodTests.Add(Tuple.Create(reader.GetString("Year"), reader.GetInt32("COUNT(BUser_ID)")));
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return countBloodTests;
         }
@@ -502,8 +502,8 @@ namespace BCare.data
                     {
                         info = "<h2 style=\"direction: ltr; text-align:right;\">" + reader.GetString("BOA_Name") + "</h2>" + reader.GetString("Info");
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return info;
         }
@@ -521,8 +521,8 @@ namespace BCare.data
                     {
                         countHMO.Add(Tuple.Create(reader.GetString("HMO_NAME"), reader.GetInt32("COUNT(User_ID)")));
                     }
-                    conn.Close();
                 }
+                conn.Close();
             }
             return countHMO;
         }
@@ -554,10 +554,14 @@ namespace BCare.data
                     Enum.TryParse(reader.GetString("Premission_Name"), out PremissionName PN);
                     if (PN.ToString().Equals("Admin"))
                     {
+                        conn.Close();
                         return true;
                     }
                     else
+                    {
+                        conn.Close();
                         return false;
+                    }
                 }
             }
         }

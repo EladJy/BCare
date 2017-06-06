@@ -30,6 +30,7 @@ namespace BCare.Controllers
             //context.SetNewComment(314118456,5,1,"04-06-2017",4,"Veru helpful");
             //context.DeleteComment(314118456, 5, 1);
             //context.UpdateComment(314118456, 5, 1, "04-06-2017", 2, "Not So Good");
+            List<Tuple<double, double>> range = context.GetBOARangeByID(2, 314118456);
             return View();
         }
 

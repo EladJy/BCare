@@ -263,6 +263,74 @@ namespace BCare.data
             return HMOList;
         }
 
+        public List<Tuple<int, string>> GetBOAList()
+        {
+            List<Tuple<int, string>> BOAList = new List<Tuple<int, string>>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT BOA_ID,BOA_Name FROM blood_or_additive_component", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        BOAList.Add(Tuple.Create(reader.GetInt32("BOA_ID"), reader.GetString("BOA_Name")));
+                    }
+                    conn.Close();
+                }
+            }
+            return BOAList;
+        }
+
+        public List<Tuple<double, double>> GetBOARangeByID(int BOAId, int UserId)
+        {
+            List<Tuple<double, double>> BOARange = new List<Tuple<double, double>>();
+            String gender;
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+
+                MySqlCommand cmdG = new MySqlCommand("SELECT Gender FROM users WHERE User_ID=@User_ID", conn);
+                cmdG.Parameters.AddWithValue("User_ID", UserId);
+                using (MySqlDataReader reader = cmdG.ExecuteReader())
+                {
+                    reader.Read();
+                    gender = reader.GetString("Gender");
+                }
+
+                if (gender.Contains("M"))
+                {
+                    MySqlCommand cmdMan = new MySqlCommand("SELECT Men_Min, Men_Max FROM blood_or_additive_component WHERE BOA_ID=@BOA_ID", conn);
+                    cmdMan.Parameters.AddWithValue("BOA_ID", BOAId);
+                    using (MySqlDataReader reader = cmdMan.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            BOARange.Add(Tuple.Create(reader.GetDouble("Men_Min"), reader.GetDouble("Men_Max")));
+                        }
+                        conn.Close();
+                    }
+                }
+                else
+                {
+                    MySqlCommand cmdMan = new MySqlCommand("SELECT Women_Min, Women_Max FROM blood_or_additive_component WHERE BOA_ID=@BOA_ID", conn);
+                    cmdMan.Parameters.AddWithValue("BOA_ID", BOAId);
+                    using (MySqlDataReader reader = cmdMan.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            BOARange.Add(Tuple.Create(reader.GetDouble("Women_Min"), reader.GetDouble("Women_Max")));
+                        }
+                        conn.Close();
+                    }
+                }
+            }
+            return BOARange;
+        }
+
+
         public List<Tuple<DateTime, double>> CompValuesStats(int userID, int compID)
         { // values of component by tests
             List<Tuple<DateTime, double>> testValuesByCompId = new List<Tuple<DateTime, double>>();

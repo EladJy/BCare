@@ -19,23 +19,49 @@
 </p></div>
 
 }
-
+<h2>תגובה:</h2>
 <div class="addFeedback">
-    <button id="addFeedback">הוסף תגובה</button>
-</div>
-<h2>תגובות:</h2>
-<div class="feedbackSection">
-    @foreach (var item in Model.rofvmList)
-    {
-
-        <div>
-            <header>
-                <b><u>שם:</u></b> @item.first_Name @item.last_Name
-                <span class="rating star-@item.rof.Rating"></span>
-            </header>
-            <span>
-                @item.rof.Text
-            </span>
+    <button id="addFeedback" class="btn btn-default">הוסף תגובה</button>
+    <div class="text-danger">@ViewBag.Error</div>
+    <form asp-controller="Account" asp-action="addFeedback" method="post">
+        <div class="newFeedback">
+            <br />
+            <div>דירוג: @Html.DropDownList("rating", Html.GetEnumSelectList<BCare.Models.Rating>())</div>
+            <div>תוכן התגובה: <br /><textarea name="content"></textarea></div>
+            <input type="number" name="id" value="@ViewContext.RouteData.Values["id"]" hidden />
+            <button type="submit">הוסף תגובה</button>
         </div>
-    }
+        <br />
+        </form>
 </div>
+@if(Model.rofvmList.Count > 0) { 
+<div class="feedbackSection">
+    <div>
+        <header>
+            <b><u>שם:</u></b> @Model.rofvmList[0].first_Name @Model.rofvmList[0].last_Name
+            <span class="rating star-@Model.rofvmList[0].rof.Rating"></span>
+        </header>
+        <span>
+            @Model.rofvmList[0].rof.Text
+        </span>
+    </div>
+    @*@foreach (var item in Model.rofvmList)
+        {
+
+            <div>
+                <header>
+                    <b><u>שם:</u></b> @item.first_Name @item.last_Name
+                    <span class="rating star-@item.rof.Rating"></span>
+                </header>
+                <span>
+                    @item.rof.Text
+                </span>
+            </div>
+        }*@
+</div>
+}
+<script>
+    $('#addFeedback').click(function () {
+        $('.newFeedback').toggle();
+    });
+</script>

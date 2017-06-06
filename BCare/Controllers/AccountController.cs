@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -144,6 +144,8 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
             presId = context.GetPresByBloodTest(id);
+            if (TempData["errorMessage"] != null)
+                ViewBag.Error = TempData["errorMessage"];
             if (presId == 0)
             {
                 Models.GA.Population po = new Models.GA.Population(id, context);
@@ -185,6 +187,36 @@ namespace BCare.Controllers
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult addFeedback(int id, int rating , string content)
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            int presId  = context.GetPresByBloodTest(id);
+            int userId = Int32.Parse(cookie.Substring(10));
+            presCommentViewModel pres = context.getPrescriptionDetails(presId, id);
+            HashSet<int> meds = new HashSet<int>();
+            for(int i=0; i <pres.rofvmList.Count; i++)
+            {
+                if(pres.rofvmList[i].rof.RFUserID == userId && pres.rofvmList[i].rof.RFSomID == pres.somcList[i].SOMI.SomID)
+                {
+                    meds.Add(pres.rofvmList[i].rof.RFSomID);
+                }
+            }
+            for(int i=0; i < pres.somcList.Count; i++)
+            {
+                if(!meds.Contains(pres.somcList[i].SOMI.SomID))
+                {
+                    context.SetNewComment(userId, pres.somcList[i].SOMI.SomID, presId, DateTime.Now.ToString(), rating, content);
+                }
+            }
+            if(meds.Count > 0)
+            {
+                TempData["errorMessage"] = "דירגת כבר את התרופות הללו.";
+            }
+            return RedirectToAction("AnalyzeTest", "Account", new { id = id });
         }
 
         public IActionResult Details()

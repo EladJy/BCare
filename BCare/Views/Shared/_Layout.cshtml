@@ -29,9 +29,9 @@
                         <li><a asp-controller="Home" asp-action="Contact">צור קשר<span class="glyphicon glyphicon-envelope"></span></a></li>
                         <li><a asp-controller="Home" asp-action="About">אודותינו<span class="glyphicon glyphicon-envelope"></span></a></li>
                         <li><a asp-controller="Home" asp-action="Charts">סטטיסטיקות<span class="glyphicon glyphicon-user"></span></a></li>
-                        <li>
+                        @*<li>
                             <a asp-controller="Home" asp-action="Index">בלוג<span class="glyphicon glyphicon-folder-open"></span></a>
-                        </li>
+                        </li>*@
                         <li><a asp-controller="Home" asp-action="Index">ראשי<span class="glyphicon glyphicon-home"></span></a></li>
 
                     </ul>
@@ -46,7 +46,7 @@
                     <div class="navbar-inner">
                         <ul class="nav navbar-nav navbar-right">
                             <li><a asp-controller="Account" asp-action="AddBloodTest">הוסף בדיקת דם</a></li>
-                            <li><a asp-controller="Account" asp-action="Stats">סטטיסטיקה ומעקב</a></li>
+                            @**@<li><a asp-controller="Account" asp-action="Stats">סטטיסטיקה ומעקב</a></li>
                             <li><a asp-controller="Account" asp-action="BloodTest">הבדיקות שלי</a></li>
                             <li><a asp-controller="Account" asp-action="Details">פרטיים אישיים</a></li>
                         </ul>

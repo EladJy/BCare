@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace BCare.Models
     {
         public int User_ID { get; set; }
         public DateTime BT_Date { get; set; }
+        [Display(Name = "שם הדוקטור")]
         public String Doctor_Name { get; set; }
         public String UserGender { get; set; }
         public String IsPregnant { get; set; }

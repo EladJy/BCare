@@ -9,6 +9,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th></th>
                 <th>תאריך הבדיקה</th>
                 <th>שם רופא</th>
                 <th>תוצאות</th>
@@ -21,6 +22,7 @@
                     <td>@item.BTestDate.ToString("dd/MM/yyyy")</td>
                     <td>@item.DoctorName</td>
                     <td><a asp-controller="Account" asp-action="BloodTestResult" asp-route-id="@item.BTestID">להצגת התוצאות</a></td>
+                    <td><a asp-controller="Account" asp-action="DeleteBloodTest" asp-route-id="@item.BTestID">מחיקה</a></td>
                 </tr>
             }
         </tbody>

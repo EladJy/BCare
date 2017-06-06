@@ -666,6 +666,23 @@ namespace BCare.data
             }
         }
 
+        public int GetUserIdByBloodTest(int btId)
+        {
+            int userId;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT bt.BUser_ID from blood_test bt WHERE bt.BTest_ID = @btId", conn);
+                cmd.Parameters.AddWithValue("@btId", btId);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    userId = reader.GetInt32("BUser_ID");
+                }
+                conn.Close();
+                return userId;
+            }
+        }
         public int GetIDByUserName(string userName)
         {
             int ID;
@@ -929,6 +946,39 @@ namespace BCare.data
                 conn.Close();
             }
         }
+
+        public void DeleteBloodTest(int btId)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                int presId = GetPresByBloodTest(btId);
+                if(presId != 0)
+                {
+                    MySqlCommand cmd = new MySqlCommand("DELETE FROM review_or_feedback WHERE RFPres_ID = @presId", conn);
+                    cmd.Parameters.AddWithValue("@presId", presId);
+                    MySqlCommand cmd2 = new MySqlCommand("DELETE FROM prescription_details WHERE PDPres_ID = @presId", conn);
+                    cmd2.Parameters.AddWithValue("@presId", presId);
+                    cmd.ExecuteNonQuery();
+                    cmd2.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
+                    cmd2.Parameters.Clear();
+                }
+                MySqlCommand cmd3 = new MySqlCommand("DELETE FROM prescription WHERE PBTest_ID = @btId", conn);
+                MySqlCommand cmd4 = new MySqlCommand("DELETE FROM blood_test_data WHERE BTest_ID = @btId", conn);
+                MySqlCommand cmd5 = new MySqlCommand("DELETE FROM blood_test WHERE BTest_ID = @btId", conn);
+                cmd3.Parameters.AddWithValue("@btId", btId);
+                cmd4.Parameters.AddWithValue("@btId", btId);
+                cmd5.Parameters.AddWithValue("@btId", btId);
+                cmd3.ExecuteNonQuery();
+                cmd4.ExecuteNonQuery();
+                cmd5.ExecuteNonQuery();
+                cmd3.Parameters.Clear();
+                cmd4.Parameters.Clear();
+                cmd5.Parameters.Clear();
+                conn.Close();
+            }
+        }
         public Dictionary<int, double> GetAvgRating()
         {
             Dictionary<int, double> avgDic = new Dictionary<int, double>();
@@ -1082,6 +1132,41 @@ namespace BCare.data
                 cmd.Parameters.AddWithValue("@Post_ID", Post_ID);
 
                 cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+        }
+
+        public int SetNewBloodTest(int BUser_ID , string Doctor_Name , DateTime BTest_Date , string IsPregnant)
+        {
+            int primeryKey = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO blood_test(BUser_ID, Doctor_Name, BTest_Date , IsPregnant) VALUES (@BUser_ID, @Doctor_Name, @BTest_Date, @IsPregnant) ", conn);
+                cmd.Parameters.AddWithValue("@BUser_ID", BUser_ID);
+                cmd.Parameters.AddWithValue("@Doctor_Name", Doctor_Name);
+                DateTime dt = Convert.ToDateTime(BTest_Date);
+                cmd.Parameters.AddWithValue("@BTest_Date", dt);
+                cmd.Parameters.AddWithValue("@IsPregnant", IsPregnant);
+                cmd.ExecuteScalar();
+                primeryKey = Convert.ToInt32(cmd.LastInsertedId);
+                cmd.Parameters.Clear();
+                conn.Close();
+            }
+            return primeryKey;
+        }
+
+        public void setNewBloodTestData(int BTest_ID , int BComp_ID , double Value)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO blood_test_data VALUES (@BTest_ID, @BComp_ID, @Value) ", conn);
+                cmd.Parameters.AddWithValue("@BTest_ID", BTest_ID);
+                cmd.Parameters.AddWithValue("@BComp_ID", BComp_ID);
+                cmd.Parameters.AddWithValue("@Value", Value);
+                cmd.ExecuteScalar();
                 cmd.Parameters.Clear();
                 conn.Close();
             }

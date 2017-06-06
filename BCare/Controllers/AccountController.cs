@@ -40,7 +40,8 @@ namespace BCare.Controllers
             String cookie = Request.Cookies["Session"];
             if (cookie != null)
             {
-                List<Tuple<string, int>> listHMO = context.UserBloodTestByDateStats(Int32.Parse(cookie.Substring(10))); return Json(listHMO);
+                List<Tuple<string, int>> listHMO = context.UserBloodTestByDateStats(Int32.Parse(cookie.Substring(10)));
+                return Json(listHMO);
             }
             return Json("");
         }
@@ -244,9 +245,23 @@ namespace BCare.Controllers
         {
             context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
             String cookie = Request.Cookies["Session"];
-            List<Tuple<int, string>> ListComp = context.GetBOAList();
-            ViewBag.ListComp = new SelectList(ListComp, "Item1", "Item2");
-            return View();
+            int bloodId = context.SetNewBloodTest(Int32.Parse(cookie.Substring(10)), BTVM.Doctor_Name, DateTime.Now, "N");
+            for(int i=0; i < BTVM.BTC.Count; i++)
+            {
+                context.setNewBloodTestData(bloodId, BTVM.BTC[i].btData.BCompID , BTVM.BTC[i].btData.Value);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult DeleteBloodTest(int id)
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            if(Int32.Parse(cookie.Substring(10)) == context.GetUserIdByBloodTest(id)) {
+                context.DeleteBloodTest(id);
+                return RedirectToAction("BloodTest", "Account");
+            }
+            return View("אל תנסה אתה לא תצליח!");
         }
     }
 }

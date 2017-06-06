@@ -8,6 +8,7 @@ namespace BCare.Models
 {
     public class presCommentViewModel
     {
+        public string Text { get; set; }
         [DataType(DataType.Date)]
         public DateTime bloodTest_Date { get; set; }
         public List<SOMConsumeViewModel> somcList { get; set; }

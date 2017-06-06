@@ -405,6 +405,16 @@ namespace BCare.data
                     }
 
                 }
+                MySqlCommand cmd4 = new MySqlCommand("SELECT p.PresGenText from prescription p where p.Pres_ID = @Pres_ID", conn);
+                cmd4.Parameters.AddWithValue("@Pres_ID", presID);
+                using (MySqlDataReader reader = cmd4.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        commentsAndPres.Text = reader.GetString("PresGenText");
+                    }
+
+                }
                 conn.Close();
             }
             return commentsAndPres;
@@ -757,16 +767,17 @@ namespace BCare.data
                 conn.Close();
             }
         }
-        public void SetNewPrescription(int PBTest_ID, DateTime Pres_Date, int Recomendor_ID)
+        public void SetNewPrescription(int PBTest_ID, DateTime Pres_Date, int Recomendor_ID , string PresGenText)
         {
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO prescription(PBTest_ID, Pres_Date, Recomendor_ID) VALUES (@PBTest_ID, @Pres_Date, @Recomendor_ID) ", conn);
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO prescription(PBTest_ID, Pres_Date, Recomendor_ID , PresGenText) VALUES (@PBTest_ID, @Pres_Date, @Recomendor_ID, @PresGenText) ", conn);
                 cmd.Parameters.AddWithValue("@PBTest_ID", PBTest_ID);
                 DateTime dt = Convert.ToDateTime(Pres_Date);
                 cmd.Parameters.AddWithValue("@Pres_Date", dt);
                 cmd.Parameters.AddWithValue("@Recomendor_ID", Recomendor_ID);
+                cmd.Parameters.AddWithValue("@PresGenText", PresGenText);
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
                 conn.Close();

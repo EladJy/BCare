@@ -146,17 +146,20 @@ namespace BCare.Controllers
             if (presId == 0)
             {
                 Models.GA.Population po = new Models.GA.Population(id, context);
-                for (int i = 0; i < 1549; i++)
+                for (int i = 0; i < 499; i++)
                 {
                     po.NextGeneration();
                 }
                 po.WriteNextGeneration();
                 Models.GA.Individual bestResult = po.bestList[0];
-                context.SetNewPrescription(id, DateTime.Now, 123123123);
+                context.SetNewPrescription(id, DateTime.Now, 123123123, bestResult.text);
                 presId = context.GetPresByBloodTest(id);
-                foreach (int med in bestResult.hashMed)
+                if (!bestResult.noExecptions)
                 {
-                    context.SetNewPrescriptionDetails(presId, med, RandomNumber(1, 3), RandomNumber(5, 8), "");
+                    foreach (int med in bestResult.hashMed)
+                    {
+                        context.SetNewPrescriptionDetails(presId, med, RandomNumber(1, 3), RandomNumber(5, 8), "");
+                    }
                 }
                 prescription = context.getPrescriptionDetails(presId, id);
                 return View(prescription);

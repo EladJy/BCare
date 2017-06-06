@@ -14,17 +14,20 @@ namespace BCare.Models.GA
         public List<Individual> arrIndiv = new List<Individual>();
         public List<Individual> nextArrIndiv = new List<Individual>();
         public List<Individual> bestList = new List<Individual>();
+        BloodTestViewModel BTVM;
         List<int> listOfIndexes = new List<int>();
-        const int populationSize = 250;
+        const int populationSize = 150;
         bool[] arrCheck = new bool[populationSize];
         int generation = 1;
         public Population(int btID , BcareContext context)
         {
-            for(int i=0; i < populationSize; i++)
+            BTVM = new BloodTestViewModel();
+            BTVM = context.GetTestResultByID(btID);
+            for (int i=0; i < populationSize; i++)
             {
                 Individual arrGenome = new Individual(btID , context);
                 arrIndiv.Add(arrGenome);
-                arrGenome.CalculateFitness();
+                arrGenome.CalculateFitness(BTVM);
             }
             //arrIndiv.Sort();
             bestList.Add(arrIndiv[0]);
@@ -39,7 +42,7 @@ namespace BCare.Models.GA
             for(int i = 0; i <arrIndiv.Count;i++)
             {
                 Mutate(arrIndiv[i]); // Mutation
-                arrIndiv[i].CalculateFitness();
+                arrIndiv[i].CalculateFitness(BTVM);
             }
 
             //for (int i = 0; i < arrIndiv.Count; i++)

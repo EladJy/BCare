@@ -3,12 +3,21 @@
 <h2>ניתוח נתונים</h2>
 <h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.bloodTest_Date.ToString("dd/MM/yyyy"):</b></h4>
 לאחר ניתוח התוצאות מערכת <b>BCare</b> זיהתה:<br />
+@Html.Raw(@Model.Text)
+<br />
+@if (Model.somcList.Count > 0)
+{
+    <div>התרופות אשר צריך ליטול:</div>
+}
 @foreach (var item in Model.somcList)
 {
-    @Html.Raw(@item.pres.Text)
-    <div>כמות צריכה יומית: @item.pres.AmountToConsume</div>
-    <div>ימי צריכה: @item.pres.DaysToConsume</div>
-    <br />
+<div class="med"><p style="float: right;"><img id="imageMed" src="@item.SOMI.ProductImageURL" height="90" width="90"></p>
+<p>
+    <div><b><u>שם תרופה:</u></b> @item.SOMI.SOMName</div>
+    <div><b><u>כמות צריכה יומית:</u></b> @item.pres.AmountToConsume</div>
+    <div><b><u>ימי צריכה:</u></b> @item.pres.DaysToConsume</div>
+</p></div>
+
 }
 
 <h2>תגובות:</h2>

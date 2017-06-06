@@ -248,6 +248,16 @@ p.Login {
 .glyphicon {
     margin-left: 5px;
 }
+
+.med {
+    padding:15px;
+    
+}
+#imageMed {
+    border-radius: 15px;
+    margin-left: 15px;
+
+}
 /*=============================
     RATING
   =============================*/

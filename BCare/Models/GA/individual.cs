@@ -16,14 +16,14 @@ namespace BCare.Models.GA
         private static readonly Random random = new Random();
         private static readonly object syncLock = new object();
         public List<Genome> genomeList = new List<Genome>();
-        static BloodTestViewModel BTVM;
         public const int indivSize = 6;
         public double fitnessGrade = 100.0;
         public const int EXECPTION = 50;
-        public const int PRICE = 10;
+        public const int FEEDBACK = 10;
         public const int MEDICAL_PRESCRIPTION = 5;
         public const int IN_HEALTH_PLAN = 5;
         public const int NUM_OF_MEDICATIONS = 30;
+        public const int MAXRATING = 5;
         public bool noExecptions = false;
         public string text = "";
         public HashSet<int> hashMed;
@@ -61,13 +61,12 @@ namespace BCare.Models.GA
             Genome newGenome = new Genome(contextIndv);
             genomeList[MutationIndex] = newGenome;
         }
-        public void CalculateFitness()
+        public void CalculateFitness(BloodTestViewModel BTVM)
         {
+            text = "";
             fitnessGrade = 100;
-            if (BTVM == null)
+            if (avgDic == null)
             {
-                BTVM = new BloodTestViewModel();
-                BTVM = contextIndv.GetTestResultByID(bloodTestID);
                 avgDic = contextIndv.GetAvgRating();
                 aceList = contextIndv.getAllEffects();
             }
@@ -75,6 +74,7 @@ namespace BCare.Models.GA
             double amountPerMed = NUM_OF_MEDICATIONS / (double)(indivSize-1);
             double amountOnPres = MEDICAL_PRESCRIPTION / (double)genomeList.Count;
             double amountOnPlan = IN_HEALTH_PLAN / (double)genomeList.Count;
+            double amountOnFeedback = FEEDBACK / (double)genomeList.Count;
             int countGoods = 0;
             for (int i = 0; i < BTVM.BTC.Count; i++)
             {
@@ -107,7 +107,7 @@ namespace BCare.Models.GA
                 if(value < min)
                 {
                     text = text + "<li>מחסור ב " + BTVM.BTC[i].BOAComp.BOA_Name + "</li>";
-                } else if(value > min)
+                } else if(value > max)
                 {
                     text = text + "<li>עודף ב " + BTVM.BTC[i].BOAComp.BOA_Name + "</li>";
                 }
@@ -125,23 +125,7 @@ namespace BCare.Models.GA
                             //value = BTVM.BTC[i].btData.Value + contextIndv.GetEffectOnComp(BTVM.BTC[i].BOAComp.BOA_ID, genomeList[j].med.SomID) * ((max - min) / 100);
                         }
                         hashMed.Add(genomeList[j].med.SomID);
-                    }
-                    if (genomeList[j].med.InHealthPlan.ToString().Equals("N"))
-                    {
-                        fitnessGrade = fitnessGrade - amountOnPlan;
-                    }
-                    if(genomeList[j].med.WithMedicalPrescription.ToString().Equals("Y"))
-                    {
-                        fitnessGrade = fitnessGrade - amountOnPres;
-                    }
-                    double avgRating = 5;
-                    avgDic.TryGetValue(genomeList[j].med.SomID,out double avgRate);
-                    if(avgRate != 0)
-                    {
-                        avgRating = avgRate;
-                    }
-                    fitnessGrade = fitnessGrade - (PRICE - avgRating * 2);
-                    
+                    }                    
                 }
                 if (value < 0)
                     value = 0.000000000001;
@@ -154,9 +138,27 @@ namespace BCare.Models.GA
                 {
                     fitnessGrade = fitnessGrade - ((1 - (avg / value)) * amountPerComp);
                 }
-                fitnessGrade = fitnessGrade - amountPerMed * (hashMed.Count-1); // 30% of fitness
             }
-            if(countGoods == BTVM.BTC.Count)
+            for(int i=0; i < genomeList.Count; i++ )
+            {
+                if (genomeList[i].med.InHealthPlan.ToString().Equals("N"))
+                {
+                    fitnessGrade = fitnessGrade - amountOnPlan;
+                }
+                if (genomeList[i].med.WithMedicalPrescription.ToString().Equals("Y"))
+                {
+                    fitnessGrade = fitnessGrade - amountOnPres;
+                }
+                double avgRating = 5;
+                avgDic.TryGetValue(genomeList[i].med.SomID, out double avgRate);
+                if (avgRate != 0)
+                {
+                    avgRating = avgRate;
+                }
+                fitnessGrade = fitnessGrade - (amountOnFeedback/MAXRATING * (MAXRATING - avgRating));
+            }
+            fitnessGrade = fitnessGrade - amountPerMed * (hashMed.Count - 1); // 30% of fitness
+            if (countGoods == BTVM.BTC.Count)
             {
                 noExecptions = true;
                 text = "כל הבדיקות יצאו תקינות!";

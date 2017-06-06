@@ -778,7 +778,7 @@ namespace BCare.data
                 conn.Open();
                 if ((firstName.Length != 0) && (lastName.Length != 0) && pwd != null)
                 {
-                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name,Premission_Name = @permissionUser , Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address. User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE @UserID =users.User_ID ", conn);
+                    MySqlCommand cmd = new MySqlCommand("UPDATE users SET First_Name = @First_Name, Last_Name = @Last_Name,Premission_Name = @permissionUser , Gender = @Gender, Birth_date=@Birth_Date, HMO_ID=@HMO_ID, Blood_Type=@Blood_Type, Address=@Address, User_Name = @userName, PW_Hash = @hashedPassword, Email = @Email WHERE @UserID =users.User_ID ", conn);
                     cmd.Parameters.AddWithValue("@UserID", User_ID);
                     cmd.Parameters.AddWithValue("@First_Name", firstName);
                     cmd.Parameters.AddWithValue("@Last_Name", lastName);

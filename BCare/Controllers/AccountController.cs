@@ -197,14 +197,7 @@ namespace BCare.Controllers
             int presId  = context.GetPresByBloodTest(id);
             int userId = Int32.Parse(cookie.Substring(10));
             presCommentViewModel pres = context.getPrescriptionDetails(presId, id);
-            HashSet<int> meds = new HashSet<int>();
-            for(int i=0; i <pres.rofvmList.Count; i++)
-            {
-                if(pres.rofvmList[i].rof.RFUserID == userId && pres.rofvmList[i].rof.RFSomID == pres.somcList[i].SOMI.SomID)
-                {
-                    meds.Add(pres.rofvmList[i].rof.RFSomID);
-                }
-            }
+            HashSet<int> meds = context.getMedsByUser(userId);
             for(int i=0; i < pres.somcList.Count; i++)
             {
                 if(!meds.Contains(pres.somcList[i].SOMI.SomID))
@@ -235,6 +228,25 @@ namespace BCare.Controllers
             {
                 return View();
             }
+        }
+
+        public IActionResult AddBloodTestManually()
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            List<Tuple<int, string>> ListComp = context.GetBOAList();
+            ViewBag.ListComp = new SelectList(ListComp, "Item1", "Item2");
+            return View();
+        }
+        
+        [HttpPost]
+        public IActionResult AddBloodTestManually(BloodTestViewModel BTVM)
+        {
+            context = HttpContext.RequestServices.GetService(typeof(BCare.data.BcareContext)) as BcareContext;
+            String cookie = Request.Cookies["Session"];
+            List<Tuple<int, string>> ListComp = context.GetBOAList();
+            ViewBag.ListComp = new SelectList(ListComp, "Item1", "Item2");
+            return View();
         }
     }
 }

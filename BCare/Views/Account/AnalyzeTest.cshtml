@@ -1,6 +1,9 @@
 ﻿@model BCare.Models.presCommentViewModel
+@{
+    ViewBag.Title = "ניתוח נתונים";
+}
 
-<h2>ניתוח נתונים</h2>
+<h2>@ViewData["Title"]</h2>
 <h4><b>תוצאות ניתוח הנתונים לבדיקת דם שבוצעה בתאריך @Model.bloodTest_Date.ToString("dd/MM/yyyy"):</b></h4>
 לאחר ניתוח התוצאות מערכת <b>BCare</b> זיהתה:<br />
 @Html.Raw(@Model.Text)

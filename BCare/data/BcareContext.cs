@@ -156,6 +156,27 @@ namespace BCare.data
 
             return aceList;
         }
+
+        public HashSet<int> getMedsByUser(int id)
+        {
+            HashSet<int> medSet = new HashSet<int>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT rof.RFSOM_ID FROM review_or_feedback rof WHERE rof.RFUser_ID = @userId", conn);
+                cmd.Parameters.AddWithValue("@userId", id);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        medSet.Add(reader.GetInt32("RFSOM_ID"));
+                    }
+                }
+                conn.Close();
+            }
+
+            return medSet;
+        }
         public blood_test GetBloodTestByID(int testID)
         {
             using (MySqlConnection conn = GetConnection())

@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Momlazim</title>
+    <title>@ViewData["Title"] - BCare</title>
     @await Html.PartialAsync("_HeaderPartial")
 </head>
 <body>
@@ -45,7 +45,8 @@
                 <div class="sub-navbar">
                     <div class="navbar-inner">
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a asp-controller="Account" asp-action="AddBloodTest">הוסף בדיקת דם</a></li>
+                            <li><a asp-controller="Account" asp-action="AddBloodTestManually">הוספת בדיקת דם ידנית</a></li>
+                            <li><a asp-controller="Account" asp-action="AddBloodTest">הוספת בדיקת דם</a></li>
                             @**@<li><a asp-controller="Account" asp-action="Stats">סטטיסטיקה ומעקב</a></li>
                             <li><a asp-controller="Account" asp-action="BloodTest">הבדיקות שלי</a></li>
                             <li><a asp-controller="Account" asp-action="Details">פרטיים אישיים</a></li>

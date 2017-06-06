@@ -1,0 +1,47 @@
+﻿@model BCare.Models.BloodTestViewModel
+@{
+    ViewBag.Title = "הוספת בדיקת דם ידנית";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@using (Html.BeginForm())
+{
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group col-lg-12">
+            @Html.LabelFor(m => m.Doctor_Name)
+            <div class="cols-sm-10">
+                <div class="input-group">
+                    <div>@Html.TextBoxFor(m => m.Doctor_Name, new { @class = "form-control", placeholder = "הכנס שם רופא" })</div>
+                    <span class="text-danger">@Html.ValidationMessageFor(m => m.Doctor_Name)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bloodList">
+            @for (int i = 0; i < 10; i++)
+            {    <div class="form-group col-lg-3 col-lg-offset-6">
+        <div class="cols-sm-10">
+            <div class="input-group">
+                ערך: @Html.TextBoxFor(m => m.BTC[i].btData.Value, new { placeholder = "הכנס ערך רכיב בדיקת דם", @type = "number" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-lg-3 ">
+        <div class="cols-sm-10">
+            <div class="input-group">
+                @Html.DropDownList("BTC[i].btData.BCompID", (SelectList)ViewBag.ListComp, "-בחר רכיב בדיקת דם-")
+            </div>
+        </div>
+    </div>
+
+            }
+        </div>
+        <button type="submit" class="btn btn-danger col-lg-2 col-lg-offset-10">הוסף בדיקת דם</button>
+}
+        @*<script>
+                $('menu').change(function () {
+                    var number = $('#menu option:selected').val();
+                    $('menu1').append("מינימום:" + @Model.BTC)
+                });
+            </script>*@

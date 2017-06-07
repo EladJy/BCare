@@ -261,7 +261,8 @@ namespace BCare.Controllers
                 context.DeleteBloodTest(id);
                 return RedirectToAction("BloodTest", "Account");
             }
-            return View("אל תנסה אתה לא תצליח!");
+            ViewBag.Error = "אל תנסה אתה לא תצליח!";
+            return View();
         }
     }
 }
